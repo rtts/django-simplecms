@@ -1,0 +1,277 @@
+$font: sans-serif;
+$small: 500px;
+
+html, body {
+  font-family: $font;
+  margin: 0;
+  padding: 0;
+}
+
+div.wrapper {
+  max-width: 700px;
+  margin: auto;
+}
+
+header {
+  padding: 1rem;
+}
+
+nav {
+  @media(min-width: $small) {
+    button#hamburger {
+      display: none;
+    }
+    ul#menu {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+
+      li {
+        margin: 1em;
+        padding: 0;
+        display: inline-block;
+
+        a {
+          transition: .1s ease;
+          display: inline-block;
+          text-decoration: none;
+          color: inherit;
+          font-weight: bold;
+          font-size: 1.25em;
+
+          &:hover, &.current {
+            transform: scale(1.2);
+            transform-origin: bottom;
+          }
+        }
+      }
+    }
+  }
+
+  @media(max-width: $small) {
+    button#hamburger {
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      right: 0;
+
+      .hamburger-inner, .hamburger-inner:before, .hamburger-inner:after {
+        background: black !important;
+      }
+      &.is-active {
+        position: fixed;
+      }
+      &:hover {
+        opacity: 1 !important;
+      }
+      &:focus {
+        outline: none !important;
+      }
+    }
+
+    ul#menu {
+      position: fixed;
+      z-index: 1;
+      margin: 0;
+      padding: 0;
+      padding-top: 2em;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: white;
+      list-style: none;
+
+      li {
+        padding: 1em;
+        margin: 0 1em;
+        border-bottom: 1px solid #ddd;
+        line-height: 1.5;
+        text-align: center;
+
+        a {
+          color: black;
+          text-decoration: none;
+          font-size: 34px;
+        }
+      }
+
+      transition: .5s ease;
+      transform: translatex(100%);
+      &.visible {
+        transform: translatex(0);
+      }
+    }
+  }
+}
+
+article {
+  section {
+    padding: 1rem;
+  }
+}
+
+
+div.edit {
+  position: fixed;
+  left: 1em;
+  top: 1em;
+  font-size: 0.8em;
+  color: red;
+
+  a, button {
+    color: inherit;
+    border: none;
+    display: inline;
+    background: none;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+
+    &:before {
+      content: '[ ';
+    }
+    &:after {
+      content: ' ]';
+    }
+  }
+}
+
+a.edit {
+  color: red !important;
+}
+
+div.video {
+  padding: 0;
+  margin: -10px 0;
+
+  div.iframe {
+    width: 100%;
+    padding-bottom: 56%;
+    position: relative;
+
+    iframe {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+    }
+  }
+}
+
+/* Form elements */
+
+form {
+  fieldset {
+    padding: 2em;
+    margin-bottom: 2em;
+    border: 0.5px solid black;
+    border-radius: 3px;
+
+
+    legend {
+      font-size: 1.15em;
+    }
+  }
+
+  div.formfield {
+    margin: 5px 0;
+    padding: 10px 0;
+    font-size: 0;
+  }
+  div.formfield > * {
+    font-size: 1rem;
+  }
+  div.formfield.error {
+    border: 1px solid red;
+    border-radius: 10px;
+    div.errors ul li:before {
+      content: "Oeps! ";
+    }
+  }
+  div.formfield.required {
+    div.label {
+      font-weight: 700;
+    }
+    input, select, textarea {
+      border: 1px solid black;
+    }
+  }
+
+  div.label {
+    font-size: 0.8rem;
+    font-weight: 400;
+  }
+
+  div.input {
+    overflow: hidden;
+    margin: 5px 0;
+  }
+
+  div.helptext, span.required {
+    color: #666;
+    font-size: 12px !important;
+    font-weight: 400 !important;
+  }
+
+  span.required {
+    font-style: italic;
+  }
+
+  input, select, textarea {
+    background: white;
+    color: black;
+    border: 1px solid #aaa;
+    font-size: 1rem;
+    diplay: inline-block;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 5px;
+  }
+
+  div.django-ckeditor-widget {
+    display: block !important;
+  }
+  div.cke_chrome {
+    box-sizing: border-box !important;
+    border: 1px solid #aaa !important;
+  }
+
+  input[type=checkbox] {
+    width: auto;
+  }
+
+  select {
+    background: white;
+  }
+
+  div.filefield {
+    border: 1px solid #aaa;
+    background: white;
+    padding: 4px;
+
+    input { border: none }
+  }
+
+  ul.errorlist {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: red;
+    font-size: 12px !important;
+
+    li {
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  .errors {
+    color: red;
+    font-weight: bold;
+  }
+}
+

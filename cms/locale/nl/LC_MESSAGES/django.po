@@ -1,0 +1,111 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-03-27 12:21+0000\n"
+"PO-Revision-Date: 2019-03-27 13:24+0100\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: admin.py:23 models.py:37
+msgid "content"
+msgstr "inhoud"
+
+#: apps.py:6
+msgid "Content Management System"
+msgstr "Content Beheer"
+
+#: models.py:11 models.py:32
+msgid "position"
+msgstr "positie"
+
+#: models.py:12 models.py:33
+msgid "title"
+msgstr "titel"
+
+#: models.py:13
+msgid "slug"
+msgstr "slug"
+
+#: models.py:13
+msgid "A short identifier to use in URLs"
+msgstr "Een korte identifier voor gebruik in URL’s"
+
+#: models.py:14
+msgid "visible in menu"
+msgstr "zichtbaar in het menu"
+
+#: models.py:26 templates/cms/edit.html:10
+msgid "Page"
+msgstr "Pagina"
+
+#: models.py:27
+msgid "Pages"
+msgstr "Pagina’s"
+
+#: models.py:31
+msgid "page"
+msgstr "pagina"
+
+#: models.py:34
+msgid "section type"
+msgstr "sectie type"
+
+#: models.py:35
+msgid "color"
+msgstr "kleur"
+
+#: models.py:38
+msgid "image"
+msgstr "afbeelding"
+
+#: models.py:39
+msgid "video"
+msgstr "video"
+
+#: models.py:40
+msgid "button text"
+msgstr "button tekst"
+
+#: models.py:41
+msgid "button link"
+msgstr "button link"
+
+#: models.py:50
+msgid "section"
+msgstr "sectie"
+
+#: models.py:51
+msgid "sections"
+msgstr "secties"
+
+#: models.py:56
+msgid "Footer"
+msgstr "Footer"
+
+#: models.py:66
+msgid "configuration parameter"
+msgstr "configuratieparameter"
+
+#: models.py:67
+msgid "configuration parameters"
+msgstr "configuratieparameters"
+
+#: templates/cms/edit.html:20
+msgid "Section"
+msgstr "Sectie"
+
+#: templates/cms/edit.html:27
+msgid "Save"
+msgstr "Opslaan"

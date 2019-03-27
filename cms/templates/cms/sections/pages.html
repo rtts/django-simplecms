@@ -1,0 +1,22 @@
+{% load thumbnail %}
+
+<ul>
+  {% for p in pages %}
+    {% if p.slug %}
+      <li>
+        <a href="{{p.get_absolute_url}}">
+          <div class="image" {% if p.image %}style="background-image: url('{% thumbnail p.image 500x500 %}')"{% endif %}></div>
+        </a>
+
+        <div class="text">
+          <h1>{{p.title}}</h1>
+          {{p.content|safe}}
+          {% if user.is_staff %}
+            <a class="edit" href="{% url 'updatepage' p.slug %}">[ bewerken ]</a>
+          {% endif %}
+          <a class="readmore" href="{{p.get_absolute_url}}">Lees meer &raquo;</a>
+        </div>
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul>
