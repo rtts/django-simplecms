@@ -1,7 +1,7 @@
 {% load thumbnail embed_video_tags %}
 
 {% if section.image %}
-  <div class="photo">
+  <div class="image">
     <img alt="" src="{% thumbnail section.image 800x800 %}">
   </div>
 {% endif %}
@@ -23,5 +23,11 @@
     <div class="iframe">
       {% video section.video '800x600' %}
     </div>
+  </div>
+{% endif %}
+
+{% if section.button_text and section.button_link %}
+  <div class="button">
+    <a href="{{section.button_link}}">{{section.button_text}}</a>
   </div>
 {% endif %}

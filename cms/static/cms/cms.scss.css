@@ -7,7 +7,7 @@ div.wrapper {
   max-width: 700px;
   margin: auto; }
 
-header {
+header, section, footer {
   padding: 1rem; }
 
 @media (min-width: 500px) {
@@ -74,9 +74,6 @@ header {
     nav ul#menu.visible {
       transform: translatex(0); } }
 
-article section {
-  padding: 1rem; }
-
 div.edit {
   position: fixed;
   left: 1em;
@@ -99,21 +96,44 @@ div.edit {
 a.edit {
   color: red !important; }
 
-div.video {
-  padding: 0;
-  margin: -10px 0; }
-  div.video div.iframe {
+article section div.image img {
+  width: 100%; }
+
+article section div.title {
+  font-size: 2em;
+  text-align: center; }
+
+article section div.video div.iframe {
+  width: 100%;
+  padding-bottom: 56%;
+  position: relative; }
+  article section div.video div.iframe iframe {
+    position: absolute;
     width: 100%;
-    padding-bottom: 56%;
-    position: relative; }
-    div.video div.iframe iframe {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      left: 0;
-      top: 0; }
+    height: 100%;
+    left: 0;
+    top: 0; }
+
+article section div.button {
+  text-align: center; }
+  article section div.button a {
+    text-decoration: none;
+    background: black;
+    color: white;
+    padding: 5px 15px;
+    font-size: 1.5em;
+    border-radius: 3px;
+    display: inline-block; }
 
 /* Form elements */
+form div.global_error {
+  border: 2px dotted red;
+  padding: 10px;
+  margin: 1em -10px;
+  background: #f001;
+  color: red;
+  font-weight: bold; }
+
 form fieldset {
   padding: 2em;
   margin-bottom: 2em;
@@ -131,10 +151,10 @@ form div.formfield > * {
   font-size: 1rem; }
 
 form div.formfield.error {
-  border: 1px solid red;
-  border-radius: 10px; }
-  form div.formfield.error div.errors ul li:before {
-    content: "Oeps! "; }
+  border: 2px dotted red;
+  padding: 10px;
+  margin: 0 -10px;
+  background: #f001; }
 
 form div.formfield.required div.label {
   font-weight: 700; }
@@ -191,6 +211,7 @@ form div.filefield {
 
 form ul.errorlist {
   margin: 0;
+  margin-bottom: 1em;
   padding: 0;
   list-style: none;
   color: red;

@@ -18,34 +18,30 @@
       {% block main %}
 
         <header>
-          <div class="wrapper">
-            {% block header %}
-            {% endblock %}
-          </div>
+          {% block header %}
+          {% endblock %}
         </header>
 
         <nav>
-          <div class="wrapper">
-            {% block nav %}
-              <ul id="menu">
-                {% for p in pages %}
-                  {% if p.slug %}
-                    <li><a href="{% url 'cms:page' p.slug %}" {% if p.pk == object.pk %}class="current"{% endif %}>{{p.title}}</a></li>
-                  {% else %}
-                    <li><a href="{% url 'cms:homepage' %}" {% if p.pk == object.pk %}class="current"{% endif %}>{{p.title}}</a></li>
-                  {% endif %}
-                {% endfor %}
-                {% if user.is_staff %}
-                  <li><a class="edit" href="{% url 'cms:createpage' %}">+ {% trans 'new page' %}</a></li>
+          {% block nav %}
+            <ul id="menu">
+              {% for p in pages %}
+                {% if p.slug %}
+                  <li><a href="{% url 'cms:page' p.slug %}" {% if p.pk == object.pk %}class="current"{% endif %}>{{p.title}}</a></li>
+                {% else %}
+                  <li><a href="{% url 'cms:homepage' %}" {% if p.pk == object.pk %}class="current"{% endif %}>{{p.title}}</a></li>
                 {% endif %}
-              </ul>
-            {% endblock %}
-          </div>
-          <button class="hamburger hamburger--collapse" id='hamburger'>
-            <span class="hamburger-box">
-              <span class="hamburger-inner"></span>
-            </span>
-          </button>
+              {% endfor %}
+              {% if user.is_staff %}
+                <li><a class="edit" href="{% url 'cms:createpage' %}">+ {% trans 'new page' %}</a></li>
+              {% endif %}
+            </ul>
+            <button class="hamburger hamburger--collapse" id='hamburger'>
+              <span class="hamburger-box">
+                <span class="hamburger-inner"></span>
+              </span>
+            </button>
+          {% endblock %}
         </nav>
 
         <article>
@@ -54,10 +50,8 @@
         </article>
 
         <footer>
-          <div class="wrapper">
-            {% block footer %}
-            {% endblock %}
-          </div>
+          {% block footer %}
+          {% endblock %}
         </footer>
 
       {% endblock %}

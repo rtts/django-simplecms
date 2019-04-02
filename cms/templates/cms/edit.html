@@ -7,6 +7,13 @@
     {{form.media}}
 
     <div class="wrapper">
+      {% if form.errors or formset.errors %}
+        <div class="global_error">
+          {% blocktrans %}
+            Please correct the errors below and save again
+          {% endblocktrans %}
+        </div>
+      {% endif %}
       {% for field in form %}
         {% include 'cms/formfield.html' with field=field %}
       {% endfor %}

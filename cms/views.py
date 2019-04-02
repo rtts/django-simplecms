@@ -33,7 +33,7 @@ class EditPageMixin:
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = self.get_form()
-        formset = SectionFormSet(request.POST, instance=self.object)
+        formset = SectionFormSet(request.POST, request.FILES, instance=self.object)
         if form.is_valid() and formset.is_valid():
             return self.form_valid(form, formset)
         else:

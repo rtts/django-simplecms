@@ -1,16 +1,23 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block nav %}
+{% endblock %}
+
 {% block content %}
   <form method="post">
     {% csrf_token %}
-    <fieldset>
-      <legend>{% trans 'Log in' %}</legend>
+
+    <section>
       {{form.non_field_errors}}
-      {% for field in form %}
-        {% include 'cms/formfield.html' with field=field %}
-      {% endfor %}
-    </fieldset>
-    <input type="submit" value="{% trans 'Log in' %}">
+      <div class="wrapper">
+        <h1>{% trans 'Log in' %}</h1>
+        {% for field in form %}
+          {% include 'cms/formfield.html' with field=field %}
+        {% endfor %}
+        <button>{% trans 'Log in' %}</button>
+      </div>
+    </section>
+
   </form>
 {% endblock %}

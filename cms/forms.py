@@ -6,4 +6,4 @@ class PageForm(forms.ModelForm):
         model = Page
         fields = '__all__'
 
-SectionFormSet = forms.inlineformset_factory(Page, Section, exclude='__all__', extra=0)
+SectionFormSet = forms.inlineformset_factory(Page, Section, exclude='__all__', extra=1)
