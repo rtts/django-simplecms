@@ -3,12 +3,13 @@ from setuptools import setup, find_packages
 
 setup(
     name = 'django-simplecms',
-    version = '0.0.2',
+    version = '0.0.3',
     url = 'https://github.com/rtts/django-simplecms',
     author = 'Jaap Joris Vens',
     author_email = 'jj@rtts.eu',
     license = 'GPL3',
     packages = find_packages(),
+    include_package_data = True,
     install_requires = [
         'django',
         'django-ckeditor',
