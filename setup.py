@@ -14,6 +14,5 @@ setup(
         'django-ckeditor',
         'django-embed-video',
         'easy-thumbnails',
-        'git+https://github.com/JaapJoris/django-simplecms.git',
     ],
 )
