@@ -1,1 +1,3 @@
-include *.html
+recursive-include cms/static *
+recursive-include cms/templates *
+recursive-include cms/locale *
