@@ -9,9 +9,7 @@
     <div class="wrapper">
       {% if form.errors or formset.errors %}
         <div class="global_error">
-          {% blocktrans %}
-            Please correct the errors below and save again
-          {% endblocktrans %}
+          {% trans 'Please correct the error(s) below and save again' %}
         </div>
       {% endif %}
       {% for field in form %}

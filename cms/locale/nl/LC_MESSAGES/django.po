@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-27 12:21+0000\n"
-"PO-Revision-Date: 2019-03-27 13:24+0100\n"
+"POT-Creation-Date: 2019-04-03 15:48+0200\n"
+"PO-Revision-Date: 2019-04-03 15:49+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: admin.py:23 models.py:37
+#: admin.py:23 models.py:80
 msgid "content"
 msgstr "inhoud"
 
@@ -26,86 +26,106 @@ msgstr "inhoud"
 msgid "Content Management System"
 msgstr "Content Beheer"
 
-#: models.py:11 models.py:32
+#: models.py:54 models.py:75
 msgid "position"
 msgstr "positie"
 
-#: models.py:12 models.py:33
+#: models.py:55 models.py:76
 msgid "title"
 msgstr "titel"
 
-#: models.py:13
+#: models.py:56
 msgid "slug"
 msgstr "slug"
 
-#: models.py:13
+#: models.py:56
 msgid "A short identifier to use in URLs"
 msgstr "Een korte identifier voor gebruik in URL’s"
 
-#: models.py:14
+#: models.py:57
 msgid "visible in menu"
 msgstr "zichtbaar in het menu"
 
-#: models.py:26 templates/cms/edit.html:10
+#: models.py:69
 msgid "Page"
 msgstr "Pagina"
 
-#: models.py:27
+#: models.py:70
 msgid "Pages"
 msgstr "Pagina’s"
 
-#: models.py:31
+#: models.py:74
 msgid "page"
 msgstr "pagina"
 
-#: models.py:34
+#: models.py:77
 msgid "section type"
 msgstr "sectie type"
 
-#: models.py:35
+#: models.py:78
 msgid "color"
 msgstr "kleur"
 
-#: models.py:38
+#: models.py:81
 msgid "image"
 msgstr "afbeelding"
 
-#: models.py:39
+#: models.py:82
 msgid "video"
 msgstr "video"
 
-#: models.py:40
+#: models.py:83
 msgid "button text"
 msgstr "button tekst"
 
-#: models.py:41
+#: models.py:84
 msgid "button link"
 msgstr "button link"
 
-#: models.py:50
+#: models.py:93
 msgid "section"
 msgstr "sectie"
 
-#: models.py:51
+#: models.py:94
 msgid "sections"
 msgstr "secties"
 
-#: models.py:56
+#: models.py:99
 msgid "Footer"
 msgstr "Footer"
 
-#: models.py:66
+#: models.py:109
 msgid "configuration parameter"
 msgstr "configuratieparameter"
 
-#: models.py:67
+#: models.py:110
 msgid "configuration parameters"
 msgstr "configuratieparameters"
 
-#: templates/cms/edit.html:20
+#: templates/cms/base.html:36
+msgid "new page"
+msgstr "nieuwe pagina"
+
+#: templates/cms/edit.html:12
+msgid "Please correct the error(s) below and save again"
+msgstr "Herstel a.u.b. de fout(en) hieronder en sla nogmaals op"
+
+#: templates/cms/edit.html:28
 msgid "Section"
 msgstr "Sectie"
 
-#: templates/cms/edit.html:27
-msgid "Save"
-msgstr "Opslaan"
+#: templates/cms/edit.html:37
+msgid "save"
+msgstr "opslaan"
+
+#: templates/cms/page.html:10 templates/cms/page.html:12
+msgid "edit this page"
+msgstr "bewerk deze pagina"
+
+#: templates/cms/page.html:15
+msgid "login"
+msgstr "inloggen"
+
+#: templates/registration/login.html:14 templates/registration/login.html:18
+msgid "Log in"
+msgstr "Inloggen"
