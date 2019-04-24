@@ -18,9 +18,7 @@
 
   {% for section in object.sections.all %}
     <section class="{{section.type}} color{{section.color}}">
-      <div class="wrapper">
-        {% include 'cms/sections/'|add:section.type|add:'.html' %}
-      </div>
+      {% include 'cms/sections/'|add:section.type|add:'.html' %}
     </section>
   {% endfor %}
 {% endblock %}
