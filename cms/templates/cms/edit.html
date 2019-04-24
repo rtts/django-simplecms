@@ -25,7 +25,7 @@
       {% endfor %}
       <section>
         <div class="wrapper">
-          <h1>{% trans 'Section' %}: {{form.instance.title}}</h1>
+          <h1>{% trans 'Section' %}: {{form.instance}}</h1>
           {% for field in form.visible_fields %}
             {% include 'cms/formfield.html' with field=field %}
           {% endfor %}

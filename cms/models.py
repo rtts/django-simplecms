@@ -73,13 +73,13 @@ class Page(NumberedModel):
 class Section(NumberedModel):
     page = models.ForeignKey(Page, verbose_name=_('page'), related_name='sections', on_delete=models.PROTECT)
     position = models.PositiveIntegerField(_('position'), blank=True)
-    title = models.CharField(_('title'), max_length=255)
+    title = models.CharField(_('title'), max_length=255, blank=True)
     type = models.CharField(_('section type'), max_length=16, default=settings.SECTION_TYPES[0][0], choices=settings.SECTION_TYPES)
     color = models.PositiveIntegerField(_('color'), default=1, choices=settings.SECTION_COLORS)
 
     content = RichTextField(_('content'), blank=True)
     image = models.ImageField(_('image'), blank=True)
-    video = EmbedVideoField(_('video'), blank=True, help_text='Paste a YouTube, Vimeo, or SoundCloud link')
+    video = EmbedVideoField(_('video'), blank=True, help_text=_('Paste a YouTube, Vimeo, or SoundCloud link'))
     button_text = models.CharField(_('button text'), max_length=255, blank=True)
     button_link = models.CharField(_('button link'), max_length=255, blank=True)
 
@@ -87,7 +87,13 @@ class Section(NumberedModel):
         return self.page.sections.all()
 
     def __str__(self):
-        return '{}. {}'.format(self.position, self.title)
+        if not self.position:
+            title = _('New section')
+        elif not self.title:
+            title = '{}. {}'.format(self.position, _('Untitled'))
+        else:
+            title = '{}. {}'.format(self.position, self.title)
+        return str(title)
 
     class Meta:
         verbose_name = _('section')
