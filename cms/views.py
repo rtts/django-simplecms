@@ -1,10 +1,10 @@
-from django.views.generic import DetailView, UpdateView, CreateView
-from django.views.generic.detail import SingleObjectMixin
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect
 from django.contrib.auth.mixins import UserPassesTestMixin
-from .models import *
-from .forms import *
-from .utils import *
+from django.views.generic import DetailView, UpdateView, CreateView
+
+from .models import Page
+from .forms import PageForm, SectionFormSet
+from .utils import get_config
 
 class StaffRequiredMixin(UserPassesTestMixin):
     def test_func(self):
@@ -25,7 +25,12 @@ class PageView(MenuMixin, DetailView):
     model = Page
     template_name = 'cms/page.html'
 
-class EditPageMixin:
+class CreatePage(StaffRequiredMixin, MenuMixin, CreateView):
+    model = Page
+    form_class = PageForm
+    template_name = 'cms/new.html'
+
+class UpdatePage(StaffRequiredMixin, MenuMixin, UpdateView):
     model = Page
     form_class = PageForm
     template_name = 'cms/edit.html'
@@ -55,12 +60,3 @@ class EditPageMixin:
                 'formset': formset,
             })
         return context
-
-class UpdatePage(StaffRequiredMixin, MenuMixin, EditPageMixin, UpdateView):
-    pass
-class CreatePage(StaffRequiredMixin, MenuMixin, EditPageMixin, CreateView):
-    def get_object(self):
-        pass
-
-class CreateSection:
-    pass

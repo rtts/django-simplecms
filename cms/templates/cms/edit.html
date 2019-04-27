@@ -17,21 +17,23 @@
       {% endfor %}
     </div>
 
-    {{formset.management_form}}
-    {% for form in formset %}
-      {{form.media}}
-      {% for field in form.hidden_fields %}
-        {{field}}
+    {% block sections %}
+      {{formset.management_form}}
+      {% for form in formset %}
+        {{form.media}}
+        {% for field in form.hidden_fields %}
+          {{field}}
+        {% endfor %}
+        <section>
+          <div class="wrapper">
+            <h1>{% trans 'Section' %}: {{form.instance}}</h1>
+            {% for field in form.visible_fields %}
+              {% include 'cms/formfield.html' with field=field %}
+            {% endfor %}
+          </div>
+        </section>
       {% endfor %}
-      <section>
-        <div class="wrapper">
-          <h1>{% trans 'Section' %}: {{form.instance}}</h1>
-          {% for field in form.visible_fields %}
-            {% include 'cms/formfield.html' with field=field %}
-          {% endfor %}
-        </div>
-      </section>
-    {% endfor %}
+    {% endblock %}
 
     <div class="edit">
       <button>{% trans 'save' %}</button>
