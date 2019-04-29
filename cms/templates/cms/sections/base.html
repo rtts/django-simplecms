@@ -8,11 +8,13 @@
     </div>
   {% endif %}
 
-  <div class="title">
-    <h1>
-      {{section.title}}
-    </h1>
-  </div>
+  {% if section.title %}
+    <div class="title">
+      <h1>
+        {{section.title}}
+      </h1>
+    </div>
+  {% endif %}
 
   {% if section.content %}
     <div class="content">
@@ -27,6 +29,11 @@
       </div>
     </div>
   {% endif %}
+
+  {% block extracontent %}
+</div>
+<div class="wrapper">
+  {% endblock %}
 
   {% if section.button_text and section.button_link %}
     <div class="button">
