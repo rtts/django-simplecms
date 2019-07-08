@@ -106,7 +106,7 @@ class Config(models.Model):
     ]
 
     parameter = models.PositiveIntegerField(choices=TYPES, unique=True)
-    content = RichTextField('Inhoud', blank=True)
+    content = RichTextField(_('content'), blank=True)
 
     def __str__(self):
         return "{}. {}".format(self.parameter, self.get_parameter_display())
