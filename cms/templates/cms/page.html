@@ -4,7 +4,7 @@
 {% block title %}{{block.super}} - {{object.title}}{% endblock %}
 
 {% block content %}
-  <div class="edit">
+  <div class="edit page">
     {% if user.is_staff %}
       {% if object.slug %}
         <a href="{% url 'cms:updatepage' object.slug %}">{% trans 'edit this page' %}</a>

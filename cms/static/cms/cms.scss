@@ -113,11 +113,14 @@ nav {
 }
 
 div.edit {
-  position: fixed;
-  left: 1em;
-  top: 1em;
   font-size: 0.8em;
   color: red;
+
+  &.page {
+    position: fixed;
+    left: 1em;
+    top: 1em;
+  }
 
   a, button {
     color: inherit;

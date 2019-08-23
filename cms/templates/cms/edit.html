@@ -1,23 +1,29 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
+{% block header %}{% endblock %}
+{% block nav %}{% endblock %}
+
 {% block content %}
   <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{form.media}}
 
-    <div class="wrapper">
-      {% if form.errors or formset.errors %}
-        <div class="global_error">
-          {% trans 'Please correct the error(s) below and save again' %}
-        </div>
-      {% endif %}
-      {% for field in form %}
-        {% include 'cms/formfield.html' with field=field %}
-      {% endfor %}
-    </div>
+    <section>
+      <div class="wrapper">
+        <h1>{{form.instance}}</h1>
+        {% if form.errors or formset.errors %}
+          <div class="global_error">
+            {% trans 'Please correct the error(s) below and save again' %}
+          </div>
+        {% endif %}
+        {% for field in form %}
+          {% include 'cms/formfield.html' with field=field %}
+        {% endfor %}
+      </div>
+    </section>
 
-    {% block sections %}
+    {% block formset %}
       {{formset.management_form}}
       {% for form in formset %}
         {{form.media}}
@@ -26,16 +32,26 @@
         {% endfor %}
         <section>
           <div class="wrapper">
-            <h1>{% trans 'Section' %}: {{form.instance}}</h1>
+            <h1>{{form.instance}}</h1>
             {% for field in form.visible_fields %}
               {% include 'cms/formfield.html' with field=field %}
             {% endfor %}
           </div>
         </section>
       {% endfor %}
+
+      <section>
+        <div class="wrapper">
+          <div class="button">
+            <a href="{{formset_form_url}}">
+              Add a new {{formset_description}}
+            </a>
+          </div>
+        </div>
+      </section>
     {% endblock %}
 
-    <div class="edit">
+    <div class="edit page">
       <button>{% trans 'save' %}</button>
     </div>
   </form>

@@ -37,6 +37,7 @@ header, section, footer {
         nav ul#menu li a:hover, nav ul#menu li a.current {
           transform: scale(1.2);
           transform-origin: bottom; } }
+
 @media (max-width: 500px) {
   nav button#hamburger {
     position: absolute;
@@ -79,11 +80,12 @@ header, section, footer {
       transform: translatex(0); } }
 
 div.edit {
-  position: fixed;
-  left: 1em;
-  top: 1em;
   font-size: 0.8em;
   color: red; }
+  div.edit.page {
+    position: fixed;
+    left: 1em;
+    top: 1em; }
   div.edit a, div.edit button {
     color: inherit;
     border: none;
@@ -102,9 +104,11 @@ a.edit {
 
 article section div.image img {
   width: 100%; }
+
 article section div.title {
   font-size: 2em;
   text-align: center; }
+
 article section div.video div.iframe {
   width: 100%;
   padding-bottom: 56%;
@@ -115,6 +119,7 @@ article section div.video div.iframe {
     height: 100%;
     left: 0;
     top: 0; }
+
 article section div.button {
   text-align: center; }
   article section div.button a {
@@ -134,6 +139,7 @@ form div.global_error {
   background: #f001;
   color: red;
   font-weight: bold; }
+
 form fieldset {
   padding: 2em;
   margin-bottom: 2em;
@@ -141,33 +147,43 @@ form fieldset {
   border-radius: 3px; }
   form fieldset legend {
     font-size: 1.15em; }
+
 form div.formfield {
   margin: 5px 0;
   padding: 10px 0;
   font-size: 0; }
+
 form div.formfield > * {
   font-size: 1rem; }
+
 form div.formfield.error {
   border: 2px dotted red;
   padding: 10px;
   margin: 0 -10px;
   background: #f001; }
+
 form div.formfield.required div.label {
   font-weight: 700; }
+
 form div.formfield.required input, form div.formfield.required select, form div.formfield.required textarea {
   border: 1px solid black; }
+
 form div.label {
   font-size: 0.8rem;
   font-weight: 400; }
+
 form div.input {
   overflow: hidden;
   margin: 5px 0; }
+
 form div.helptext, form span.required {
   color: #666;
   font-size: 12px !important;
   font-weight: 400 !important; }
+
 form span.required {
   font-style: italic; }
+
 form input, form select, form textarea {
   background: white;
   color: black;
@@ -178,21 +194,27 @@ form input, form select, form textarea {
   box-sizing: border-box;
   margin: 0;
   padding: 5px; }
+
 form div.django-ckeditor-widget {
   display: block !important; }
+
 form div.cke_chrome {
   box-sizing: border-box !important;
   border: 1px solid #aaa !important; }
+
 form input[type=checkbox] {
   width: auto; }
+
 form select {
   background: white; }
+
 form div.filefield {
   border: 1px solid #aaa;
   background: white;
   padding: 4px; }
   form div.filefield input {
     border: none; }
+
 form ul.errorlist {
   margin: 0;
   margin-bottom: 1em;
@@ -203,6 +225,7 @@ form ul.errorlist {
   form ul.errorlist li {
     margin: 0;
     padding: 0; }
+
 form .errors {
   color: red;
   font-weight: bold; }

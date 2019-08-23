@@ -1,10 +1,16 @@
 from django.db import models
 from django.urls import reverse
 from django.conf import settings
+from django.forms import TextInput
 from django.utils.translation import gettext_lazy as _
 
 from ckeditor.fields import RichTextField
 from embed_video.fields import EmbedVideoField
+
+class VarCharField(models.TextField):
+    def formfield(self, **kwargs):
+        kwargs.update({'widget': TextInput})
+        return super().formfield(**kwargs)
 
 # From https://github.com/JaapJoris/django-numberedmodel.git
 class NumberedModel(models.Model):
@@ -57,7 +63,7 @@ class Page(NumberedModel):
     menu = models.BooleanField(_('visible in menu'), default=True)
 
     def __str__(self):
-        return '{}. {}'.format(self.position, self.title)
+        return '{}: {}. {}'.format(self._meta.verbose_name.title(), self.position, self.title)
 
     def get_absolute_url(self):
         if self.slug:
@@ -87,17 +93,35 @@ class Section(NumberedModel):
         return self.page.sections.all()
 
     def __str__(self):
-        if not self.position:
-            title = _('New section')
-        elif not self.title:
-            title = '{}. {}'.format(self.position, _('Untitled'))
-        else:
-            title = '{}. {}'.format(self.position, self.title)
-        return str(title)
+        title = self.title if self.title else _('Untitled')
+        return '{}: {}. {}'.format(self._meta.verbose_name.title(), self.position, title)
 
     class Meta:
         verbose_name = _('section')
         verbose_name_plural = _('sections')
+        ordering = ['position']
+
+class SubSection(NumberedModel):
+    section = models.ForeignKey(Section, verbose_name=_('section'), related_name='subsections', on_delete=models.PROTECT)
+    position = models.PositiveIntegerField(_('position'), blank=True)
+    title = models.CharField(_('title'), max_length=255, blank=True)
+    color = models.PositiveIntegerField(_('color'), default=1, choices=settings.SECTION_COLORS)
+
+    content = RichTextField(_('content'), blank=True)
+    image = models.ImageField(_('image'), blank=True)
+    button_text = VarCharField(_('button text'), blank=True)
+    button_link = VarCharField(_('button link'), blank=True)
+
+    def number_with_respect_to(self):
+        return self.section.subsections.all()
+
+    def __str__(self):
+        title = self.title if self.title else _('Untitled')
+        return '{}: {}. {}'.format(self._meta.verbose_name.title(), self.position, title)
+
+    class Meta:
+        verbose_name = _('subsection')
+        verbose_name_plural = _('subsections')
         ordering = ['position']
 
 class Config(models.Model):

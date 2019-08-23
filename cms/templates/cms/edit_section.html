@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form.media}}
+
+    <section>
+      <div class="wrapper">
+        <h1>{{form.model}}: {{form.object}}</h1>
+        {% if form.errors or formset.errors %}
+          <div class="global_error">
+            {% trans 'Please correct the error(s) below and save again' %}
+          </div>
+        {% endif %}
+        {% for field in form %}
+          {% include 'cms/formfield.html' with field=field %}
+        {% endfor %}
+      </div>
+    </section>
+
+    {{formset.management_form}}
+    {% for form in formset %}
+      {{form.media}}
+      {% for field in form.hidden_fields %}
+        {{field}}
+      {% endfor %}
+      <section>
+        <div class="wrapper">
+          <h1>{% trans 'Subsection' %}: {{form.instance}}</h1>
+          {% for field in form.visible_fields %}
+            {% include 'cms/formfield.html' with field=field %}
+          {% endfor %}
+        </div>
+      </section>
+    {% endfor %}
+
+    <div class="edit">
+      <button>{% trans 'save' %}</button>
+    </div>
+  </form>
+{% endblock %}

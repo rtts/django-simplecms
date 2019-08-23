@@ -1,4 +1,4 @@
-{% load thumbnail embed_video_tags %}
+{% load i18n thumbnail embed_video_tags %}
 
 <div class="wrapper">
 
@@ -38,6 +38,12 @@
   {% if section.button_text and section.button_link %}
     <div class="button">
       <a href="{{section.button_link}}">{{section.button_text}}</a>
+    </div>
+  {% endif %}
+
+  {% if user.is_staff %}
+    <div class="edit">
+      <a href="{% url 'cms:updatesection' section.pk %}">{% trans 'edit this section' %}</a>
     </div>
   {% endif %}
 
