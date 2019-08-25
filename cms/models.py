@@ -102,7 +102,7 @@ class Section(NumberedModel):
         ordering = ['position']
 
 class SubSection(NumberedModel):
-    section = models.ForeignKey(Section, verbose_name=_('section'), related_name='subsections', on_delete=models.PROTECT)
+    section = models.ForeignKey(Section, verbose_name=_('section'), related_name='subsections', on_delete=models.CASCADE)
     position = models.PositiveIntegerField(_('position'), blank=True)
     title = models.CharField(_('title'), max_length=255, blank=True)
     color = models.PositiveIntegerField(_('color'), default=1, choices=settings.SECTION_COLORS)

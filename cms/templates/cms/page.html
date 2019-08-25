@@ -7,7 +7,7 @@
   <div class="edit page">
     {% if user.is_staff %}
       {% if object.slug %}
-        <a href="{% url 'cms:updatepage' object.slug %}">{% trans 'edit this page' %}</a>
+        <a href="{% url 'cms:updatepage' object.pk %}">{% trans 'edit this page' %}</a>
       {% else %}
         <a href="{% url 'cms:updatehomepage' %}">{% trans 'edit this page' %}</a>
       {% endif %}
@@ -21,4 +21,15 @@
       {% include 'cms/sections/'|add:section.type|add:'.html' %}
     </section>
   {% endfor %}
+
+  {% if user.is_staff %}
+    <section>
+      <div class="wrapper">
+        <div class="edit">
+          <a href="{% url 'cms:createsection' object.pk %}">+ {% trans 'new section' %}</a>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
 {% endblock %}

@@ -22,7 +22,13 @@ class MenuMixin(object):
         })
         return context
 
-class PageView(MenuMixin, DetailView):
+class MemoryMixin(object):
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            request.session['previous_url'] = request.path
+        return super().dispatch(request, *args, **kwargs)
+
+class PageView(MenuMixin, MemoryMixin, DetailView):
     model = Page
     template_name = 'cms/page.html'
 
@@ -39,7 +45,7 @@ class CreateSection(StaffRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.page = Page.objects.get(pk=self.kwargs.get('pk'))
         form.save()
-        return redirect(reverse('cms:updatepage', args=[form.instance.page.pk]))
+        return redirect(self.request.session.get('previous_url'))
 
 class CreateSubSection(StaffRequiredMixin, CreateView):
     model = SubSection
@@ -49,9 +55,9 @@ class CreateSubSection(StaffRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.section = Section.objects.get(pk=self.kwargs.get('pk'))
         form.save()
-        return redirect(reverse('cms:updatesection', args=[form.instance.section.pk]))
+        return redirect(self.request.session.get('previous_url'))
 
-class BaseUpdateView(StaffRequiredMixin, MenuMixin, UpdateView):
+class BaseUpdateView(StaffRequiredMixin, UpdateView):
     template_name = 'cms/edit.html'
 
     def post(self, request, *args, **kwargs):
@@ -66,7 +72,7 @@ class BaseUpdateView(StaffRequiredMixin, MenuMixin, UpdateView):
     def form_valid(self, form, formset):
         form.save()
         formset.save()
-        return redirect(self.get_absolute_url(form.instance))
+        return redirect(self.request.session.get('previous_url'))
 
     def form_invalid(self, form, formset):
         return self.render_to_response(self.get_context_data(form=form, formset=formset))
@@ -90,9 +96,6 @@ class UpdatePage(BaseUpdateView):
     def get_formset_form_url(self, page):
         return reverse('cms:createsection', args=[page.pk])
 
-    def get_absolute_url(self, instance):
-        return instance.get_absolute_url()
-
 class UpdateSection(BaseUpdateView):
     model = Section
     form_class = SectionForm
@@ -100,6 +103,3 @@ class UpdateSection(BaseUpdateView):
 
     def get_formset_form_url(self, page):
         return reverse('cms:createsubsection', args=[page.pk])
-
-    def get_absolute_url(self, instance):
-        return instance.page.get_absolute_url()

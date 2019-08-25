@@ -30,12 +30,24 @@
     </div>
   {% endif %}
 
+  {% if section.subsections.exists %}
+    <div class="subsections">
+      {% for sub in section.subsections.all %}
+        <div class="subsection color{{sub.color}}">
+          {% with section=sub user=None %}
+            {% include 'cms/sections/base.html' %}
+          {% endwith %}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
   {% block extracontent %}
 </div>
 <div class="wrapper">
   {% endblock %}
 
-  {% if section.button_text and section.button_link %}
+  {% if section.button_text %}
     <div class="button">
       <a href="{{section.button_link}}">{{section.button_text}}</a>
     </div>
