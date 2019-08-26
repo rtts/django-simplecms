@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block title %}{{block.super}} - {{object.title}}{% endblock %}
+{% block title %}{{block.super}} - {{page.title}}{% endblock %}
 
 {% block content %}
   <div class="edit page">
     {% if user.is_staff %}
-      {% if object.slug %}
-        <a href="{% url 'cms:updatepage' object.pk %}">{% trans 'edit this page' %}</a>
+      {% if page.slug %}
+        <a href="{% url 'cms:updatepage' page.pk %}">{% trans 'edit this page' %}</a>
       {% else %}
         <a href="{% url 'cms:updatehomepage' %}">{% trans 'edit this page' %}</a>
       {% endif %}
@@ -16,7 +16,7 @@
     {% endif %}
   </div>
 
-  {% for section in object.sections.all %}
+  {% for section in sections %}
     <section class="{{section.type}} color{{section.color}}">
       {% include 'cms/sections/'|add:section.type|add:'.html' %}
     </section>
@@ -26,7 +26,7 @@
     <section>
       <div class="wrapper">
         <div class="edit">
-          <a href="{% url 'cms:createsection' object.pk %}">+ {% trans 'new section' %}</a>
+          <a href="{% url 'cms:createsection' page.pk %}">+ {% trans 'new section' %}</a>
         </div>
       </div>
     </section>

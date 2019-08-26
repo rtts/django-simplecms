@@ -32,6 +32,16 @@ class PageView(MenuMixin, MemoryMixin, DetailView):
     model = Page
     template_name = 'cms/page.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        page = self.object
+        sections = page.sections.all()
+        context.update({
+            'page': page,
+            'sections': sections,
+        })
+        return context
+
 class CreatePage(StaffRequiredMixin, MenuMixin, CreateView):
     model = Page
     form_class = PageForm

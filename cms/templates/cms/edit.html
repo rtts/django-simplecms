@@ -55,3 +55,25 @@
     </div>
   </form>
 {% endblock %}
+
+{% block extrabody %}
+  <script type="text/javascript" src="/static/admin/js/urlify.js"></script>
+  <script>
+    /* My own implementation of Django's prepopulate.js */
+
+    var slugfield = document.getElementById('id_slug');
+    var titlefield = document.getElementById('id_title');
+
+    if (slugfield && titlefield) {
+        var virgin = slugfield.value === '';
+
+        if (virgin) {
+            titlefield.addEventListener('input', function(event) {
+                if (virgin) {
+                    slugfield.value = URLify(titlefield.value);
+                }
+            });
+        }
+    }
+  </script>
+{% endblock %}

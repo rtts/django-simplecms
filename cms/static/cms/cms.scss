@@ -9,6 +9,7 @@ html, body {
 }
 
 div.wrapper {
+  box-sizing: border-box;
   max-width: 700px;
   margin: auto;
   padding: 0 1rem;
@@ -19,7 +20,7 @@ div.spacer {
   clear: both;
 }
 
-header, section, footer {
+header, nav, section, footer {
   padding: 1rem;
 }
 
@@ -119,6 +120,7 @@ div.edit {
     position: fixed;
     left: 1em;
     top: 1em;
+    z-index: 1000;
   }
 }
 
@@ -126,6 +128,7 @@ div.edit a, div.edit button, a.edit{
   font-size: 1rem !important;
   font-weight: normal !important;
   color: red !important;
+  text-transform: none !important;
   text-decoration: none;
   color: inherit;
   border: none;
