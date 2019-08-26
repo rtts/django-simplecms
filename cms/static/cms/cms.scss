@@ -12,7 +12,7 @@ div.wrapper {
   box-sizing: border-box;
   max-width: 700px;
   margin: auto;
-  padding: 0 1rem;
+  padding: 1rem;
 }
 
 div.spacer {
@@ -241,7 +241,7 @@ article {
 
 /* Form elements */
 
-form {
+form.cms {
   div.global_error {
     border: 2px dotted red;
     padding: 10px;

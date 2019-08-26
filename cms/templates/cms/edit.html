@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block content %}
-  <form method="POST" enctype="multipart/form-data">
+  <form method="POST" enctype="multipart/form-data" class="cms">
     {% csrf_token %}
     {{form.media}}
 
