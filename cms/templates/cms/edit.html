@@ -1,9 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block header %}{% endblock %}
-{% block nav %}{% endblock %}
-
 {% block content %}
   <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
@@ -11,7 +8,9 @@
 
     <section>
       <div class="wrapper">
-        <h1>{{form.instance}}</h1>
+        <div class="title">
+          <h1>{{form.instance}}</h1>
+        </div>
         {% if form.errors or formset.errors %}
           <div class="global_error">
             {% trans 'Please correct the error(s) below and save again' %}
@@ -42,9 +41,9 @@
 
       <section>
         <div class="wrapper">
-          <div class="button">
+          <div class="edit">
             <a href="{{formset_form_url}}">
-              Add a new {{formset_description}}
+              + {% trans 'new' %} {{formset_description}}
             </a>
           </div>
         </div>

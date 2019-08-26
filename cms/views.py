@@ -32,12 +32,12 @@ class PageView(MenuMixin, MemoryMixin, DetailView):
     model = Page
     template_name = 'cms/page.html'
 
-class CreatePage(StaffRequiredMixin, CreateView):
+class CreatePage(StaffRequiredMixin, MenuMixin, CreateView):
     model = Page
     form_class = PageForm
     template_name = 'cms/new.html'
 
-class CreateSection(StaffRequiredMixin, CreateView):
+class CreateSection(StaffRequiredMixin, MenuMixin, CreateView):
     model = Section
     form_class = SectionForm
     template_name = 'cms/new.html'
@@ -47,7 +47,7 @@ class CreateSection(StaffRequiredMixin, CreateView):
         form.save()
         return redirect(self.request.session.get('previous_url'))
 
-class CreateSubSection(StaffRequiredMixin, CreateView):
+class CreateSubSection(StaffRequiredMixin, MenuMixin, CreateView):
     model = SubSection
     form_class = SubSectionForm
     template_name = 'cms/new.html'
@@ -57,7 +57,7 @@ class CreateSubSection(StaffRequiredMixin, CreateView):
         form.save()
         return redirect(self.request.session.get('previous_url'))
 
-class BaseUpdateView(StaffRequiredMixin, UpdateView):
+class BaseUpdateView(StaffRequiredMixin, MenuMixin, UpdateView):
     template_name = 'cms/edit.html'
 
     def post(self, request, *args, **kwargs):
@@ -84,7 +84,7 @@ class BaseUpdateView(StaffRequiredMixin, UpdateView):
             context.update({
                 'formset': formset,
                 'formset_form_url': self.get_formset_form_url(self.object),
-                'formset_description': self.formset_class.model._meta.verbose_name.title(),
+                'formset_description': self.formset_class.model._meta.verbose_name,
             })
         return context
 

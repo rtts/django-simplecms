@@ -63,7 +63,10 @@ class Page(NumberedModel):
     menu = models.BooleanField(_('visible in menu'), default=True)
 
     def __str__(self):
-        return '{}: {}. {}'.format(self._meta.verbose_name.title(), self.position, self.title)
+        if not self.pk:
+            return str(_('New page'))
+        else:
+            return self.title
 
     def get_absolute_url(self):
         if self.slug:
@@ -93,8 +96,12 @@ class Section(NumberedModel):
         return self.page.sections.all()
 
     def __str__(self):
-        title = self.title if self.title else _('Untitled')
-        return '{}: {}. {}'.format(self._meta.verbose_name.title(), self.position, title)
+        if not self.pk:
+            return str(_('New section'))
+        elif not self.title:
+            return str(_('Untitled'))
+        else:
+            return self.title
 
     class Meta:
         verbose_name = _('section')
@@ -116,8 +123,12 @@ class SubSection(NumberedModel):
         return self.section.subsections.all()
 
     def __str__(self):
-        title = self.title if self.title else _('Untitled')
-        return '{}: {}. {}'.format(self._meta.verbose_name.title(), self.position, title)
+        if not self.pk:
+            return str(_('New subsection'))
+        elif not self.title:
+            return str(_('Untitled'))
+        else:
+            return self.title
 
     class Meta:
         verbose_name = _('subsection')
