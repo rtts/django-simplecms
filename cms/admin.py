@@ -20,12 +20,17 @@ class PageAdmin(admin.ModelAdmin):
 @admin.register(Section)
 class SectionAdmin(admin.ModelAdmin):
     inlines = [InlineSubSectionAdmin]
-    list_filter = ['page']
+    list_filter = [
+        ('page', admin.RelatedOnlyFieldListFilter),
+    ]
     list_display = ['__str__', 'get_type_display']
 
 @admin.register(SubSection)
 class SubSectionAdmin(admin.ModelAdmin):
-    list_filter = ['section', 'section__page']
+    list_filter = [
+        ('section', admin.RelatedOnlyFieldListFilter),
+        ('section__page', admin.RelatedOnlyFieldListFilter),
+    ]
 
 @admin.register(Config)
 class ConfigAdmin(admin.ModelAdmin):
