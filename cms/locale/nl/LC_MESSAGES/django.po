@@ -3,13 +3,12 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-03 15:48+0200\n"
-"PO-Revision-Date: 2019-04-03 15:49+0200\n"
+"POT-Creation-Date: 2019-08-27 14:40+0200\n"
+"PO-Revision-Date: 2019-08-27 14:42+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -18,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: admin.py:23 models.py:80
+#: admin.py:37 models.py:89 models.py:117 models.py:144
 msgid "content"
 msgstr "inhoud"
 
@@ -26,79 +25,107 @@ msgstr "inhoud"
 msgid "Content Management System"
 msgstr "Content Beheer"
 
-#: models.py:54 models.py:75
+#: models.py:60 models.py:84 models.py:113
 msgid "position"
 msgstr "positie"
 
-#: models.py:55 models.py:76
+#: models.py:61 models.py:85 models.py:114
 msgid "title"
 msgstr "titel"
 
-#: models.py:56
+#: models.py:62
 msgid "slug"
 msgstr "slug"
 
-#: models.py:56
+#: models.py:62
 msgid "A short identifier to use in URLs"
 msgstr "Een korte identifier voor gebruik in URL’s"
 
-#: models.py:57
+#: models.py:63
 msgid "visible in menu"
 msgstr "zichtbaar in het menu"
 
-#: models.py:69
+#: models.py:67
+msgid "New page"
+msgstr "Nieuwe pagina"
+
+#: models.py:78
 msgid "Page"
 msgstr "Pagina"
 
-#: models.py:70
+#: models.py:79
 msgid "Pages"
 msgstr "Pagina’s"
 
-#: models.py:74
+#: models.py:83
 msgid "page"
 msgstr "pagina"
 
-#: models.py:77
+#: models.py:86
 msgid "section type"
 msgstr "sectie type"
 
-#: models.py:78
+#: models.py:87 models.py:115
 msgid "color"
 msgstr "kleur"
 
-#: models.py:81
+#: models.py:90 models.py:118
 msgid "image"
 msgstr "afbeelding"
 
-#: models.py:82
+#: models.py:91
 msgid "video"
 msgstr "video"
 
-#: models.py:83
+#: models.py:91
+msgid "Paste a YouTube, Vimeo, or SoundCloud link"
+msgstr "Plak hier een YouTube, Vimeo of SoundCloud link"
+
+#: models.py:92 models.py:119
 msgid "button text"
 msgstr "button tekst"
 
-#: models.py:84
+#: models.py:93 models.py:120
 msgid "button link"
 msgstr "button link"
 
-#: models.py:93
+#: models.py:100
+msgid "New section"
+msgstr "Nieuwe sectie"
+
+#: models.py:102 models.py:129
+msgid "Untitled"
+msgstr "Geen titel"
+
+#: models.py:107 models.py:112
 msgid "section"
 msgstr "sectie"
 
-#: models.py:94
+#: models.py:108
 msgid "sections"
 msgstr "secties"
 
-#: models.py:99
+#: models.py:127
+msgid "New subsection"
+msgstr "Nieuwe subsectie"
+
+#: models.py:134
+msgid "subsection"
+msgstr "subsectie"
+
+#: models.py:135
+msgid "subsections"
+msgstr "subsecties"
+
+#: models.py:140
 msgid "Footer"
 msgstr "Footer"
 
-#: models.py:109
+#: models.py:150
 msgid "configuration parameter"
 msgstr "configuratieparameter"
 
-#: models.py:110
+#: models.py:151
 msgid "configuration parameters"
 msgstr "configuratieparameters"
 
@@ -106,25 +133,33 @@ msgstr "configuratieparameters"
 msgid "new page"
 msgstr "nieuwe pagina"
 
-#: templates/cms/edit.html:12
+#: templates/cms/edit.html:16
 msgid "Please correct the error(s) below and save again"
 msgstr "Herstel a.u.b. de fout(en) hieronder en sla nogmaals op"
 
-#: templates/cms/edit.html:28
-msgid "Section"
-msgstr "Sectie"
+#: templates/cms/edit.html:46
+msgid "new"
+msgstr "nieuwe"
 
-#: templates/cms/edit.html:37
+#: templates/cms/edit.html:54
 msgid "save"
 msgstr "opslaan"
 
-#: templates/cms/page.html:10 templates/cms/page.html:12
+#: templates/cms/page.html:16 templates/cms/page.html:18
 msgid "edit this page"
 msgstr "bewerk deze pagina"
 
-#: templates/cms/page.html:15
+#: templates/cms/page.html:21
 msgid "login"
 msgstr "inloggen"
+
+#: templates/cms/page.html:29
+msgid "new section"
+msgstr "nieuwe sectie"
+
+#: templates/cms/sections/base.html:59
+msgid "edit this section"
+msgstr "bewerk deze sectie"
 
 #: templates/registration/login.html:14 templates/registration/login.html:18
 msgid "Log in"
