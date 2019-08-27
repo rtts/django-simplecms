@@ -4,6 +4,12 @@
 {% block title %}{{block.super}} - {{page.title}}{% endblock %}
 
 {% block content %}
+  {% for section in sections %}
+    <section class="{{section.type}} color{{section.color}}">
+      {% include 'cms/sections/'|add:section.type|add:'.html' %}
+    </section>
+  {% endfor %}
+
   <div class="edit page">
     {% if user.is_staff %}
       {% if page.slug %}
@@ -15,12 +21,6 @@
       <a href="{% url 'login' %}">{% trans 'login' %}</a>
     {% endif %}
   </div>
-
-  {% for section in sections %}
-    <section class="{{section.type}} color{{section.color}}">
-      {% include 'cms/sections/'|add:section.type|add:'.html' %}
-    </section>
-  {% endfor %}
 
   {% if user.is_staff %}
     <section>

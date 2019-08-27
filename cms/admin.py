@@ -21,6 +21,7 @@ class PageAdmin(admin.ModelAdmin):
 class SectionAdmin(admin.ModelAdmin):
     inlines = [InlineSubSectionAdmin]
     list_filter = ['page']
+    list_display = ['__str__', 'get_type_display']
 
 @admin.register(SubSection)
 class SubSectionAdmin(admin.ModelAdmin):
