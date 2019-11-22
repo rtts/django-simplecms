@@ -1,0 +1,6 @@
+Django
+django-ckeditor
+django-extensions
+django-embed-video
+easy-thumbnails
+psycopg2 --no-binary psycopg2
