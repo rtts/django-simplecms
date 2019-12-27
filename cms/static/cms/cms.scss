@@ -25,59 +25,65 @@ header, nav, section, footer {
 }
 
 nav {
-  @media(min-width: $small) {
-    button#hamburger {
-      display: none;
+  button#hamburger {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 0;
+
+    .hamburger-inner, .hamburger-inner:before, .hamburger-inner:after {
+      background: black;
     }
-    ul#menu {
-      list-style: none;
-      margin: 0;
+    &.is-active {
+      position: fixed;
+    }
+    &:hover {
+      opacity: 1 !important;
+    }
+    &:focus {
+      outline: none !important;
+    }
+  }
+
+  ul#menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+
+    li {
+      margin: .5em;
       padding: 0;
-      text-align: center;
+      display: inline-block;
 
-      li {
-        margin: 1em;
-        padding: 0;
+      a {
+        transition: .1s ease;
         display: inline-block;
+        text-decoration: none;
+        color: inherit;
+        font-weight: bold;
+        font-size: 1.25em;
 
-        a {
-          transition: .1s ease;
-          display: inline-block;
-          text-decoration: none;
-          color: inherit;
-          font-weight: bold;
-          font-size: 1.25em;
-
-          &:hover, &.current {
-            transform: scale(1.2);
-            transform-origin: bottom;
-          }
+        &:hover, &.current {
+          transform: scale(1.2);
+          transform-origin: bottom;
         }
       }
     }
   }
 
-  @media(max-width: $small) {
+  @media(min-width: $small) {
     button#hamburger {
-      position: absolute;
-      z-index: 1;
-      top: 0;
-      right: 0;
-
-      .hamburger-inner, .hamburger-inner:before, .hamburger-inner:after {
-        background: black !important;
-      }
-      &.is-active {
-        position: fixed;
-      }
-      &:hover {
-        opacity: 1 !important;
-      }
-      &:focus {
-        outline: none !important;
-      }
+      display: none;
     }
+  }
 
+  @media(max-width: $small) {
+    padding: 0;
+
+    button#hamburger {
+      display: block;
+    }
     ul#menu {
       position: fixed;
       overflow-y: auto;
@@ -93,6 +99,7 @@ nav {
       list-style: none;
 
       li {
+        display: block;
         padding: 1em;
         margin: 0 1em;
         border-bottom: 1px solid #ddd;
@@ -100,7 +107,6 @@ nav {
         text-align: center;
 
         a {
-          color: black;
           text-decoration: none;
         }
       }
@@ -201,7 +207,7 @@ article {
     }
 
     div.title {
-      font-size: 2em;
+      //font-size: 2em;
       text-align: center;
     }
 

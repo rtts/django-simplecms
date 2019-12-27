@@ -1,14 +1,12 @@
-import os, string, random
-
+import os, random, string
 try:
     import uwsgi
-    SECRET_KEY = ''.join(random.choice(string.printable) for x in range(50))
     DEBUG = False
 except ImportError:
-    SECRET_KEY = 'abc'
     DEBUG = True
 
 PROJECT_NAME = INSERT_PROJECT_NAME_HERE
+KEYFILE = f'/tmp/{PROJECT_NAME}.secret'
 ADMINS = [('JJ Vens', 'jj@rtts.eu')]
 ALLOWED_HOSTS = ['*']
 ROOT_URLCONF = 'project.urls'
@@ -23,6 +21,18 @@ STATIC_ROOT = '/srv/' + PROJECT_NAME + '/static'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = '/srv/' + PROJECT_NAME + '/media'
 LOGIN_REDIRECT_URL = '/'
+
+def read(file):
+    with open(file) as f:
+        return f.read()
+def write(file, content):
+    with open(file, 'w') as f:
+        f.write(content)
+try:
+    SECRET_KEY = read(KEYFILE)
+except IOError:
+    SECRET_KEY = ''.join(random.choice(string.printable) for x in range(50))
+    write(KEYFILE, SECRET_KEY)
 
 SECTION_TYPES = [
     ('normal', 'Normaal'),

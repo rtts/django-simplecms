@@ -5,3 +5,4 @@ django-extensions
 django-embed-video
 easy-thumbnails
 psycopg2
+libsass
