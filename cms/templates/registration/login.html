@@ -9,8 +9,8 @@
     {% csrf_token %}
 
     <section>
-      {{form.non_field_errors}}
       <div class="wrapper">
+        {{form.non_field_errors}}
         <h1>{% trans 'Log in' %}</h1>
         {% for field in form %}
           {% include 'cms/formfield.html' with field=field %}
