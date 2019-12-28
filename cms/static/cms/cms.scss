@@ -1,6 +1,7 @@
 $font: sans-serif;
 $small: 500px;
 $medium: 800px;
+$blue: #3573a8;
 
 html, body {
   font-family: $font;
@@ -8,9 +9,38 @@ html, body {
   padding: 0;
 }
 
-a.button {
+a {
+  color: $blue;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+a.button, button.button {
   cursor: pointer;
-  border: 5px solid black;
+  font-family: sans-serif;
+  font-size: 1.5em;
+  line-height: 1.25;
+  border-radius: 5px;
+  display: inline-block;
+  text-decoration: none;
+  border: none;
+  padding: 5px 20px;;
+  background: $blue;
+  color: white;
+  box-sizing: border-box;
+
+  &:hover {
+    background: white;
+    box-shadow: 0 0 0 2px $blue;
+    color: $blue;
+  }
+  &:active {
+    position: relative;
+    top: 2px;
+    left: 2px;
+  }
 }
 
 div.wrapper {
@@ -30,6 +60,8 @@ header, nav, section, footer {
 }
 
 nav {
+  padding: 0;
+
   button#hamburger {
     position: absolute;
     z-index: 1;
@@ -37,7 +69,7 @@ nav {
     right: 0;
 
     .hamburger-inner, .hamburger-inner:before, .hamburger-inner:after {
-      background: black;
+      background: $blue;
     }
     &.is-active {
       position: fixed;
@@ -50,34 +82,42 @@ nav {
     }
   }
 
-  ul#menu {
+  ul {
+    border-top: 2px solid $blue;
+    border-bottom: 2px solid $blue;
     list-style: none;
     margin: 0;
     padding: 0;
     text-align: center;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
 
     li {
-      margin: .5em;
+      margin: 0;
       padding: 0;
       display: inline-block;
+      float: left;
 
       a {
+        font-size: 1.25rem;
+        padding: 5px .5em;
         transition: .1s ease;
         display: inline-block;
-        text-decoration: none;
-        color: inherit;
         font-weight: bold;
-        font-size: 1.25em;
-
-        &:hover, &.current {
-          transform: scale(1.2);
-          transform-origin: bottom;
-        }
       }
     }
   }
 
   @media(min-width: $small) {
+    a:hover:not(.edit), a.current {
+      text-decoration: none;
+      color: white;
+      background: $blue;
+    }
+
     button#hamburger {
       display: none;
     }
@@ -104,7 +144,8 @@ nav {
       list-style: none;
 
       li {
-        display: block;
+        width: 100%;
+        box-sizing: border-box;
         padding: 1em;
         margin: 0 1em;
         border-bottom: 1px solid #ddd;
@@ -158,88 +199,87 @@ div.edit a, div.edit button, a.edit{
   }
 }
 
-article {
-  section {
-    clear: both;
+section {
+  clear: both;
+  border-bottom: 2px solid $blue;
 
-    div.subsections {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
+  div.subsections {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 
-      div.subsection {
-        div.wrapper {
-          padding: 0;
-        }
-        flex: 0 0 30%;
-        margin-bottom: 2em;
-        box-sizing: border-box;
-
-        div.title {
-          font-size: 1.5em;
-        }
-
-        div.image {
-          padding-top: 56%;
-          overflow: hidden;
-          position: relative;
-
-          img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-          }
-        }
-
-        @media(max-width: $medium) {
-          flex-basis: 45%;
-        }
-        @media(max-width: $small) {
-          flex-basis: 100%;
-        }
+    div.subsection {
+      div.wrapper {
+        padding: 0;
       }
-    }
+      flex: 0 0 30%;
+      margin-bottom: 2em;
+      box-sizing: border-box;
 
-    div.image {
-      img {
-        width: 100%;
+      div.title {
+        font-size: 1.5em;
       }
-    }
 
-    div.title {
-      //font-size: 2em;
-      text-align: center;
-    }
-
-    div.content {
-    }
-
-    div.video {
-      div.iframe {
-        width: 100%;
-        padding-bottom: 56%;
+      div.image {
+        padding-top: 56%;
+        overflow: hidden;
         position: relative;
 
-        iframe {
+        img {
           position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
           width: 100%;
           height: 100%;
-          left: 0;
-          top: 0;
+          object-fit: cover;
+          object-position: center;
         }
       }
-    }
 
-    div.button {
-      text-align: center;
-      padding: 1em 0;
+      @media(max-width: $medium) {
+        flex-basis: 45%;
+      }
+      @media(max-width: $small) {
+        flex-basis: 100%;
+      }
     }
+  }
+
+  div.image {
+    img {
+      width: 100%;
+    }
+  }
+
+  div.title {
+    //font-size: 2em;
+    text-align: center;
+  }
+
+  div.content {
+  }
+
+  div.video {
+    div.iframe {
+      width: 100%;
+      padding-bottom: 56%;
+      position: relative;
+
+      iframe {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+      }
+    }
+  }
+
+  div.button {
+    text-align: center;
+    padding: 1em 0;
   }
 }
 

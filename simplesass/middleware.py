@@ -1,5 +1,6 @@
 import os
 from django.conf import settings
+from django.apps import apps
 from sass import compile
 
 class SimpleSassMiddleware:
@@ -8,10 +9,11 @@ class SimpleSassMiddleware:
 
     def __call__(self, request):
         if settings.DEBUG and request.path.endswith('.css'):
-            _, staticdir, app, css_file = request.path.split('/', maxsplit=3)
+            _, staticdir, appname, css_file = request.path.split('/', maxsplit=3)
+            app_path = apps.get_app_config(appname).path
             sass_file = css_file[:-4]
-            css_path = os.path.join(app, staticdir, app, css_file)
-            sass_path = os.path.join(app, staticdir, app, sass_file)
+            css_path = os.path.join(app_path, staticdir, appname, css_file)
+            sass_path = os.path.join(app_path, staticdir, appname, sass_file)
             map_path = css_path + '.map'
             if os.path.exists(sass_path):
                 css = compile(filename=sass_path, output_style='nested')

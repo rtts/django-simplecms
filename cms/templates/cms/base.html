@@ -24,14 +24,16 @@
 
         <nav>
           {% block nav %}
-            <ul id="menu">
-              {% for p in pages %}
-                <li><a href="{% if p.slug %}{% url page_url_pattern p.slug %}{% else %}{% url page_url_pattern %}{% endif %}" {% if p.pk == object.pk %}class="current"{% endif %}>{{p.title}}</a></li>
-              {% endfor %}
-              {% if user.is_staff %}
-                <li><a class="edit" href="{% url 'cms:createpage' %}">+ {% trans 'new page' %}</a></li>
-              {% endif %}
-            </ul>
+            {% if pages %}
+              <ul id="menu">
+                {% for p in pages %}
+                  <li><a href="{% if p.slug %}{% url page_url_pattern p.slug %}{% else %}{% url page_url_pattern %}{% endif %}" {% if p.pk == object.pk %}class="current"{% endif %}>{{p.title}}</a></li>
+                {% endfor %}
+                {% if user.is_staff %}
+                  <li><a class="edit" href="{% url 'cms:createpage' %}">+ {% trans 'new page' %}</a></li>
+                {% endif %}
+              </ul>
+            {% endif %}
             <button class="hamburger hamburger--collapse" id='hamburger'>
               <span class="hamburger-box">
                 <span class="hamburger-inner"></span>
