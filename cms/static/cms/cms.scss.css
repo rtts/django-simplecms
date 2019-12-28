@@ -70,12 +70,12 @@ nav {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    align-items: center; }
+    align-items: center;
+    align-content: start; }
     nav ul li {
       margin: 0;
       padding: 0;
-      display: inline-block;
-      float: left; }
+      display: inline-block; }
       nav ul li a {
         font-size: 1.25rem;
         padding: 5px .5em;

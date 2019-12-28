@@ -94,12 +94,12 @@ nav {
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
+    align-content: start;
 
     li {
       margin: 0;
       padding: 0;
       display: inline-block;
-      float: left;
 
       a {
         font-size: 1.25rem;
