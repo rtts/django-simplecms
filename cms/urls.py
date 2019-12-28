@@ -4,12 +4,14 @@ from .views import PageView, UpdatePage, CreatePage, UpdateSection, CreateSectio
 app_name = 'cms'
 
 urlpatterns = [
-    path('', PageView.as_view(), {'slug': ''}, name='homepage'),
+    path('updatepage/', UpdatePage.as_view(), {'slug': ''}, name='updatehomepage'),
+    path('updatepage/<int:pk>/', UpdatePage.as_view(), name='updatepage'),
+    path('updatesection/<int:pk>/', UpdateSection.as_view(), name='updatesection'),
+    path('createpage/', CreatePage.as_view(), name='createpage'),
+    path('createsection/<int:pk>', CreateSection.as_view(), name='createsection'),
+    path('createsubsection/<int:pk>/', CreateSubSection.as_view(), name='createsubsection'),
+
+    # Feel free to copy the following into your root URL conf!
+    path('', PageView.as_view(), name='page'),
     path('<slug:slug>/', PageView.as_view(), name='page'),
-    path('cms/homepage/', UpdatePage.as_view(), {'slug': ''}, name='updatehomepage'),
-    path('cms/page/<int:pk>/', UpdatePage.as_view(), name='updatepage'),
-    path('cms/section/<int:pk>/', UpdateSection.as_view(), name='updatesection'),
-    path('cms/newpage/', CreatePage.as_view(), name='createpage'),
-    path('cms/page/<int:pk>/newsection/', CreateSection.as_view(), name='createsection'),
-    path('cms/section/<int:pk>/newsubsection/', CreateSubSection.as_view(), name='createsubsection'),
 ]

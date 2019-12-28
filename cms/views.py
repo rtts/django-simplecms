@@ -28,9 +28,15 @@ class MemoryMixin(object):
             request.session['previous_url'] = request.path
         return super().dispatch(request, *args, **kwargs)
 
-class PageView(MenuMixin, MemoryMixin, DetailView):
+class BasePageView(MenuMixin, MemoryMixin, DetailView):
     model = Page
     template_name = 'cms/page.html'
+
+    def setup(self, request, *args, slug='', **kwargs):
+        self.request = request
+        self.args = args
+        self.kwargs = kwargs
+        self.kwargs['slug'] = slug
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -41,6 +47,9 @@ class PageView(MenuMixin, MemoryMixin, DetailView):
             'sections': sections,
         })
         return context
+
+class PageView(BasePageView):
+    pass
 
 class CreatePage(StaffRequiredMixin, MenuMixin, CreateView):
     model = Page

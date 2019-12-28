@@ -229,7 +229,7 @@ form.cms input, form.cms select, form.cms textarea {
   color: black;
   border: 1px solid #aaa;
   font-size: 1rem;
-  diplay: inline-block;
+  display: inline-block;
   width: 100%;
   box-sizing: border-box;
   margin: 0;
