@@ -95,6 +95,7 @@ div.edit {
     z-index: 1000; }
 
 div.edit a, div.edit button, a.edit {
+  font-family: inherit;
   font-size: 1rem !important;
   font-weight: normal !important;
   color: red !important;
@@ -161,15 +162,10 @@ article section {
       left: 0;
       top: 0; }
   article section div.button {
-    text-align: center; }
+    text-align: center;
+    padding: 1em 0; }
     article section div.button a {
-      text-decoration: none;
-      background: black;
-      color: white;
-      padding: 5px 15px;
-      font-size: 1.5em;
-      border-radius: 3px;
-      display: inline-block; }
+      border: 5px solid black; }
 
 /* Form elements */
 form.cms div.global_error {
