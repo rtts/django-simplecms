@@ -26,7 +26,7 @@
           {% block nav %}
             <ul id="menu">
               {% for p in pages %}
-                <li><a href="{% if p.slug %}{% url 'cms:page' p.slug %}{% else %}{% url 'cms:page' %}{% endif %}" {% if p.pk == object.pk %}class="current"{% endif %}>{{p.title}}</a></li>
+                <li><a href="{% if p.slug %}{% url page_url_pattern p.slug %}{% else %}{% url page_url_pattern %}{% endif %}" {% if p.pk == object.pk %}class="current"{% endif %}>{{p.title}}</a></li>
               {% endfor %}
               {% if user.is_staff %}
                 <li><a class="edit" href="{% url 'cms:createpage' %}">+ {% trans 'new page' %}</a></li>

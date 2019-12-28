@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.urls import reverse
 from django.shortcuts import redirect
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -17,6 +18,7 @@ class MenuMixin(object):
         pages = Page.objects.filter(menu=True)
         footer = get_config(10)
         context.update({
+            'page_url_pattern': settings.PAGE_URL_PATTERN,
             'pages': pages,
             'footer': footer,
         })

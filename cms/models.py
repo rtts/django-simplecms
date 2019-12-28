@@ -27,9 +27,9 @@ class Page(NumberedModel):
 
     def get_absolute_url(self):
         if self.slug:
-            return reverse('page', args=[self.slug])
+            return reverse(settings.PAGE_URL_PATTERN, args=[self.slug])
         else:
-            return reverse('page')
+            return reverse(settings.PAGE_URL_PATTERN)
 
     class Meta:
         verbose_name = _('Page')
