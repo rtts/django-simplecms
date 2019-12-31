@@ -7,12 +7,11 @@ class Section(BaseSection):
     '''
 
 class TextSection(Section):
-    fields = ['title', 'content']
+    fields = ['type', 'position', 'title', 'content']
     class Meta:
         proxy = True
 
 class ImageSection(Section):
-    fields = ['title', 'image']
+    fields = ['type', 'position', 'title', 'image']
     class Meta:
         proxy = True
-

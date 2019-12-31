@@ -59,10 +59,11 @@
 {% block extrabody %}
   <script type="text/javascript" src="/static/admin/js/urlify.js"></script>
   <script>
-    /* My own implementation of Django's prepopulate.js */
-
     var slugfield = document.getElementById('id_slug');
     var titlefield = document.getElementById('id_title');
+    var typefield = document.getElementById('id_type');
+
+    /* My own implementation of Django's prepopulate.js */
 
     if (slugfield && titlefield) {
         var virgin = slugfield.value === '';
@@ -74,6 +75,29 @@
                 }
             });
         }
+    }
+
+    /* Only show relevant fields */
+
+    if (typefield) {
+        function show_relevant_fields(type) {
+            fields_per_type = {{fields_per_type|safe}};
+
+            for (el of document.querySelectorAll('div.formfield')) {
+                el.style.display = 'none';
+            }
+
+            for (field of fields_per_type[type]) {
+                el = document.getElementById(field);
+                el.style.display = 'block';
+            }
+        }
+
+        typefield.addEventListener('input', function(event) {
+            console.log(typefield.value);
+            show_relevant_fields(typefield.value.toLowerCase());
+        });
+        show_relevant_fields(typefield.value.toLowerCase());
     }
   </script>
 {% endblock %}

@@ -41,9 +41,10 @@ class Page(NumberedModel):
 choices = settings.SECTION_TYPES
 class BaseSection(NumberedModel, PolymorphicModel):
     page = models.ForeignKey(Page, verbose_name=_('page'), related_name='sections', on_delete=models.PROTECT)
+    type = models.CharField(_('section type'), max_length=16, default=choices[0][0], choices=choices)
+
     position = models.PositiveIntegerField(_('position'), blank=True)
     title = models.CharField(_('title'), max_length=255, blank=True)
-    type = models.CharField(_('section type'), max_length=16, default=choices[0][0], choices=choices)
     color = models.PositiveIntegerField(_('color'), default=1, choices=settings.SECTION_COLORS)
 
     content = RichTextField(_('content'), blank=True)

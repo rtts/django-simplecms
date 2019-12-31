@@ -6,7 +6,6 @@
 {% block content %}
   {% for section in sections %}
     <section class="{{section.type}} color{{section.color}}">
-      DIT IS EEN SECTIE MET FIELDS: {{section.fields}}
       {% include 'cms/sections/'|add:section.type|lower|add:'.html' %}
     </section>
   {% endfor %}
