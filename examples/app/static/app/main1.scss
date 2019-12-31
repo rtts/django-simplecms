@@ -1,0 +1,47 @@
+$small: 500px;
+$medium: 800px;
+$font: sans-serif;
+$titlefont: sans-serif;
+
+body {
+  font-family: $font;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: .5em 0;
+  font-family: $titlefont;
+}
+h1 { font-size: 2em }
+h2 { font-size: 1.5em }
+h3 { font-size: 1.25em }
+h4, h5, h6 { font-size: 1em }
+
+a {
+  &:hover {
+  }
+}
+
+a.button {
+  &:hover {
+  }
+}
+
+header {
+  h1 {
+    text-align: center;
+  }
+  img {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+  }
+}
+
+nav {
+}
+
+footer {
+  margin-top: 4em;
+  min-height: 400px;
+}

@@ -2,35 +2,17 @@ from django.contrib import admin
 from django.utils.text import Truncator
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
-from .models import Page, Section, SubSection, Config
-
-class InlineSectionAdmin(admin.StackedInline):
-    model = Section
-    extra = 0
-
-class InlineSubSectionAdmin(admin.StackedInline):
-    model = SubSection
-    extra = 0
+from .models import Page, Config
 
 @admin.register(Page)
 class PageAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
-    inlines = [InlineSectionAdmin]
 
-@admin.register(Section)
-class SectionAdmin(admin.ModelAdmin):
-    inlines = [InlineSubSectionAdmin]
+class BaseSectionAdmin(admin.ModelAdmin):
     list_filter = [
         ('page', admin.RelatedOnlyFieldListFilter),
     ]
     list_display = ['__str__', 'get_type_display']
-
-@admin.register(SubSection)
-class SubSectionAdmin(admin.ModelAdmin):
-    list_filter = [
-        ('section', admin.RelatedOnlyFieldListFilter),
-        ('section__page', admin.RelatedOnlyFieldListFilter),
-    ]
 
 @admin.register(Config)
 class ConfigAdmin(admin.ModelAdmin):

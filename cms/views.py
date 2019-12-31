@@ -4,9 +4,12 @@ from django.shortcuts import redirect
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic import DetailView, UpdateView, CreateView
 
-from .models import Page, Section, SubSection
-from .forms import PageForm, SectionFormSet, SectionForm, SubSectionFormSet, SubSectionForm
+from .models import Page
+from .forms import PageForm, SectionForm
 from .utils import get_config
+
+import swapper
+Section = swapper.load_model('cms', 'Section')
 
 class StaffRequiredMixin(UserPassesTestMixin):
     def test_func(self):
@@ -68,59 +71,17 @@ class CreateSection(StaffRequiredMixin, MenuMixin, CreateView):
         form.save()
         return redirect(self.request.session.get('previous_url'))
 
-class CreateSubSection(StaffRequiredMixin, MenuMixin, CreateView):
-    model = SubSection
-    form_class = SubSectionForm
-    template_name = 'cms/new.html'
-
-    def form_valid(self, form):
-        form.instance.section = Section.objects.get(pk=self.kwargs.get('pk'))
-        form.save()
-        return redirect(self.request.session.get('previous_url'))
-
 class BaseUpdateView(StaffRequiredMixin, MenuMixin, UpdateView):
     template_name = 'cms/edit.html'
 
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        form = self.get_form()
-        formset = self.formset_class(request.POST, request.FILES, instance=self.object)
-        if form.is_valid() and formset.is_valid():
-            return self.form_valid(form, formset)
-        else:
-            return self.form_invalid(form, formset)
-
-    def form_valid(self, form, formset):
+    def form_valid(self, form):
         form.save()
-        formset.save()
         return redirect(self.request.session.get('previous_url'))
-
-    def form_invalid(self, form, formset):
-        return self.render_to_response(self.get_context_data(form=form, formset=formset))
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        if 'formset' not in context:
-            formset = self.formset_class(instance=self.object)
-            context.update({
-                'formset': formset,
-                'formset_form_url': self.get_formset_form_url(self.object),
-                'formset_description': self.formset_class.model._meta.verbose_name,
-            })
-        return context
 
 class UpdatePage(BaseUpdateView):
     model = Page
     form_class = PageForm
-    formset_class = SectionFormSet
-
-    def get_formset_form_url(self, page):
-        return reverse('cms:createsection', args=[page.pk])
 
 class UpdateSection(BaseUpdateView):
     model = Section
     form_class = SectionForm
-    formset_class = SubSectionFormSet
-
-    def get_formset_form_url(self, page):
-        return reverse('cms:createsubsection', args=[page.pk])

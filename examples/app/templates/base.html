@@ -1,0 +1,13 @@
+{% extends 'cms/base.html' %}
+{% load static %}
+{% block title %}app{% endblock %}
+
+{% block extrahead %}
+  <link rel="stylesheet" href="{% static 'app/main1.scss.css' %}">
+{% endblock %}
+
+{% block header %}
+  <div class="wrapper">
+    <h1><a href="/">Awesome Website</a></h1>
+  </div>
+{% endblock %}

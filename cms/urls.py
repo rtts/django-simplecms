@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import PageView, UpdatePage, CreatePage, UpdateSection, CreateSection, CreateSubSection
+from .views import PageView, UpdatePage, CreatePage, UpdateSection, CreateSection
 
 app_name = 'cms'
 
@@ -9,7 +9,6 @@ urlpatterns = [
     path('updatesection/<int:pk>/', UpdateSection.as_view(), name='updatesection'),
     path('createpage/', CreatePage.as_view(), name='createpage'),
     path('createsection/<int:pk>', CreateSection.as_view(), name='createsection'),
-    path('createsubsection/<int:pk>/', CreateSubSection.as_view(), name='createsubsection'),
 
     # Feel free to copy the following into your root URL conf!
     path('', PageView.as_view(), name='page'),

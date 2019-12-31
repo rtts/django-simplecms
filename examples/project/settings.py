@@ -5,7 +5,7 @@ try:
 except ImportError:
     DEBUG = True
 
-PROJECT_NAME = INSERT_PROJECT_NAME_HERE
+PROJECT_NAME = 'example'
 KEYFILE = f'/tmp/{PROJECT_NAME}.secret'
 ADMINS = [('JJ Vens', 'jj@rtts.eu')]
 ALLOWED_HOSTS = ['*']
@@ -22,6 +22,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = '/srv/' + PROJECT_NAME + '/media'
 LOGIN_REDIRECT_URL = '/'
 PAGE_URL_PATTERN = 'cms:page'
+CMS_SECTION_MODEL = 'app.Section'
 
 def read(file):
     with open(file) as f:
@@ -36,7 +37,8 @@ except IOError:
     write(KEYFILE, SECRET_KEY)
 
 SECTION_TYPES = [
-    ('normal', 'Normaal'),
+    ('TextSection', 'Tekst'),
+    ('ImageSection', 'Afbeelding'),
 ]
 
 SECTION_COLORS = [
@@ -63,8 +65,7 @@ CKEDITOR_CONFIGS = {
 }
 
 INSTALLED_APPS = [
-    'simplesass',
-    PROJECT_NAME,
+    'app',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -72,7 +73,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'cms',
+    'simplesass',
     'ckeditor',
+    'polymorphic',
     'embed_video',
     'easy_thumbnails',
     'django_extensions',

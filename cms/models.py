@@ -1,3 +1,4 @@
+import swapper
 from django.db import models
 from django.urls import reverse
 from django.conf import settings
@@ -5,6 +6,7 @@ from django.forms import TextInput
 from django.utils.translation import gettext_lazy as _
 from ckeditor.fields import RichTextField
 from embed_video.fields import EmbedVideoField
+from polymorphic.models import PolymorphicModel
 
 from numberedmodel.models import NumberedModel
 
@@ -36,11 +38,12 @@ class Page(NumberedModel):
         verbose_name_plural = _('Pages')
         ordering = ['position']
 
-class Section(NumberedModel):
+choices = settings.SECTION_TYPES
+class BaseSection(NumberedModel, PolymorphicModel):
     page = models.ForeignKey(Page, verbose_name=_('page'), related_name='sections', on_delete=models.PROTECT)
     position = models.PositiveIntegerField(_('position'), blank=True)
     title = models.CharField(_('title'), max_length=255, blank=True)
-    type = models.CharField(_('section type'), max_length=16, default=settings.SECTION_TYPES[0][0], choices=settings.SECTION_TYPES)
+    type = models.CharField(_('section type'), max_length=16, default=choices[0][0], choices=choices)
     color = models.PositiveIntegerField(_('color'), default=1, choices=settings.SECTION_COLORS)
 
     content = RichTextField(_('content'), blank=True)
@@ -61,36 +64,15 @@ class Section(NumberedModel):
             return self.title
 
     class Meta:
+        abstract = True
         verbose_name = _('section')
         verbose_name_plural = _('sections')
         ordering = ['position']
+        #app_label = 'cms'
 
-class SubSection(NumberedModel):
-    section = models.ForeignKey(Section, verbose_name=_('section'), related_name='subsections', on_delete=models.CASCADE)
-    position = models.PositiveIntegerField(_('position'), blank=True)
-    title = models.CharField(_('title'), max_length=255, blank=True)
-    color = models.PositiveIntegerField(_('color'), default=1, choices=settings.SECTION_COLORS)
-
-    content = RichTextField(_('content'), blank=True)
-    image = models.ImageField(_('image'), blank=True)
-    button_text = VarCharField(_('button text'), blank=True)
-    button_link = VarCharField(_('button link'), blank=True)
-
-    def number_with_respect_to(self):
-        return self.section.subsections.all()
-
-    def __str__(self):
-        if not self.pk:
-            return str(_('New subsection'))
-        elif not self.title:
-            return str(_('Untitled'))
-        else:
-            return self.title
-
+class Section(BaseSection):
     class Meta:
-        verbose_name = _('subsection')
-        verbose_name_plural = _('subsections')
-        ordering = ['position']
+        swappable = swapper.swappable_setting('cms', 'Section')
 
 class Config(models.Model):
     TYPES = [

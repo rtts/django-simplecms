@@ -8,7 +8,7 @@ def add_homepage(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cms', '0003_subsection'),
+        ('cms', '0001_initial'),
     ]
 
     operations = [
