@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib.contenttypes.models import ContentType
-from .models import Page
 
 import swapper
+Page = swapper.load_model('cms', 'Page')
 Section = swapper.load_model('cms', 'Section')
 
 class PageForm(forms.ModelForm):
@@ -11,6 +11,13 @@ class PageForm(forms.ModelForm):
         fields = '__all__'
 
 class SectionForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Repopulate the 'choices' attribute of the type field from
+        # the child model.
+        self.fields['type'].choices = self._meta.model.TYPES
+
     def save(self):
         section = super().save()
         app_label = section._meta.app_label
@@ -21,7 +28,7 @@ class SectionForm(forms.ModelForm):
         # id to the 'polymorphic_ctype_id' field. This way, the next
         # time the object is requested from the database,
         # django-polymorphic will automatically convert it to the
-        # correct subclass. Brilliant!
+        # correct subclass.
         section.polymorphic_ctype = ContentType.objects.get(
             app_label=section._meta.app_label,
             model=section.type.lower(),

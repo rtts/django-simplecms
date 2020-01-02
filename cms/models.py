@@ -2,7 +2,7 @@ import swapper
 from django.db import models
 from django.urls import reverse
 from django.conf import settings
-from django.forms import TextInput
+from django.forms import TextInput, Select
 from django.utils.translation import gettext_lazy as _
 from ckeditor.fields import RichTextField
 from embed_video.fields import EmbedVideoField
@@ -10,14 +10,25 @@ from polymorphic.models import PolymorphicModel
 
 from numberedmodel.models import NumberedModel
 
+def register(verbose_name):
+    def wrapper(model):
+        model.__bases__[-1].TYPES.append((model.__name__.lower(), verbose_name))
+        return model
+    return wrapper
+
 class VarCharField(models.TextField):
     def formfield(self, **kwargs):
         kwargs.update({'widget': TextInput})
         return super().formfield(**kwargs)
 
-class Page(NumberedModel):
+class VarCharChoiceField(models.TextField):
+    def formfield(self, **kwargs):
+        kwargs.update({'widget': Select})
+        return super().formfield(**kwargs)
+
+class BasePage(NumberedModel):
     position = models.PositiveIntegerField(_('position'), blank=True)
-    title = models.CharField(_('title'), max_length=255)
+    title = VarCharField(_('title'))
     slug = models.SlugField(_('slug'), help_text=_('A short identifier to use in URLs'), blank=True, unique=True)
     menu = models.BooleanField(_('visible in menu'), default=True)
 
@@ -29,29 +40,28 @@ class Page(NumberedModel):
 
     def get_absolute_url(self):
         if self.slug:
-            return reverse(settings.PAGE_URL_PATTERN, args=[self.slug])
+            return reverse('cms:page', args=[self.slug])
         else:
-            return reverse(settings.PAGE_URL_PATTERN)
+            return reverse('cms:page')
 
     class Meta:
+        abstract = True
         verbose_name = _('Page')
         verbose_name_plural = _('Pages')
         ordering = ['position']
 
-choices = settings.SECTION_TYPES
 class BaseSection(NumberedModel, PolymorphicModel):
-    page = models.ForeignKey(Page, verbose_name=_('page'), related_name='sections', on_delete=models.PROTECT)
-    type = models.CharField(_('section type'), max_length=16, default=choices[0][0], choices=choices)
-
+    TYPES = []
+    page = models.ForeignKey(swapper.get_model_name('cms', 'Page'), verbose_name=_('page'), related_name='sections', on_delete=models.PROTECT)
+    type = VarCharChoiceField(_('section type'), default='', choices=TYPES)
     position = models.PositiveIntegerField(_('position'), blank=True)
-    title = models.CharField(_('title'), max_length=255, blank=True)
+    title = VarCharField(_('title'), blank=True)
     color = models.PositiveIntegerField(_('color'), default=1, choices=settings.SECTION_COLORS)
-
     content = RichTextField(_('content'), blank=True)
     image = models.ImageField(_('image'), blank=True)
     video = EmbedVideoField(_('video'), blank=True, help_text=_('Paste a YouTube, Vimeo, or SoundCloud link'))
-    button_text = models.CharField(_('button text'), max_length=255, blank=True)
-    button_link = models.CharField(_('button link'), max_length=255, blank=True)
+    button_text = VarCharField(_('button text'), blank=True)
+    button_link = VarCharField(_('button link'), blank=True)
 
     def number_with_respect_to(self):
         return self.page.sections.all()
@@ -69,10 +79,13 @@ class BaseSection(NumberedModel, PolymorphicModel):
         verbose_name = _('section')
         verbose_name_plural = _('sections')
         ordering = ['position']
-        #app_label = 'cms'
+
+class Page(BasePage):
+    class Meta(BasePage.Meta):
+        swappable = swapper.swappable_setting('cms', 'Page')
 
 class Section(BaseSection):
-    class Meta:
+    class Meta(BaseSection.Meta):
         swappable = swapper.swappable_setting('cms', 'Section')
 
 class Config(models.Model):

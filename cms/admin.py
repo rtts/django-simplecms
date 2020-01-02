@@ -2,10 +2,9 @@ from django.contrib import admin
 from django.utils.text import Truncator
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
-from .models import Page, Config
+from .models import Config
 
-@admin.register(Page)
-class PageAdmin(admin.ModelAdmin):
+class BasePageAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
 
 class BaseSectionAdmin(admin.ModelAdmin):

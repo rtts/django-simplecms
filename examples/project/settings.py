@@ -21,7 +21,6 @@ STATIC_ROOT = '/srv/' + PROJECT_NAME + '/static'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = '/srv/' + PROJECT_NAME + '/media'
 LOGIN_REDIRECT_URL = '/'
-PAGE_URL_PATTERN = 'cms:page'
 CMS_SECTION_MODEL = 'app.Section'
 
 def read(file):
