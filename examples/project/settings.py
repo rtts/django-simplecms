@@ -4,6 +4,7 @@ try:
     DEBUG = False
 except ImportError:
     DEBUG = True
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 PROJECT_NAME = 'example'
 KEYFILE = f'/tmp/{PROJECT_NAME}.secret'

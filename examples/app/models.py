@@ -1,4 +1,5 @@
-from cms.models import *
+from cms.models import BasePage, BaseSection
+from cms.decorators import register_model
 
 class Page(BasePage):
     '''Add custom fields here. Already existing fields: position, title,
@@ -12,14 +13,20 @@ class Section(BaseSection):
 
     '''
 
-@register('Tekst')
+@register_model('Tekst')
 class TextSection(Section):
     fields = ['type', 'position', 'title', 'content']
     class Meta:
         proxy = True
 
-@register('Afbeelding')
+@register_model('Afbeelding')
 class ImageSection(Section):
     fields = ['type', 'position', 'title', 'image']
+    class Meta:
+        proxy = True
+
+@register_model('Contact')
+class ContactSection(Section):
+    fields = ['type', 'position', 'title']
     class Meta:
         proxy = True

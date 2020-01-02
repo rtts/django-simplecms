@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = 'django-simplecms',
-    version = '2.0.0',
+    version = '2.1.0',
     url = 'https://github.com/rtts/django-simplecms',
     author = 'Jaap Joris Vens',
     author_email = 'jj@rtts.eu',

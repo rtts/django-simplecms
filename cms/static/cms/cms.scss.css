@@ -149,38 +149,6 @@ div.edit a, div.edit button, a.edit {
 section {
   clear: both;
   border-bottom: 2px solid #3573a8; }
-  section div.subsections {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between; }
-    section div.subsections div.subsection {
-      flex: 0 0 30%;
-      margin-bottom: 2em;
-      box-sizing: border-box; }
-      section div.subsections div.subsection div.wrapper {
-        padding: 0; }
-      section div.subsections div.subsection div.title {
-        font-size: 1.5em; }
-      section div.subsections div.subsection div.image {
-        padding-top: 56%;
-        overflow: hidden;
-        position: relative; }
-        section div.subsections div.subsection div.image img {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: center; }
-      @media (max-width: 800px) {
-        section div.subsections div.subsection {
-          flex-basis: 45%; } }
-      @media (max-width: 500px) {
-        section div.subsections div.subsection {
-          flex-basis: 100%; } }
   section div.image img {
     width: 100%; }
   section div.title {
@@ -198,6 +166,12 @@ section {
   section div.button {
     text-align: center;
     padding: 1em 0; }
+
+section.contactsection div#message {
+  display: none; }
+
+section.contactsection textarea {
+  font-family: inherit; }
 
 /* Form elements */
 form.cms div.global_error {

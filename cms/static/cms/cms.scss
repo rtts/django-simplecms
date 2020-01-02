@@ -201,50 +201,6 @@ section {
   clear: both;
   border-bottom: 2px solid $blue;
 
-  div.subsections {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-
-    div.subsection {
-      div.wrapper {
-        padding: 0;
-      }
-      flex: 0 0 30%;
-      margin-bottom: 2em;
-      box-sizing: border-box;
-
-      div.title {
-        font-size: 1.5em;
-      }
-
-      div.image {
-        padding-top: 56%;
-        overflow: hidden;
-        position: relative;
-
-        img {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: center;
-        }
-      }
-
-      @media(max-width: $medium) {
-        flex-basis: 45%;
-      }
-      @media(max-width: $small) {
-        flex-basis: 100%;
-      }
-    }
-  }
-
   div.image {
     img {
       width: 100%;
@@ -252,7 +208,6 @@ section {
   }
 
   div.title {
-    //font-size: 2em;
     text-align: center;
   }
 
@@ -278,6 +233,15 @@ section {
   div.button {
     text-align: center;
     padding: 1em 0;
+  }
+}
+
+section.contactsection {
+  div#message {
+    display: none;
+  }
+  textarea {
+    font-family: inherit;
   }
 }
 

@@ -1,4 +1,7 @@
+'''CMS Models'''
+
 import swapper
+
 from django.db import models
 from django.urls import reverse
 from django.conf import settings
@@ -10,23 +13,20 @@ from polymorphic.models import PolymorphicModel
 
 from numberedmodel.models import NumberedModel
 
-def register(verbose_name):
-    def wrapper(model):
-        model.__bases__[-1].TYPES.append((model.__name__.lower(), verbose_name))
-        return model
-    return wrapper
-
 class VarCharField(models.TextField):
+    '''Variable width CharField'''
     def formfield(self, **kwargs):
         kwargs.update({'widget': TextInput})
         return super().formfield(**kwargs)
 
 class VarCharChoiceField(models.TextField):
+    '''Variable width CharField with choices'''
     def formfield(self, **kwargs):
         kwargs.update({'widget': Select})
         return super().formfield(**kwargs)
 
 class BasePage(NumberedModel):
+    '''Abstract base model for pages'''
     position = models.PositiveIntegerField(_('position'), blank=True)
     title = VarCharField(_('title'))
     slug = models.SlugField(_('slug'), help_text=_('A short identifier to use in URLs'), blank=True, unique=True)
@@ -35,14 +35,12 @@ class BasePage(NumberedModel):
     def __str__(self):
         if not self.pk:
             return str(_('New page'))
-        else:
-            return self.title
+        return self.title
 
     def get_absolute_url(self):
         if self.slug:
             return reverse('cms:page', args=[self.slug])
-        else:
-            return reverse('cms:page')
+        return reverse('cms:page')
 
     class Meta:
         abstract = True
@@ -51,6 +49,7 @@ class BasePage(NumberedModel):
         ordering = ['position']
 
 class BaseSection(NumberedModel, PolymorphicModel):
+    '''Abstract base model for sections'''
     TYPES = []
     page = models.ForeignKey(swapper.get_model_name('cms', 'Page'), verbose_name=_('page'), related_name='sections', on_delete=models.PROTECT)
     type = VarCharChoiceField(_('section type'), default='', choices=TYPES)
@@ -81,10 +80,12 @@ class BaseSection(NumberedModel, PolymorphicModel):
         ordering = ['position']
 
 class Page(BasePage):
+    '''Swappable page model'''
     class Meta(BasePage.Meta):
         swappable = swapper.swappable_setting('cms', 'Page')
 
 class Section(BaseSection):
+    '''Swappable section model'''
     class Meta(BaseSection.Meta):
         swappable = swapper.swappable_setting('cms', 'Section')
 
