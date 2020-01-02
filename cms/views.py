@@ -12,7 +12,6 @@ from django.http import HttpResponseRedirect, HttpResponseBadRequest
 
 from .decorators import register_view
 from .forms import PageForm, SectionForm
-from .utils import get_config
 
 Page = swapper.load_model('cms', 'Page')
 Section = swapper.load_model('cms', 'Section')
@@ -59,14 +58,12 @@ class SectionWithFormView(SectionView):
         return section
 
 class MenuMixin:
-    '''Add pages and footer to template context'''
+    '''Add pages to template context'''
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         pages = Page.objects.filter(menu=True)
-        footer = get_config(10)
         context.update({
             'pages': pages,
-            'footer': footer,
         })
         return context
 

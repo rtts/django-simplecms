@@ -7,6 +7,7 @@ except ImportError:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 PROJECT_NAME = 'example'
+SITE_URL = 'https://example.com/'
 KEYFILE = f'/tmp/{PROJECT_NAME}.secret'
 ADMINS = [('JJ Vens', 'jj@rtts.eu')]
 ALLOWED_HOSTS = ['*']
@@ -23,6 +24,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = '/srv/' + PROJECT_NAME + '/media'
 LOGIN_REDIRECT_URL = '/'
 CMS_SECTION_MODEL = 'app.Section'
+MARKDOWN_EXTENSIONS = ['extra', 'smarty']
+MARKDOWN_EXTENSION_CONFIGS = {'extra': {}, 'smarty': {}}
 
 def read(file):
     with open(file) as f:
@@ -36,33 +39,9 @@ except IOError:
     SECRET_KEY = ''.join(random.choice(string.printable) for x in range(50))
     write(KEYFILE, SECRET_KEY)
 
-SECTION_TYPES = [
-    ('TextSection', 'Tekst'),
-    ('ImageSection', 'Afbeelding'),
-]
-
 SECTION_COLORS = [
     (1, 'Wit'),
 ]
-
-CKEDITOR_CONFIGS = {
-    'default': {
-        'removePlugins': 'elementspath',
-        'extraPlugins': 'format',
-        'width': '100%',
-        'toolbar': 'Custom',
-        # 'contentsCss': STATIC_URL + 'ckeditor.css',
-        # 'allowedContent': True, # this allows iframes, embeds, scripts, etc...
-        'toolbar_Custom': [
-            ['Format'],
-            ['Bold', 'Italic', 'Underline', 'TextColor'],
-            ['NumberedList', 'BulletedList', 'Blockquote'],
-            ['JustifyLeft', 'JustifyCenter', 'JustifyRight'],
-            ['Link', 'Unlink'],
-            ['RemoveFormat', 'Source'],
-        ],
-    }
-}
 
 INSTALLED_APPS = [
     'app',
@@ -74,7 +53,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cms',
     'simplesass',
-    'ckeditor',
     'polymorphic',
     'embed_video',
     'easy_thumbnails',

@@ -1,5 +1,6 @@
 html, body {
   font-family: sans-serif;
+  line-height: 1.33;
   margin: 0;
   padding: 0; }
 
@@ -8,6 +9,13 @@ a {
   text-decoration: none; }
   a:hover {
     text-decoration: underline; }
+
+table {
+  border-collapse: collapse; }
+  table th, table td {
+    padding: 1em; }
+  table th {
+    border-bottom: 2px solid black; }
 
 a.button, button.button {
   cursor: pointer;
@@ -174,6 +182,9 @@ section.contactsection textarea {
   font-family: inherit; }
 
 /* Form elements */
+form.cms div.wrapper {
+  overflow: hidden; }
+
 form.cms div.global_error {
   border: 2px dotted red;
   padding: 10px;
@@ -193,10 +204,21 @@ form.cms fieldset {
 form.cms div.formfield {
   margin: 5px 0;
   padding: 10px 0;
-  font-size: 0; }
-
-form.cms div.formfield > * {
-  font-size: 1rem; }
+  clear: both;
+  box-sizing: border-box; }
+  form.cms div.formfield#type, form.cms div.formfield#position, form.cms div.formfield#title, form.cms div.formfield#slug {
+    padding: 0 1em;
+    clear: none;
+    float: left;
+    display: inline-block;
+    width: 33%; }
+  form.cms div.formfield#type, form.cms div.formfield#slug {
+    padding-left: 0; }
+  form.cms div.formfield#title {
+    padding: 0; }
+  form.cms div.formfield#position {
+    float: right;
+    padding-right: 0; }
 
 form.cms div.formfield.error {
   border: 2px dotted red;
@@ -237,12 +259,8 @@ form.cms input, form.cms select, form.cms textarea {
   margin: 0;
   padding: 5px; }
 
-form.cms div.django-ckeditor-widget {
-  display: block !important; }
-
-form.cms div.cke_chrome {
-  box-sizing: border-box !important;
-  border: 1px solid #aaa !important; }
+form.cms textarea {
+  height: 25em; }
 
 form.cms input[type=checkbox] {
   width: auto; }

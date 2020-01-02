@@ -22,7 +22,7 @@
       </div>
     </section>
 
-    {% block formset %}
+    {% if formset %}
       {{formset.management_form}}
       {% for form in formset %}
         {{form.media}}
@@ -48,7 +48,7 @@
           </div>
         </div>
       </section>
-    {% endblock %}
+    {% endif %}
 
     <div class="edit page">
       <button>{% trans 'save' %}</button>
@@ -73,6 +73,9 @@
                 if (virgin) {
                     slugfield.value = URLify(titlefield.value);
                 }
+            });
+            slugfield.addEventListener('input', function(event) {
+                virgin = false;
             });
         }
     }

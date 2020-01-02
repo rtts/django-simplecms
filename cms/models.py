@@ -7,9 +7,10 @@ from django.urls import reverse
 from django.conf import settings
 from django.forms import TextInput, Select
 from django.utils.translation import gettext_lazy as _
-from ckeditor.fields import RichTextField
 from embed_video.fields import EmbedVideoField
 from polymorphic.models import PolymorphicModel
+from markdownfield.models import MarkdownField, RenderedMarkdownField
+from markdownfield.validators import VALIDATOR_NULL
 
 from numberedmodel.models import NumberedModel
 
@@ -27,9 +28,9 @@ class VarCharChoiceField(models.TextField):
 
 class BasePage(NumberedModel):
     '''Abstract base model for pages'''
-    position = models.PositiveIntegerField(_('position'), blank=True)
-    title = VarCharField(_('title'))
     slug = models.SlugField(_('slug'), help_text=_('A short identifier to use in URLs'), blank=True, unique=True)
+    title = VarCharField(_('title'))
+    position = models.PositiveIntegerField(_('position'), blank=True)
     menu = models.BooleanField(_('visible in menu'), default=True)
 
     def __str__(self):
@@ -52,11 +53,12 @@ class BaseSection(NumberedModel, PolymorphicModel):
     '''Abstract base model for sections'''
     TYPES = []
     page = models.ForeignKey(swapper.get_model_name('cms', 'Page'), verbose_name=_('page'), related_name='sections', on_delete=models.PROTECT)
-    type = VarCharChoiceField(_('section type'), default='', choices=TYPES)
-    position = models.PositiveIntegerField(_('position'), blank=True)
+    type = VarCharChoiceField(_('type'), default='', choices=TYPES)
     title = VarCharField(_('title'), blank=True)
+    position = models.PositiveIntegerField(_('position'), blank=True)
     color = models.PositiveIntegerField(_('color'), default=1, choices=settings.SECTION_COLORS)
-    content = RichTextField(_('content'), blank=True)
+    content = MarkdownField(_('content'), rendered_field='content_rendered', validator=VALIDATOR_NULL, use_admin_editor=False, blank=True)
+    content_rendered = RenderedMarkdownField()
     image = models.ImageField(_('image'), blank=True)
     video = EmbedVideoField(_('video'), blank=True, help_text=_('Paste a YouTube, Vimeo, or SoundCloud link'))
     button_text = VarCharField(_('button text'), blank=True)
@@ -88,19 +90,3 @@ class Section(BaseSection):
     '''Swappable section model'''
     class Meta(BaseSection.Meta):
         swappable = swapper.swappable_setting('cms', 'Section')
-
-class Config(models.Model):
-    TYPES = [
-        (10, _('Footer')),
-    ]
-
-    parameter = models.PositiveIntegerField(choices=TYPES, unique=True)
-    content = RichTextField(_('content'), blank=True)
-
-    def __str__(self):
-        return "{}. {}".format(self.parameter, self.get_parameter_display())
-
-    class Meta:
-        verbose_name = _('configuration parameter')
-        verbose_name_plural = _('configuration parameters')
-        ordering = ['parameter']

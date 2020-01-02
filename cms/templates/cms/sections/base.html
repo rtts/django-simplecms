@@ -17,9 +17,9 @@
       </div>
     {% endif %}
 
-    {% if section.content %}
+    {% if section.content_rendered %}
       <div class="content">
-        {{section.content|safe}}
+        {{section.content_rendered|safe}}
       </div>
     {% endif %}
 
