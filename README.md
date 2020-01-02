@@ -1,23 +1,15 @@
-Django Simple CMS
-=================
+# Django Simple CMS
 
-Hello stranger! You have stumbled on my personal Django boilerplate
-repository. It contains all those code fragments that I find myself
-writing over and over again when I create websites for clients.
-There's models for Pages and Sections in the `cms` app, as well as
-some basic HTML and CSS designs. There's a NumberedModel in the
-`numberedmodel` app. There's simple SASS compiler in `simplesass`.
+*A super simple but very extensible content management system for
+Django websites.*
 
-With these apps it's very simple to setup a basic website. Simply use
-the project template from the `examples` directory as a starting
-point. Then run the following Django commands:
+This project provides the basic building blocks of *Pages* and
+*Sections* and all the views needed to display and edit them.
 
-    $ ./manage.py migrate
-    $ ./manage.py createsuperuser
-    $ ./manage.py runserver --nostatic
+## Installation
 
-(The `--nostatic` argument is needed to make `simplesass` work.)
+Use the provided helper command `simplecms` to quickly setup a new
+project:
 
-Now point your browser to http://localhost:8000/ and there will be a
-website ready to be edited using the CMS views! All you need to do
-next is to hire a graphic designer ;-)
+    pip install https://github.com/rtts/django-simplecms.git
+    simplecms mysite
