@@ -8,7 +8,7 @@ Page = swapper.load_model('cms', 'Page')
 Section = swapper.load_model('cms', 'Section')
 
 class ContactForm(forms.Form):
-    sender = forms.EmailField(label=_('From'))
+    sender = forms.EmailField(label=_('Your email address'))
     spam_protection = forms.CharField(label=_('Your message'), widget=forms.Textarea())
     message = forms.CharField(label=_('Your message'), widget=forms.Textarea(), initial='Hi there!')
 

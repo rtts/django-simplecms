@@ -1,5 +1,6 @@
 from cms.forms import ContactForm
-from cms.views import SectionWithFormView, register_view
+from cms.views import SectionWithFormView
+from cms.decorators import register_view
 
 from .models import *
 

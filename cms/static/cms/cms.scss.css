@@ -35,7 +35,7 @@ div.wrapper {
   box-sizing: border-box;
   max-width: 700px;
   margin: auto;
-  padding: 1rem; }
+  padding: 0 1rem; }
 
 div.spacer {
   height: 1rem;
