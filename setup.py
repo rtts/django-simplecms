@@ -20,6 +20,7 @@ setup(
         'easy-thumbnails',
         'psycopg2',
         'markdown',
+        'bleach',
         'libsass',
         'swapper',
     ],
