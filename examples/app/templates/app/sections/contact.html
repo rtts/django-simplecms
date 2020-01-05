@@ -1,7 +1,6 @@
-{% extends 'cms/sections/base.html' %}
 {% load i18n %}
 
-{% block section %}
+<section class="{{section.type}} color{{section.color}}">
   <div class="wrapper">
     <div class="title">
       <h1>{{section.title}}</h1>
@@ -10,12 +9,13 @@
     <div class="form">
       <form method="post" class="cms">
         {% csrf_token %}
-        {% for field in section.form %}
+        {% for field in form %}
           {% include 'cms/formfield.html' with field=field %}
         {% endfor %}
         <button class="button" name="section" value="{{section.pk}}">{% trans 'Send' %}</button>
       </form>
     </div>
 
+    {% include 'cms/editlink.html' %}
   </div>
-{% endblock %}
+</section>

@@ -1,6 +1,7 @@
 {% load i18n thumbnail embed_video_tags %}
+{% load markdown %}
 
-{% block section %}
+<section class="{{section.type}} color{{section.color}}">
   <div class="wrapper">
 
     {% if section.image %}
@@ -17,9 +18,9 @@
       </div>
     {% endif %}
 
-    {% if section.content_rendered %}
+    {% if section.content %}
       <div class="content">
-        {{section.content_rendered|safe}}
+        {{section.content|markdown}}
       </div>
     {% endif %}
 
@@ -31,32 +32,12 @@
       </div>
     {% endif %}
 
-    {% if section.subsections.exists %}
-      <div class="subsections">
-        {% for sub in section.subsections.all %}
-          <div class="subsection color{{sub.color}}">
-            {% with section=sub user=None %}
-              {% include 'cms/sections/base.html' %}
-            {% endwith %}
-          </div>
-        {% endfor %}
-      </div>
-    {% endif %}
-
     {% if section.button_text %}
       <div class="button">
         <a class="button" href="{{section.button_link}}">{{section.button_text}}</a>
       </div>
     {% endif %}
-  </div>
-{% endblock %}
 
-{% block extracontent %}{% endblock %}
-
-{% if user.is_staff %}
-  <div class="wrapper">
-    <div class="edit">
-      <a href="{% url 'cms:updatesection' section.pk %}">{% trans 'edit this section' %}</a>
-    </div>
+    {% include 'cms/editlink.html' %}
   </div>
-{% endif %}
+</section>

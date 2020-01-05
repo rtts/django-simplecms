@@ -7,7 +7,6 @@ except ImportError:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 PROJECT_NAME = 'example'
-SITE_URL = 'https://example.com/'
 KEYFILE = f'/tmp/{PROJECT_NAME}.secret'
 ADMINS = [('JJ Vens', 'jj@rtts.eu')]
 ALLOWED_HOSTS = ['*']
@@ -25,7 +24,6 @@ MEDIA_ROOT = '/srv/' + PROJECT_NAME + '/media'
 LOGIN_REDIRECT_URL = '/'
 CMS_SECTION_MODEL = 'app.Section'
 MARKDOWN_EXTENSIONS = ['extra', 'smarty']
-MARKDOWN_EXTENSION_CONFIGS = {'extra': {}, 'smarty': {}}
 
 def read(file):
     with open(file) as f:

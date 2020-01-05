@@ -9,8 +9,6 @@ urlpatterns = [
     path('updatesection/<int:pk>/', UpdateSection.as_view(), name='updatesection'),
     path('createpage/', CreatePage.as_view(), name='createpage'),
     path('createsection/<int:pk>', CreateSection.as_view(), name='createsection'),
-
-    # Feel free to copy the following into your root URL conf!
     path('', PageView.as_view(), name='page'),
     path('<slug:slug>/', PageView.as_view(), name='page'),
 ]

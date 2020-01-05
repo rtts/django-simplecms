@@ -1,0 +1,16 @@
+{% load embed_video_tags %}
+
+<section class="{{section.type}} color{{section.color}}">
+  <div class="wrapper">
+
+    {% if section.video %}
+      <div class="video">
+        <div class="iframe">
+          {% video section.video '800x600' %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% include 'cms/editlink.html' %}
+  </div>
+</section>

@@ -1,0 +1,21 @@
+{% load markdown %}
+
+<section class="{{section.type}} color{{section.color}}">
+  <div class="wrapper">
+    {% if section.title %}
+      <div class="title">
+        <h1>
+          {{section.title}}
+        </h1>
+      </div>
+    {% endif %}
+
+    {% if section.content %}
+      <div class="content">
+        {{section.content|markdown}}
+      </div>
+    {% endif %}
+
+    {% include 'cms/editlink.html' %}
+  </div>
+</section>

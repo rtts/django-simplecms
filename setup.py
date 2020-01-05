@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = 'django-simplecms',
-    version = '2.2.0',
+    version = '2.3.0',
     url = 'https://github.com/rtts/django-simplecms',
     author = 'Jaap Joris Vens',
     author_email = 'jj@rtts.eu',
@@ -16,11 +16,9 @@ setup(
         'django-extensions',
         'django-embed-video',
         'django-polymorphic',
-        'django-markdownfield',
         'easy-thumbnails',
         'psycopg2',
         'markdown',
-        'bleach',
         'libsass',
         'swapper',
     ],

@@ -4,13 +4,10 @@ import swapper
 
 from django.db import models
 from django.urls import reverse
-from django.conf import settings
 from django.forms import TextInput, Select
 from django.utils.translation import gettext_lazy as _
 from embed_video.fields import EmbedVideoField
 from polymorphic.models import PolymorphicModel
-from markdownfield.models import MarkdownField, RenderedMarkdownField
-from markdownfield.validators import VALIDATOR_NULL
 
 from numberedmodel.models import NumberedModel
 
@@ -56,9 +53,7 @@ class BaseSection(NumberedModel, PolymorphicModel):
     type = VarCharChoiceField(_('type'), default='', choices=TYPES)
     title = VarCharField(_('title'), blank=True)
     position = models.PositiveIntegerField(_('position'), blank=True)
-    color = models.PositiveIntegerField(_('color'), default=1, choices=settings.SECTION_COLORS)
-    content = MarkdownField(_('content'), rendered_field='content_rendered', validator=VALIDATOR_NULL, use_admin_editor=False, blank=True)
-    content_rendered = RenderedMarkdownField()
+    content = models.TextField(_('content'), blank=True)
     image = models.ImageField(_('image'), blank=True)
     video = EmbedVideoField(_('video'), blank=True, help_text=_('Paste a YouTube, Vimeo, or SoundCloud link'))
     button_text = VarCharField(_('button text'), blank=True)

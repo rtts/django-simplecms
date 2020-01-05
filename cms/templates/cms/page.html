@@ -1,13 +1,12 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load cms %}
 
 {% block title %}{{block.super}} - {{page.title}}{% endblock %}
 
 {% block content %}
   {% for section in sections %}
-    <section class="{{section.type}} color{{section.color}}">
-      {% include 'cms/sections/'|add:section.type|lower|add:'.html' %}
-    </section>
+    {% include_section section %}
   {% endfor %}
 
   <div class="edit page">

@@ -4,6 +4,7 @@ import json
 import swapper
 
 from django.views import generic
+from django.views.generic.edit import FormMixin
 from django.shortcuts import redirect
 from django.core.exceptions import ImproperlyConfigured
 from django.contrib.contenttypes.models import ContentType
@@ -19,43 +20,27 @@ Section = swapper.load_model('cms', 'Section')
 @register_view(Section)
 class SectionView:
     '''Generic section view'''
-    def get(self, request, section):
-        '''Override this to add custom attributes to a section'''
-        return section
+    template_name = 'cms/sections/section.html'
 
-class SectionWithFormView(SectionView):
+    def setup(self, request, section):
+        '''Initialize request and section attributes'''
+        self.request = request
+        self.section = section
+
+    def get_context_data(self, **kwargs):
+        '''Override this to customize a section's context'''
+        return kwargs
+
+class SectionFormView(FormMixin, SectionView):
     '''Generic section with associated form'''
-    form_class = None
-    success_url = None
 
-    def get_form_class(self):
-        '''Return the form class to use in this view.'''
-        if self.form_class:
-            return self.form_class
-        raise ImproperlyConfigured(
-            'Either specify formclass attribute or override get_form_class()')
-
-    def get_success_url(self):
-        '''Return the URL to redirect to after processing a valid form.'''
-        if self.success_url:
-            return self.success_url
-        raise ImproperlyConfigured(
-            'Either specify success_url attribute or override get_success_url()')
-
-    def get(self, request, section):
-        '''Add form to section'''
-        form = self.get_form_class()()
-        section.form = form
-        return section
-
-    def post(self, request, section):
+    def post(self, request):
         '''Process form'''
-        form = self.get_form_class()(request.POST, request.FILES)
+        form = self.get_form()
         if form.is_valid():
             form.save(request)
             return redirect(self.get_success_url())
-        section.form = form
-        return section
+        return form
 
 class MenuMixin:
     '''Add pages to template context'''
@@ -83,14 +68,21 @@ class PageView(MenuMixin, MemoryMixin, generic.DetailView):
         '''Supply a default argument for slug'''
         super().setup(*args, slug=slug, **kwargs)
 
+    def initialize_section(self, section):
+        section.view = section.__class__.view_class()
+        section.view.setup(self.request, section)
+        section.context = section.view.get_context_data(
+            request = self.request,
+            section = section,
+        )
+
     def get(self, request, *args, **kwargs):
-        '''Call each sections's get() view before rendering final response'''
+        '''Initialize sections and render final response'''
         page = self.object = self.get_object()
         context = self.get_context_data(**kwargs)
         sections = page.sections.all()
         for section in sections:
-            view = section.__class__.view_class()
-            view.get(request, section)
+            self.initialize_section(section)
         context.update({
             'page': page,
             'sections': sections,
@@ -98,7 +90,8 @@ class PageView(MenuMixin, MemoryMixin, generic.DetailView):
         return self.render_to_response(context)
 
     def post(self, request, **kwargs):
-        '''Call the post() function of the correct section view'''
+        '''Initialize sections and call the post() function of the correct
+        section view'''
         try:
             pk = int(self.request.POST.get('section'))
         except:
@@ -108,20 +101,20 @@ class PageView(MenuMixin, MemoryMixin, generic.DetailView):
         context = self.get_context_data(**kwargs)
         sections = page.sections.all()
         for section in sections:
-            view = section.__class__.view_class()
+            self.initialize_section(section)
             if section.pk == pk:
-                result = view.post(request, section)
+                result = section.view.post(request)
                 if isinstance(result, HttpResponseRedirect):
                     return result
-            else:
-                view.get(request, section)
+                section.context['form'] = result
+
         context.update({
             'page': page,
             'sections': sections,
         })
         return self.render_to_response(context)
 
-# The following views all require a logged-in staff member
+# The following views require a logged-in staff member
 
 class StaffRequiredMixin(UserPassesTestMixin):
     def test_func(self):
