@@ -1,8 +1,7 @@
+import swapper
 from django import forms
-from django.utils.translation import gettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
 
-import swapper
 Page = swapper.load_model('cms', 'Page')
 Section = swapper.load_model('cms', 'Section')
 
@@ -21,15 +20,12 @@ class SectionForm(forms.ModelForm):
 
     def save(self):
         section = super().save()
-        app_label = section._meta.app_label
-        model = section.type
 
-        # Explanation: we'll get the content type of the model that
-        # the user supplied when filling in this form, and save it's
-        # id to the 'polymorphic_ctype_id' field. This way, the next
-        # time the object is requested from the database,
-        # django-polymorphic will automatically convert it to the
-        # correct subclass.
+        # Explanation: get the content type of the model that the user
+        # supplied when filling in this form, and save it's id to the
+        # 'polymorphic_ctype_id' field. The next time the object is
+        # requested from the database, django-polymorphic will convert
+        # it to the correct subclass.
         section.polymorphic_ctype = ContentType.objects.get(
             app_label=section._meta.app_label,
             model=section.type.lower(),
@@ -41,3 +37,10 @@ class SectionForm(forms.ModelForm):
     class Meta:
         model = Section
         exclude = ['page']
+        #field_classes = {
+        #    'type': forms.ChoiceField,
+        #}
+
+    # There is definitely a bug in Django, since the above 'field_classes' gets
+    # ignored entirely. Workaround to force a ChoiceField anyway:
+    type = forms.ChoiceField()

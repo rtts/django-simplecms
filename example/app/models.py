@@ -18,30 +18,30 @@ class Section(BaseSection):
 
 @register_model('Tekst')
 class TextSection(Section):
-    fields = ['type', 'position', 'title', 'color', 'content']
+    fields = ['title', 'content']
     class Meta:
         proxy = True
 
 @register_model('Button')
 class ButtonSection(Section):
-    fields = ['type', 'position', 'title', 'button_text', 'button_link']
+    fields = ['button_text', 'button_link']
     class Meta:
         proxy = True
 
 @register_model('Afbeelding')
 class ImageSection(Section):
-    fields = ['type', 'position', 'title', 'image']
+    fields = ['title', 'image']
     class Meta:
         proxy = True
 
 @register_model('Video')
 class VideoSection(Section):
-    fields = ['type', 'position', 'title', 'video']
+    fields = ['title', 'video']
     class Meta:
         proxy = True
 
 @register_model('Contact')
 class ContactSection(Section):
-    fields = ['type', 'position', 'title']
+    fields = ['title']
     class Meta:
         proxy = True

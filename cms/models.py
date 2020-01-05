@@ -1,5 +1,3 @@
-'''CMS Models'''
-
 import swapper
 
 from django.db import models
@@ -9,25 +7,62 @@ from django.utils.translation import gettext_lazy as _
 from embed_video.fields import EmbedVideoField
 from polymorphic.models import PolymorphicModel
 
-from numberedmodel.models import NumberedModel
-
 class VarCharField(models.TextField):
     '''Variable width CharField'''
     def formfield(self, **kwargs):
         kwargs.update({'widget': TextInput})
         return super().formfield(**kwargs)
 
-class VarCharChoiceField(models.TextField):
-    '''Variable width CharField with choices'''
-    def formfield(self, **kwargs):
-        kwargs.update({'widget': Select})
-        return super().formfield(**kwargs)
+class Numbered:
+    '''Mixin for numbered models. Overrides the save() method to
+    automatically renumber all instances returned by
+    number_with_respect_to()
 
-class BasePage(NumberedModel):
+    '''
+    def number_with_respect_to(self):
+        return self.__class__.objects.all()
+
+    def _renumber(self):
+        '''Renumbers the queryset while preserving the instance's number'''
+
+        queryset = self.number_with_respect_to()
+        field_name = self.__class__._meta.ordering[-1].lstrip('-')
+        this_nr = getattr(self, field_name)
+        if this_nr is None:
+            this_nr = len(queryset) + 1
+
+        # The algorithm: loop over the queryset and set each object's
+        # number to the counter. When an object's number equals the
+        # number of this instance, set this instance's number to the
+        # counter, increment the counter by 1, and finish the loop
+        counter = 1
+        inserted = False
+        for other in queryset.exclude(pk=self.pk):
+            other_nr = getattr(other, field_name)
+            if counter >= this_nr and not inserted:
+                setattr(self, field_name, counter)
+                inserted = True
+                counter += 1
+            if other_nr != counter:
+                setattr(other, field_name, counter)
+                super(NumberedModel, other).save()
+            counter += 1
+        if not inserted:
+            setattr(self, field_name, counter)
+
+    def save(self, *args, **kwargs):
+        self._renumber()
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        self._renumber()
+
+class BasePage(Numbered, models.Model):
     '''Abstract base model for pages'''
-    slug = models.SlugField(_('slug'), help_text=_('A short identifier to use in URLs'), blank=True, unique=True)
+    number = models.PositiveIntegerField(_('number'), blank=True)
+    slug = models.SlugField(_('slug'), blank=True, unique=True)
     title = VarCharField(_('title'))
-    position = models.PositiveIntegerField(_('position'), blank=True)
     menu = models.BooleanField(_('visible in menu'), default=True)
 
     def __str__(self):
@@ -44,15 +79,16 @@ class BasePage(NumberedModel):
         abstract = True
         verbose_name = _('Page')
         verbose_name_plural = _('Pages')
-        ordering = ['position']
+        ordering = ['number']
 
-class BaseSection(NumberedModel, PolymorphicModel):
+class BaseSection(Numbered, PolymorphicModel):
     '''Abstract base model for sections'''
-    TYPES = []
+    TYPES = [] # Will be populated by @register_model()
     page = models.ForeignKey(swapper.get_model_name('cms', 'Page'), verbose_name=_('page'), related_name='sections', on_delete=models.PROTECT)
-    type = VarCharChoiceField(_('type'), default='', choices=TYPES)
+    type = VarCharField(_('type'), blank=True)
+    number = models.PositiveIntegerField(_('number'), blank=True)
+
     title = VarCharField(_('title'), blank=True)
-    position = models.PositiveIntegerField(_('position'), blank=True)
     content = models.TextField(_('content'), blank=True)
     image = models.ImageField(_('image'), blank=True)
     video = EmbedVideoField(_('video'), blank=True, help_text=_('Paste a YouTube, Vimeo, or SoundCloud link'))
@@ -74,7 +110,7 @@ class BaseSection(NumberedModel, PolymorphicModel):
         abstract = True
         verbose_name = _('section')
         verbose_name_plural = _('sections')
-        ordering = ['position']
+        ordering = ['number']
 
 class Page(BasePage):
     '''Swappable page model'''

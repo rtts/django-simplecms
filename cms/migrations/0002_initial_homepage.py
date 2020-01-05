@@ -4,7 +4,7 @@ Page = swapper.load_model('cms', 'Page')
 
 def add_homepage(apps, schema_editor):
     if not Page.objects.exists():
-        Page(slug='', title='Homepage', position=1).save()
+        Page(slug='', title='Homepage', number=1).save()
 
 class Migration(migrations.Migration):
     dependencies = [

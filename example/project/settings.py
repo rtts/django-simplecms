@@ -38,7 +38,8 @@ except IOError:
     write(KEYFILE, SECRET_KEY)
 
 SECTION_COLORS = [
-    (1, 'Wit'),
+    (1, 'Licht'),
+    (2, 'Donker'),
 ]
 
 INSTALLED_APPS = [
@@ -50,7 +51,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'cms',
-    'simplesass',
     'polymorphic',
     'embed_video',
     'easy_thumbnails',
@@ -58,7 +58,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'simplesass.middleware.SimpleSassMiddleware',
+    'cms.middleware.SassMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

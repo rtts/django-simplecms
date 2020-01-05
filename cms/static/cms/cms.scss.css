@@ -206,19 +206,13 @@ form.cms div.formfield {
   padding: 10px 0;
   clear: both;
   box-sizing: border-box; }
-  form.cms div.formfield#type, form.cms div.formfield#position, form.cms div.formfield#title, form.cms div.formfield#slug {
-    padding: 0 1em;
+  form.cms div.formfield#type, form.cms div.formfield#number {
+    width: 75%;
     clear: none;
-    float: left;
-    display: inline-block;
-    width: 33%; }
-  form.cms div.formfield#type, form.cms div.formfield#slug {
-    padding-left: 0; }
-  form.cms div.formfield#title {
-    padding: 0; }
-  form.cms div.formfield#position {
-    float: right;
-    padding-right: 0; }
+    float: left; }
+  form.cms div.formfield#number {
+    width: 20%;
+    float: right; }
 
 form.cms div.formfield.error {
   border: 2px dotted red;

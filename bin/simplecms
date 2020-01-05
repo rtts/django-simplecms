@@ -5,8 +5,8 @@ test -d $dev/$1 && echo "That project already exists!" && exit 1
 
 mkdir $1 && cd $1
 pip3 freeze > requirements.txt
-examples_dir=$(python3 -c 'import os,examples;print(os.path.dirname(examples.__file__))')
-cp -r $examples_dir/{project,app,manage.py} .
+example_dir=$(python3 -c 'import os,examples;print(os.path.dirname(example.__file__))')
+cp -r $example_dir/{project,app,manage.py} .
 sed -i s/example/$1/ project/settings.py
 
 # Assume the user has sudo access to postgres
@@ -17,6 +17,7 @@ cat << EOF > .gitignore
 __pycache__/
 EOF
 
+./manage.py makemigrations app
 ./manage.py migrate
 ./manage.py createsuperuser
 ./manage.py runserver --nostatic

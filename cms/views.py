@@ -1,11 +1,9 @@
-'''CMS Views'''
-
 import json
 import swapper
 
 from django.views import generic
-from django.views.generic.edit import FormMixin
 from django.shortcuts import redirect
+from django.views.generic.edit import FormMixin
 from django.core.exceptions import ImproperlyConfigured
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -126,10 +124,10 @@ class TypeMixin(MenuMixin):
         fields_per_type = {}
         for model, _ in Section.TYPES:
             ctype = ContentType.objects.get(
-                app_label=Section._meta.app_label,
-                model=model.lower(),
+                app_label = Section._meta.app_label,
+                model = model.lower(),
             )
-            fields_per_type[ctype.model] = ctype.model_class().fields
+            fields_per_type[ctype.model] = ['type', 'number'] + ctype.model_class().fields
 
         context.update({
             'fields_per_type': json.dumps(fields_per_type),

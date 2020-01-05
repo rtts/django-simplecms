@@ -289,22 +289,14 @@ form.cms {
     clear: both;
     box-sizing: border-box;
 
-    &#type, &#position, &#title, &#slug {
-      padding: 0 1em;
+    &#type, &#number {
+      width: 75%;
       clear: none;
       float: left;
-      display: inline-block;
-      width: 33%;
     }
-    &#type, &#slug {
-      padding-left: 0;
-    }
-    &#title {
-      padding: 0;
-    }
-    &#position {
+    &#number {
+      width: 20%;
       float: right;
-      padding-right: 0;
     }
   }
   div.formfield.error {
