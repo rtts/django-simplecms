@@ -1,8 +1,8 @@
+from cms.forms import ContactForm
 from cms.views import SectionView, SectionFormView
 from cms.decorators import register_view
 
 from .models import *
-from .forms import ContactForm
 
 @register_view(TextSection)
 class TextView(SectionView):

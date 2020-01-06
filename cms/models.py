@@ -61,8 +61,8 @@ class Numbered:
 class BasePage(Numbered, models.Model):
     '''Abstract base model for pages'''
     number = models.PositiveIntegerField(_('number'), blank=True)
-    slug = models.SlugField(_('slug'), blank=True, unique=True)
     title = VarCharField(_('title'))
+    slug = models.SlugField(_('slug'), blank=True, unique=True)
     menu = models.BooleanField(_('visible in menu'), default=True)
 
     def __str__(self):
