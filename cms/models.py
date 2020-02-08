@@ -45,7 +45,7 @@ class Numbered:
                 counter += 1
             if other_nr != counter:
                 setattr(other, field_name, counter)
-                super(NumberedModel, other).save()
+                super(Numbered, other).save()
             counter += 1
         if not inserted:
             setattr(self, field_name, counter)
