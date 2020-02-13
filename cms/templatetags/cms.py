@@ -19,11 +19,7 @@ class IncludeSectionNode(template.Node):
     def render(self, context):
         section = self.section.resolve(context)
         template_name = section.view.template_name
-        if template_name is None:
-            raise ValueError(f'{section} view has no template_name attribute')
         csrf_token = self.csrf_token.resolve(context)
-        if not hasattr(section, 'context'):
-            raise ValueError(dir(section))
         section.context.update({'csrf_token': csrf_token})
         t = context.template.engine.get_template(template_name)
         return t.render(template.Context(section.context))
