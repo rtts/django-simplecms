@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+  <form method="post" class="cms">
+    {% csrf_token %}
+    {{form.media}}
+
+    <section>
+      <div class="wrapper">
+        {% if protected %}
+          <div class="title">
+            <h1>You can't do that</h1>
+          </div>
+
+          In order to delete this page, you will first need to delete the following sections:
+
+          <ul>
+            {{protected|unordered_list}}
+          </ul>
+
+        {% else %}
+          <div class="title">
+            <h1>Are you sure?</h1>
+          </div>
+
+          The following objects will be deleted:
+
+          <ul>
+            {{deleted|unordered_list}}
+          </ul>
+
+          <button name="confirm">{% trans 'delete' %}</button>
+        {% endif %}
+
+      </div>
+    </section>
+  </form>
+{% endblock %}

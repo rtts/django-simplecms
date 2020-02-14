@@ -4,13 +4,14 @@ import swapper
 from django.views import generic
 from django.shortcuts import redirect
 from django.views.generic.edit import FormMixin
+from django.contrib.admin.utils import NestedObjects
 from django.core.exceptions import ImproperlyConfigured
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http import HttpResponseRedirect, HttpResponseBadRequest
 
 from .decorators import register_view
-from .forms import PageForm, SectionForm
+from .forms import PageForm, SectionForm, SectionFormSet
 
 Page = swapper.load_model('cms', 'Page')
 Section = swapper.load_model('cms', 'Section')
@@ -138,12 +139,37 @@ class BaseUpdateView(generic.UpdateView):
     template_name = 'cms/edit.html'
 
     def form_valid(self, form):
-        form.save()
+        if 'delete' in self.request.POST:
+            collector = NestedObjects(using='default')
+            collector.collect([self.object])
+            self.template_name = 'cms/confirm.html'
+            return self.render_to_response(self.get_context_data(deleted=collector.nested(), protected=collector.protected))
+        else:
+            form.save()
         return redirect(self.request.session.get('previous_url'))
 
-class UpdatePage(StaffRequiredMixin, MenuMixin, BaseUpdateView):
+class UpdatePage(StaffRequiredMixin, TypeMixin, BaseUpdateView):
     model = Page
     form_class = PageForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if 'formset' not in context:
+            context['formset'] = SectionFormSet(instance=self.object)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        formset = SectionFormSet(request.POST, request.FILES, instance=self.object)
+        if form.is_valid() and formset.is_valid():
+            formset.save()
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form, formset)
+
+    def form_invalid(self, form, formset):
+        return self.render_to_response(self.get_context_data(form=form, formset=formset))
 
 class UpdateSection(StaffRequiredMixin, TypeMixin, BaseUpdateView):
     model = Section

@@ -2,6 +2,7 @@ import swapper
 from django import forms
 from django.contrib.contenttypes.models import ContentType
 from django.core.mail import EmailMessage
+from django.forms import inlineformset_factory
 from django.utils.translation import gettext_lazy as _
 
 Page = swapper.load_model('cms', 'Page')
@@ -42,8 +43,13 @@ class SectionForm(forms.ModelForm):
         # Repopulate the 'choices' attribute of the type field from
         # the child model.
         self.fields['type'].choices = self._meta.model.TYPES
+        self.fields['type'].initial = self._meta.model.TYPES[0][0]
 
-    def save(self):
+    def delete(self):
+        instance = super().save()
+        instance.delete()
+
+    def save(self, commit=True):
         section = super().save()
 
         # Explanation: get the content type of the model that the user
@@ -56,7 +62,8 @@ class SectionForm(forms.ModelForm):
             model=section.type.lower(),
         )
 
-        section.save()
+        if commit:
+            section.save()
         return section
 
     class Meta:
@@ -69,3 +76,5 @@ class SectionForm(forms.ModelForm):
     # There is definitely a bug in Django, since the above 'field_classes' gets
     # ignored entirely. Workaround to force a ChoiceField anyway:
     type = forms.ChoiceField()
+
+SectionFormSet = inlineformset_factory(Page, Section, form=SectionForm, extra=1)

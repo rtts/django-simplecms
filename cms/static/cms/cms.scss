@@ -289,12 +289,12 @@ form.cms {
     clear: both;
     box-sizing: border-box;
 
-    &#type, &#number {
+    &.type, &.number {
       width: 75%;
       clear: none;
       float: left;
     }
-    &#number {
+    &.number {
       width: 20%;
       float: right;
     }

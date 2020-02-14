@@ -5,6 +5,9 @@
   <form method="POST" enctype="multipart/form-data" class="cms">
     {% csrf_token %}
     {{form.media}}
+    <div class="edit page">
+      <button>{% trans 'save' %}</button>
+    </div>
 
     <section>
       <div class="wrapper">
@@ -19,6 +22,17 @@
         {% for field in form %}
           {% include 'cms/formfield.html' with field=field %}
         {% endfor %}
+        {% if form.instance.pk %}
+          <div class="formfield">
+            <div class="label">
+              <label for="id_delete">{% trans 'Delete' %}:</label>
+            </div>
+            <div class="input">
+              <input type="checkbox" name="delete" id="id_delete">
+            </div>
+          </div>
+        {% endif %}
+
       </div>
     </section>
 
@@ -32,27 +46,19 @@
         <section>
           <div class="wrapper">
             <h1>{{form.instance}}</h1>
-            {% for field in form.visible_fields %}
-              {% include 'cms/formfield.html' with field=field %}
-            {% endfor %}
+            <div class="subform">
+              {% for field in form.visible_fields %}
+                {% if field.name == 'DELETE' and not form.instance.pk %}
+                  
+                {% else %}
+                  {% include 'cms/formfield.html' with field=field counter=forloop.parentloop.counter0 %}
+                {% endif %}
+              {% endfor %}
+            </div>
           </div>
         </section>
       {% endfor %}
-
-      <section>
-        <div class="wrapper">
-          <div class="edit">
-            <a href="{{formset_form_url}}">
-              + {% trans 'new' %} {{formset_description}}
-            </a>
-          </div>
-        </div>
-      </section>
     {% endif %}
-
-    <div class="edit page">
-      <button>{% trans 'save' %}</button>
-    </div>
   </form>
 {% endblock %}
 
@@ -61,7 +67,6 @@
   <script>
     var slugfield = document.getElementById('id_slug');
     var titlefield = document.getElementById('id_title');
-    var typefield = document.getElementById('id_type');
 
     /* My own implementation of Django's prepopulate.js */
 
@@ -81,26 +86,49 @@
     }
 
     {% if fields_per_type %}
-    /* Only show relevant fields */
+
+    var typefield = document.getElementById('id_type');
+    fields_per_type = {{fields_per_type|safe}};
 
     if (typefield) {
         function show_relevant_fields(type) {
-            fields_per_type = {{fields_per_type|safe}};
-
             for (el of document.querySelectorAll('div.formfield')) {
                 el.style.display = 'none';
             }
 
             for (field of fields_per_type[type]) {
                 el = document.getElementById(field);
-                console.log('showing ' + field)
                 el.style.display = 'block';
             }
         }
 
         typefield.addEventListener('input', function(event) {
-            console.log(typefield.value);
             show_relevant_fields(typefield.value.toLowerCase());
+        });
+        show_relevant_fields(typefield.value.toLowerCase());
+    }
+
+    subforms = document.querySelectorAll('div.subform');
+    for (let i = 0; i < subforms.length; ++i) {
+        let typefield = document.getElementById('id_sections-' + i + '-type');
+
+        function show_relevant_fields(type) {
+            for (field of subforms[i].querySelectorAll('div.formfield')) {
+                field.style.display = 'none';
+            }
+
+            delete_checkbox = document.getElementById('DELETE' + i);
+            if (delete_checkbox) {
+                delete_checkbox.style.display = 'block';
+            }
+            for (field of fields_per_type[type]) {
+                el = document.getElementById(field + i);
+                el.style.display = 'block';
+            }
+        }
+
+        typefield.addEventListener('input', function(event) {
+            (show_relevant_fields(typefield.value.toLowerCase()));
         });
         show_relevant_fields(typefield.value.toLowerCase());
     }

@@ -206,11 +206,11 @@ form.cms div.formfield {
   padding: 10px 0;
   clear: both;
   box-sizing: border-box; }
-  form.cms div.formfield#type, form.cms div.formfield#number {
+  form.cms div.formfield.type, form.cms div.formfield.number {
     width: 75%;
     clear: none;
     float: left; }
-  form.cms div.formfield#number {
+  form.cms div.formfield.number {
     width: 20%;
     float: right; }
 

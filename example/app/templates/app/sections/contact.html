@@ -1,5 +1,4 @@
 {% load i18n %}
-
 <section class="{{section.type}} color{{section.color}}">
   <div class="wrapper">
     <div class="title">
@@ -15,7 +14,5 @@
         <button class="button" name="section" value="{{section.pk}}">{% trans 'Send' %}</button>
       </form>
     </div>
-
-    {% include 'cms/editlink.html' %}
   </div>
 </section>

@@ -21,14 +21,4 @@
     {% endif %}
   </div>
 
-  {% if user.is_staff %}
-    <section>
-      <div class="wrapper">
-        <div class="edit">
-          <a href="{% url 'cms:createsection' page.pk %}">+ {% trans 'new section' %}</a>
-        </div>
-      </div>
-    </section>
-  {% endif %}
-
 {% endblock %}

@@ -1,4 +1,4 @@
-<div class="formfield{% if field.errors %} error{% endif %}{% if field.field.required %} required{% endif %}" id="{{field.name}}">
+<div class="formfield{% if field.errors %} error{% endif %}{% if field.field.required %} required{% endif %} {{field.name}}" id="{{field.name}}{{counter}}">
   <div class="errors">
     {{field.errors}}
   </div>
