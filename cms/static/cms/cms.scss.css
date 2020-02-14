@@ -178,7 +178,7 @@ section {
 section.contactsection div#message {
   display: none; }
 
-section.contactsection textarea {
+section.contactsection textarea, section.contactsection input {
   font-family: inherit; }
 
 /* Form elements */
@@ -254,7 +254,7 @@ form.cms input, form.cms select, form.cms textarea {
   padding: 5px; }
 
 form.cms textarea {
-  height: 1px; }
+  height: 15em; }
 
 form.cms input[type=checkbox] {
   width: auto; }

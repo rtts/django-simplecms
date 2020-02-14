@@ -68,7 +68,8 @@
     // https://stackoverflow.com/a/25621277
     var tx = document.getElementsByTagName('textarea');
     for (var i = 0; i < tx.length; i++) {
-        tx[i].setAttribute('style', 'height:' + (tx[i].scrollHeight) + 'px;overflow-y:hidden;');
+        tx[i].setAttribute('style', 'height:0;overflow-y:hidden;');
+        tx[i].style.height = (tx[i].scrollHeight) + 'px';
         tx[i].addEventListener("input", OnInput, false);
     }
     function OnInput() {
