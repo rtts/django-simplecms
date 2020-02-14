@@ -309,7 +309,7 @@ form.cms {
     div.label {
       font-weight: 700;
     }
-    input, select, textarea {
+    input, select, .textarea, div.textarea {
       border: 1px solid black;
     }
   }
@@ -346,7 +346,7 @@ form.cms {
     padding: 5px;
   }
   textarea {
-    height: 25em;
+    height: 1px;
   }
 
   input[type=checkbox] {

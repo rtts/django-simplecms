@@ -223,7 +223,7 @@ form.cms div.formfield.error {
 form.cms div.formfield.required div.label {
   font-weight: 700; }
 
-form.cms div.formfield.required input, form.cms div.formfield.required select, form.cms div.formfield.required textarea {
+form.cms div.formfield.required input, form.cms div.formfield.required select, form.cms div.formfield.required .textarea, form.cms div.formfield.required div.textarea {
   border: 1px solid black; }
 
 form.cms div.label {
@@ -254,7 +254,7 @@ form.cms input, form.cms select, form.cms textarea {
   padding: 5px; }
 
 form.cms textarea {
-  height: 25em; }
+  height: 1px; }
 
 form.cms input[type=checkbox] {
   width: auto; }
