@@ -41,6 +41,27 @@ class SectionFormView(FormMixin, SectionView):
             return redirect(self.get_success_url())
         return form
 
+class SectionFormSetView(SectionView):
+    '''Generic section with associated form'''
+    
+    formset_class = None
+
+    def post(self, request):
+        '''Process form'''
+        formset = self.get_formset()
+        if formset.is_valid():
+            formset.save(request)
+            return redirect(self.get_success_url())
+        return formset
+        
+    def get_formset(self):
+        return self.formset_class()
+
+    def get_context_data(self, **kwargs):
+        if 'formset' not in kwargs:
+            kwargs['formset'] = self.get_formset()
+        return super().get_context_data(**kwargs)
+
 class MenuMixin:
     '''Add pages to template context'''
     def get_context_data(self, **kwargs):
