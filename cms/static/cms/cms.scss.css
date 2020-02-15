@@ -228,7 +228,8 @@ form.cms div.formfield.required input, form.cms div.formfield.required select, f
 
 form.cms div.label {
   font-size: 0.8rem;
-  font-weight: 400; }
+  font-weight: 400;
+  text-align: left; }
 
 form.cms div.input {
   overflow: hidden;

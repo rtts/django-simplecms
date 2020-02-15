@@ -22,7 +22,10 @@ STATIC_ROOT = '/srv/' + PROJECT_NAME + '/static'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = '/srv/' + PROJECT_NAME + '/media'
 LOGIN_REDIRECT_URL = '/'
+
 CMS_SECTION_MODEL = 'app.Section'
+# CMS_PAGE_MODEL = 'app.Page' # https://github.com/wq/django-swappable-models/issues/18#issuecomment-514039164
+
 MARKDOWN_EXTENSIONS = ['extra', 'smarty']
 
 def read(file):
