@@ -5,9 +5,11 @@
 {% block title %}{{block.super}} - {{page.title}}{% endblock %}
 
 {% block content %}
-  {% for section in sections %}
-    {% include_section section %}
-  {% endfor %}
+  <form class="cms">
+    {% for section in sections %}
+      {% include_section section %}
+    {% endfor %}
+  </form>
 
   <div class="edit page">
     {% if user.is_staff %}
@@ -21,4 +23,31 @@
     {% endif %}
   </div>
 
+{% endblock %}
+
+{% block extrabody %}
+  <script>
+    // https://stackoverflow.com/a/25621277
+    var tx = document.getElementsByTagName('textarea');
+    for (var i = 0; i < tx.length; i++) {
+        tx[i].setAttribute('style', 'height:0;overflow-y:hidden;');
+        tx[i].style.height = (tx[i].scrollHeight) + 'px';
+        tx[i].addEventListener("input", OnInput, false);
+    }
+    function OnInput() {
+        this.style.height = '0';
+        this.style.height = (this.scrollHeight) + 'px';
+    }
+
+    var editables = document.querySelectorAll('.editable');
+    for (el of editables) {
+        formfield = document.getElementById(el.dataset.formId);
+        formfield.style.display = 'none';
+        el.addEventListener('click', function(event) {
+            formfield = document.getElementById(this.dataset.formId);
+            formfield.style.display = 'inline-block';
+            this.style.display = 'none';
+        });
+    }
+  </script>
 {% endblock %}

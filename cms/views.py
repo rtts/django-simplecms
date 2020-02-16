@@ -89,12 +89,13 @@ class PageView(MenuMixin, MemoryMixin, generic.DetailView):
         '''Supply a default argument for slug'''
         super().setup(*args, slug=slug, **kwargs)
 
-    def initialize_section(self, section):
+    def initialize_section(self, section, form=None):
         section.view = section.__class__.view_class()
         section.view.setup(self.request, section)
         section.context = section.view.get_context_data(
             request = self.request,
             section = section,
+            form = form,
         )
 
     def get(self, request, *args, **kwargs):
@@ -102,8 +103,13 @@ class PageView(MenuMixin, MemoryMixin, generic.DetailView):
         page = self.object = self.get_object()
         context = self.get_context_data(**kwargs)
         sections = page.sections.all()
-        for section in sections:
-            self.initialize_section(section)
+
+        if request.user.has_perm('cms.change_page'):
+            formset = SectionFormSet(instance=page)
+            for form, section in zip(formset, sections):
+                self.initialize_section(section, form)
+                #raise ValueError(dir(form['title']))
+
         context.update({
             'page': page,
             'sections': sections,
