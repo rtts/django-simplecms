@@ -43,7 +43,7 @@ class SectionFormView(FormMixin, SectionView):
 
 class SectionFormSetView(SectionView):
     '''Generic section with associated form'''
-    
+
     formset_class = None
 
     def post(self, request):
@@ -53,8 +53,9 @@ class SectionFormSetView(SectionView):
             formset.save(request)
             return redirect(self.get_success_url())
         return formset
-        
+
     def get_formset(self):
+        # todo: handle initials!
         return self.formset_class()
 
     def get_context_data(self, **kwargs):
