@@ -12,7 +12,6 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        migrations.swappable_dependency(settings.CMS_PAGE_MODEL),
         ('contenttypes', '0002_remove_content_type_name'),
     ]
 
@@ -31,7 +30,6 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Pages',
                 'ordering': ['number'],
                 'abstract': False,
-                'swappable': 'CMS_PAGE_MODEL',
             },
             bases=(cms.models.Numbered, models.Model),
         ),
@@ -48,14 +46,13 @@ class Migration(migrations.Migration):
                 ('button_text', cms.models.VarCharField(blank=True, verbose_name='button text')),
                 ('button_link', cms.models.VarCharField(blank=True, verbose_name='button link')),
                 ('page', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='sections', to=settings.CMS_PAGE_MODEL, verbose_name='page')),
-                ('polymorphic_ctype', models.ForeignKey(editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='polymorphic_cms.section_set+', to='contenttypes.ContentType')),
+                ('polymorphic_ctype', models.ForeignKey(editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='polymorphic_app.section_set+', to='contenttypes.ContentType')),
             ],
             options={
                 'verbose_name': 'section',
                 'verbose_name_plural': 'sections',
                 'ordering': ['number'],
                 'abstract': False,
-                'swappable': 'CMS_SECTION_MODEL',
             },
             bases=(cms.models.Numbered, models.Model),
         ),

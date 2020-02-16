@@ -22,10 +22,8 @@ STATIC_ROOT = '/srv/' + PROJECT_NAME + '/static'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = '/srv/' + PROJECT_NAME + '/media'
 LOGIN_REDIRECT_URL = '/'
-
 CMS_SECTION_MODEL = 'app.Section'
-# CMS_PAGE_MODEL = 'app.Page' # https://github.com/wq/django-swappable-models/issues/18#issuecomment-514039164
-
+CMS_PAGE_MODEL = 'app.Page' # https://github.com/wq/django-swappable-models/issues/18#issuecomment-514039164
 MARKDOWN_EXTENSIONS = ['extra', 'smarty']
 
 def read(file):
@@ -39,11 +37,6 @@ try:
 except IOError:
     SECRET_KEY = ''.join(random.choice(string.printable) for x in range(50))
     write(KEYFILE, SECRET_KEY)
-
-SECTION_COLORS = [
-    (1, 'Licht'),
-    (2, 'Donker'),
-]
 
 INSTALLED_APPS = [
     'app',

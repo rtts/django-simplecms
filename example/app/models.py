@@ -14,7 +14,6 @@ class Section(BaseSection):
     title, content, image, video, button_text, button_link
 
     '''
-    color = models.PositiveIntegerField('kleur', default=1, choices=settings.SECTION_COLORS)
 
 @register_model('Tekst')
 class TextSection(Section):
