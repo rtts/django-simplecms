@@ -284,8 +284,7 @@ form.cms {
   }
 
   div.formfield {
-    margin: 5px 0;
-    padding: 10px 0;
+    margin-bottom: 10px;
     clear: both;
     box-sizing: border-box;
 
@@ -314,7 +313,7 @@ form.cms {
     }
   }
 
-  div.label {
+  div.label, label {
     font-size: 0.8rem;
     font-weight: 400;
     text-align: left;
@@ -322,7 +321,6 @@ form.cms {
 
   div.input {
     overflow: hidden;
-    margin: 5px 0;
   }
 
   div.helptext, span.required {
@@ -340,13 +338,20 @@ form.cms {
     color: black;
     border: 1px solid #aaa;
     font-size: 1rem;
-    display: inline-block;
+    display: block;
     width: 100%;
     box-sizing: border-box;
     margin: 0;
     padding: 5px;
+    font-family: inherit;
+  }
+  input[type=checkbox] {
+    display: inline-block;
+    vertical-align: middle;
   }
   textarea {
+    font-size: 1rem;
+    padding: 5px 5px;
     height: 15em;
   }
 

@@ -8,6 +8,9 @@ from django.utils.translation import gettext_lazy as _
 Page = swapper.load_model('cms', 'Page')
 Section = swapper.load_model('cms', 'Section')
 
+class ConfirmationForm(forms.Form):
+    pass
+
 class ContactForm(forms.Form):
     sender = forms.EmailField(label=_('Your email address'))
     spam_protection = forms.CharField(label=_('Your message'), widget=forms.Textarea())

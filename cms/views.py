@@ -160,12 +160,21 @@ class TypeMixin(MenuMixin):
 class BaseUpdateView(generic.UpdateView):
     template_name = 'cms/edit.html'
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'label_suffix': ''})
+        return kwargs
+
     def form_valid(self, form):
         if 'delete' in self.request.POST:
             collector = NestedObjects(using='default')
             collector.collect([self.object])
             self.template_name = 'cms/confirm.html'
-            return self.render_to_response(self.get_context_data(deleted=collector.nested(), protected=collector.protected))
+            return self.render_to_response(self.get_context_data(
+                deleted = collector.nested(),
+                protected = collector.protected,
+                object = self.object,
+            ))
         else:
             form.save()
         return redirect(self.request.session.get('previous_url'))
@@ -177,7 +186,7 @@ class UpdatePage(StaffRequiredMixin, TypeMixin, BaseUpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if 'formset' not in context:
-            context['formset'] = SectionFormSet(instance=self.object)
+            context['formset'] = SectionFormSet(instance=self.object, form_kwargs={'label_suffix': ''})
         return context
 
     def post(self, request, *args, **kwargs):

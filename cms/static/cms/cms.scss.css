@@ -202,8 +202,7 @@ form.cms fieldset {
     font-size: 1.15em; }
 
 form.cms div.formfield {
-  margin: 5px 0;
-  padding: 10px 0;
+  margin-bottom: 10px;
   clear: both;
   box-sizing: border-box; }
   form.cms div.formfield.type, form.cms div.formfield.number {
@@ -226,14 +225,13 @@ form.cms div.formfield.required div.label {
 form.cms div.formfield.required input, form.cms div.formfield.required select, form.cms div.formfield.required .textarea, form.cms div.formfield.required div.textarea {
   border: 1px solid black; }
 
-form.cms div.label {
+form.cms div.label, form.cms label {
   font-size: 0.8rem;
   font-weight: 400;
   text-align: left; }
 
 form.cms div.input {
-  overflow: hidden;
-  margin: 5px 0; }
+  overflow: hidden; }
 
 form.cms div.helptext, form.cms span.required {
   color: #666;
@@ -248,13 +246,20 @@ form.cms input, form.cms select, form.cms textarea {
   color: black;
   border: 1px solid #aaa;
   font-size: 1rem;
-  display: inline-block;
+  display: block;
   width: 100%;
   box-sizing: border-box;
   margin: 0;
-  padding: 5px; }
+  padding: 5px;
+  font-family: inherit; }
+
+form.cms input[type=checkbox] {
+  display: inline-block;
+  vertical-align: middle; }
 
 form.cms textarea {
+  font-size: 1rem;
+  padding: 5px 5px;
   height: 15em; }
 
 form.cms input[type=checkbox] {

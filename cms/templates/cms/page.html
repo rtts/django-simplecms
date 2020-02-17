@@ -9,16 +9,10 @@
     {% include_section section %}
   {% endfor %}
 
-  <div class="edit page">
-    {% if user.is_staff %}
-      {% if page.slug %}
-        <a href="{% url 'cms:updatepage' page.pk %}">{% trans 'edit this page' %}</a>
-      {% else %}
-        <a href="{% url 'cms:updatehomepage' %}">{% trans 'edit this page' %}</a>
-      {% endif %}
-    {% else %}
-      <a href="{% url 'login' %}">{% trans 'login' %}</a>
-    {% endif %}
-  </div>
+  {% if user.is_staff %}
+    <div class="edit page">
+      <a href="{% if page.slug %}{% url 'cms:updatepage' page.pk %}{% else %}{% url 'cms:updatehomepage' %}{% endif %}">{% trans 'edit this page' %}</a>
+    </div>
+  {% endif %}
 
 {% endblock %}

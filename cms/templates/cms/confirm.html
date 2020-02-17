@@ -30,7 +30,10 @@
             {{deleted|unordered_list}}
           </ul>
 
-          <button name="confirm">{% trans 'delete' %}</button>
+          <form method="post">
+            {% csrf_token %}
+            <button name="confirm">{% trans 'delete' %}</button>
+          </form>
         {% endif %}
 
       </div>
