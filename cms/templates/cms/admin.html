@@ -1,0 +1,19 @@
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="{% get_current_language as lang%}{{lang}}">
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'cms/cms.scss.css' %}">
+    {% block extrahead %}{% endblock %}
+  </head>
+  <body>
+    {% block content %}
+    {% endblock %}
+
+    {% block extrabody %}{% endblock %}
+  </body>
+</html>

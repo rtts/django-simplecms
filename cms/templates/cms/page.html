@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load static %}
 {% load cms %}
 
 {% block title %}{{block.super}} - {{page.title}}{% endblock %}
@@ -11,7 +11,7 @@
 
   {% if user.is_staff %}
     <div class="edit page">
-      <a href="{% if page.slug %}{% url 'cms:updatepage' page.pk %}{% else %}{% url 'cms:updatehomepage' %}{% endif %}">{% trans 'edit this page' %}</a>
+      <a href="{% if page.slug %}{% url 'cms:editpage' page.slug %}{% else %}{% url 'cms:editpage' %}{% endif %}"><img src="{% static 'cms/edit.svg' %}"></a>
     </div>
   {% endif %}
 

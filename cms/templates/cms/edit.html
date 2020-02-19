@@ -1,41 +1,31 @@
-{% extends 'base.html' %}
-{% load i18n %}
+{% extends 'admin.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans 'Edit' %} {{form.instance}}{% endblock %}
 
 {% block content %}
   <form method="POST" enctype="multipart/form-data" class="cms">
     {% csrf_token %}
     {{form.media}}
-    <div class="edit page">
-      <button>{% trans 'save' %}</button>
-    </div>
 
-    <section>
-      <div class="wrapper">
-        <div class="title">
-          <h1>{{form.instance}}</h1>
-        </div>
-        {% if form.errors or formset.errors %}
-          <div class="global_error">
-            {% trans 'Please correct the error(s) below and save again' %}
-          </div>
-        {% endif %}
-        {% for field in form %}
-          {% if field.field.widget.input_type == 'checkbox' %}
-            {% include 'cms/formfield_checkbox.html' with field=field %}
-          {% else %}
-            {% include 'cms/formfield.html' with field=field %}
-          {% endif %}
-        {% endfor %}
-        {% if form.instance.pk %}
-          <div class="formfield">
-            <div class="input">
-              <input type="checkbox" name="delete" id="id_delete"> <label for="id_delete">{% trans 'Delete' %}</label>
+    {% if form %}
+      <section>
+        <div class="wrapper">
+          {% if form.errors or formset.errors %}
+            <div class="global_error">
+              {% trans 'Please correct the error(s) below and save again' %}
             </div>
-          </div>
-        {% endif %}
-
-      </div>
-    </section>
+          {% endif %}
+          {% for field in form %}
+            {% if field.field.widget.input_type == 'checkbox' %}
+              {% include 'cms/formfield_checkbox.html' with field=field %}
+            {% else %}
+              {% include 'cms/formfield.html' with field=field %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
 
     {% if formset %}
       {{formset.management_form}}
@@ -46,7 +36,6 @@
         {% endfor %}
         <section>
           <div class="wrapper">
-            <h1>{{form.instance}}</h1>
             <div class="subform">
               {% for field in form.visible_fields %}
                 {% if field.name == 'DELETE' and not form.instance.pk %}
@@ -62,91 +51,98 @@
         </section>
       {% endfor %}
     {% endif %}
+
+    <div class="edit page">
+      <button><img src="{% static 'cms/ok.svg' %}"></button>
+    </div>
   </form>
 {% endblock %}
 
 {% block extrabody %}
   <script type="text/javascript" src="/static/admin/js/urlify.js"></script>
   <script>
-    // https://stackoverflow.com/a/25621277
-    var tx = document.getElementsByTagName('textarea');
-    for (var i = 0; i < tx.length; i++) {
-        tx[i].setAttribute('style', 'height:0;overflow-y:hidden;');
-        tx[i].style.height = (tx[i].scrollHeight) + 'px';
-        tx[i].addEventListener("input", OnInput, false);
-    }
-    function OnInput() {
-        this.style.height = '0';
-        this.style.height = (this.scrollHeight) + 'px';
-    }
+    document.addEventListener("DOMContentLoaded", function(event) {
 
-    var slugfield = document.getElementById('id_slug');
-    var titlefield = document.getElementById('id_title');
+        // Auto-resize <textarea's>
 
-    /* My own implementation of Django's prepopulate.js */
+        var tx = document.getElementsByTagName('textarea');
+        for (var i = 0; i < tx.length; i++) {
+            tx[i].setAttribute('style', 'height:0;overflow-y:hidden;');
+            tx[i].style.height = (tx[i].scrollHeight) + 'px';
+            tx[i].addEventListener("input", OnInput, false);
+        }
+        function OnInput() {
+            this.style.height = '0';
+            this.style.height = (this.scrollHeight) + 'px';
+        }
 
-    if (slugfield && titlefield) {
-        var virgin = slugfield.value === '';
+        // My own implementation of Django's prepopulate.js
 
-        if (virgin) {
-            titlefield.addEventListener('input', function(event) {
-                if (virgin) {
-                    slugfield.value = URLify(titlefield.value);
+        var slugfield = document.getElementById('id_slug');
+        var titlefield = document.getElementById('id_title');
+        if (slugfield && titlefield) {
+            var virgin = slugfield.value === '';
+            if (virgin) {
+                titlefield.addEventListener('input', function(event) {
+                    if (virgin) {
+                        slugfield.value = URLify(titlefield.value);
+                    }
+                });
+                slugfield.addEventListener('input', function(event) {
+                    virgin = false;
+                });
+            }
+        }
+
+        // Auto-hide non-relevant fields, based on type field
+
+        {% if fields_per_type %}
+        var typefield = document.getElementById('id_type');
+        fields_per_type = {{fields_per_type|safe}};
+
+        if (typefield) {
+            function show_relevant_fields(type) {
+                for (el of document.querySelectorAll('div.formfield')) {
+                    el.style.display = 'none';
                 }
-            });
-            slugfield.addEventListener('input', function(event) {
-                virgin = false;
-            });
-        }
-    }
 
-    {% if fields_per_type %}
-
-    var typefield = document.getElementById('id_type');
-    fields_per_type = {{fields_per_type|safe}};
-
-    if (typefield) {
-        function show_relevant_fields(type) {
-            for (el of document.querySelectorAll('div.formfield')) {
-                el.style.display = 'none';
+                for (field of fields_per_type[type]) {
+                    el = document.getElementById(field);
+                    el.style.display = 'block';
+                }
             }
 
-            for (field of fields_per_type[type]) {
-                el = document.getElementById(field);
-                el.style.display = 'block';
-            }
-        }
-
-        typefield.addEventListener('input', function(event) {
+            typefield.addEventListener('input', function(event) {
+                show_relevant_fields(typefield.value.toLowerCase());
+            });
             show_relevant_fields(typefield.value.toLowerCase());
-        });
-        show_relevant_fields(typefield.value.toLowerCase());
-    }
-
-    subforms = document.querySelectorAll('div.subform');
-    for (let i = 0; i < subforms.length; ++i) {
-        let typefield = document.getElementById('id_sections-' + i + '-type');
-
-        function show_relevant_fields(type) {
-            for (field of subforms[i].querySelectorAll('div.formfield')) {
-                field.style.display = 'none';
-            }
-
-            delete_checkbox = document.getElementById('DELETE' + i);
-            if (delete_checkbox) {
-                delete_checkbox.style.display = 'block';
-            }
-            for (field of fields_per_type[type]) {
-                el = document.getElementById(field + i);
-                el.style.display = 'block';
-            }
         }
 
-        typefield.addEventListener('input', function(event) {
-            (show_relevant_fields(typefield.value.toLowerCase()));
-        });
-        show_relevant_fields(typefield.value.toLowerCase());
-    }
-    {% endif %}
+        subforms = document.querySelectorAll('div.subform');
+        for (let i = 0; i < subforms.length; ++i) {
+            let typefield = document.getElementById('id_sections-' + i + '-type');
+
+            function show_relevant_fields(type) {
+                for (field of subforms[i].querySelectorAll('div.formfield')) {
+                    field.style.display = 'none';
+                }
+
+                delete_checkbox = document.getElementById('DELETE' + i);
+                if (delete_checkbox) {
+                    delete_checkbox.style.display = 'block';
+                }
+                for (field of fields_per_type[type]) {
+                    el = document.getElementById(field + i);
+                    el.style.display = 'block';
+                }
+            }
+
+            typefield.addEventListener('input', function(event) {
+                (show_relevant_fields(typefield.value.toLowerCase()));
+            });
+            show_relevant_fields(typefield.value.toLowerCase());
+        }
+        {% endif %}
+    });
   </script>
 {% endblock %}

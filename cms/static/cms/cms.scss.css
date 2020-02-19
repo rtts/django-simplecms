@@ -49,9 +49,6 @@ div.spacer {
   height: 1rem;
   clear: both; }
 
-header, nav, section, footer {
-  padding: 1rem; }
-
 nav {
   padding: 0; }
   nav button#hamburger {
@@ -133,9 +130,14 @@ div.edit {
   text-align: center; }
   div.edit.page {
     position: fixed;
-    left: 1em;
-    top: 1em;
+    right: 1em;
+    bottom: 1em;
     z-index: 1000; }
+    div.edit.page img {
+      width: 75px;
+      height: auto; }
+    div.edit.page a:before, div.edit.page button:before, div.edit.page a:after, div.edit.page button:after {
+      display: none; }
 
 div.edit a, div.edit button, a.edit {
   font-family: inherit;
@@ -155,8 +157,7 @@ div.edit a, div.edit button, a.edit {
     content: ' ]'; }
 
 section {
-  clear: both;
-  border-bottom: 2px solid #3573a8; }
+  clear: both; }
   section div.image img {
     width: 100%; }
   section div.title {
@@ -182,8 +183,8 @@ section.contactsection textarea, section.contactsection input {
   font-family: inherit; }
 
 /* Form elements */
-form.cms div.wrapper {
-  overflow: hidden; }
+form.cms section {
+  margin-top: 3em; }
 
 form.cms div.global_error {
   border: 2px dotted red;
@@ -205,8 +206,8 @@ form.cms div.formfield {
   margin-bottom: 10px;
   clear: both;
   box-sizing: border-box; }
-  form.cms div.formfield.type, form.cms div.formfield.number {
-    width: 75%;
+  form.cms div.formfield.type, form.cms div.formfield.number, form.cms div.formfield.slug {
+    width: 77%;
     clear: none;
     float: left; }
   form.cms div.formfield.number {
@@ -222,13 +223,11 @@ form.cms div.formfield.error {
 form.cms div.formfield.required div.label {
   font-weight: 700; }
 
-form.cms div.formfield.required input, form.cms div.formfield.required select, form.cms div.formfield.required .textarea, form.cms div.formfield.required div.textarea {
-  border: 1px solid black; }
-
 form.cms div.label, form.cms label {
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 400;
-  text-align: left; }
+  text-align: left;
+  margin-bottom: 2px; }
 
 form.cms div.input {
   overflow: hidden; }
@@ -244,36 +243,32 @@ form.cms span.required {
 form.cms input, form.cms select, form.cms textarea {
   background: white;
   color: black;
-  border: 1px solid #aaa;
+  border: 0.5px solid #ccc;
+  border-radius: 3px;
   font-size: 1rem;
   display: block;
   width: 100%;
   box-sizing: border-box;
   margin: 0;
-  padding: 5px;
+  padding: 5px 8px;
   font-family: inherit; }
 
 form.cms input[type=checkbox] {
+  width: auto;
   display: inline-block;
   vertical-align: middle; }
 
+form.cms input[name$=title] {
+  font-weight: bold; }
+
 form.cms textarea {
   font-size: 1rem;
-  padding: 5px 5px;
-  height: 15em; }
-
-form.cms input[type=checkbox] {
-  width: auto; }
+  height: 15em;
+  line-height: 1.5; }
 
 form.cms select {
-  background: white; }
-
-form.cms div.filefield {
-  border: 1px solid #aaa;
   background: white;
-  padding: 4px; }
-  form.cms div.filefield input {
-    border: none; }
+  padding-left: 3px; }
 
 form.cms ul.errorlist {
   margin: 0;

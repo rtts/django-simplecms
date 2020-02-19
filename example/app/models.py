@@ -23,7 +23,7 @@ class TextSection(Section):
 
 @register_model('Button')
 class ButtonSection(Section):
-    fields = ['button_text', 'button_link']
+    fields = ['title', 'href']
     class Meta:
         proxy = True
 

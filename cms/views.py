@@ -2,8 +2,10 @@ import json
 import swapper
 
 from django.views import generic
+from django.http import Http404
 from django.shortcuts import redirect
 from django.views.generic.edit import FormMixin
+from django.views.generic.detail import SingleObjectMixin
 from django.contrib.admin.utils import NestedObjects
 from django.core.exceptions import ImproperlyConfigured
 from django.contrib.contenttypes.models import ContentType
@@ -63,24 +65,7 @@ class SectionFormSetView(SectionView):
             kwargs['formset'] = self.get_formset()
         return super().get_context_data(**kwargs)
 
-class MenuMixin:
-    '''Add pages to template context'''
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        pages = Page.objects.filter(menu=True)
-        context.update({
-            'pages': pages,
-        })
-        return context
-
-class MemoryMixin:
-    '''Remember the previous page in session'''
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            request.session['previous_url'] = request.path
-        return super().dispatch(request, *args, **kwargs)
-
-class PageView(MenuMixin, MemoryMixin, generic.DetailView):
+class PageView(generic.DetailView):
     '''View of a page with heterogeneous (polymorphic) sections'''
     model = Page
     template_name = 'cms/page.html'
@@ -99,7 +84,13 @@ class PageView(MenuMixin, MemoryMixin, generic.DetailView):
 
     def get(self, request, *args, **kwargs):
         '''Initialize sections and render final response'''
-        page = self.object = self.get_object()
+        try:
+            page = self.object = self.get_object()
+        except Http404:
+            if self.request.user.has_perm('cms_page_create'):
+                return redirect('cms:editpage', self.kwargs['slug'])
+            else:
+                raise
         context = self.get_context_data(**kwargs)
         sections = page.sections.all()
         for section in sections:
@@ -135,15 +126,46 @@ class PageView(MenuMixin, MemoryMixin, generic.DetailView):
         })
         return self.render_to_response(context)
 
-# The following views require a logged-in staff member
-
-class StaffRequiredMixin(UserPassesTestMixin):
-    def test_func(self):
-        return self.request.user.is_staff
-
-class TypeMixin(MenuMixin):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        pages = Page.objects.filter(menu=True)
+        context.update({
+            'pages': pages,
+        })
+        return context
+
+class EditPage(UserPassesTestMixin, generic.UpdateView):
+    model = Page
+    form_class = PageForm
+    template_name = 'cms/edit.html'
+
+    def setup(self, *args, slug='', **kwargs):
+        '''Supply a default argument for slug'''
+        super().setup(*args, slug=slug, **kwargs)
+
+    def test_func(self):
+        return self.request.user.has_perm('cms_page_change')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'label_suffix': ''})
+        return kwargs
+
+    def form_valid(self, form):
+        object = form.save()
+        return redirect(object.get_absolute_url())
+
+    def get(self, request, *args, **kwargs):
+        try:
+            page = self.object = self.get_object()
+        except Http404:
+            return CreatePage.as_view()(request, slug=self.kwargs['slug'])
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if 'formset' not in context:
+            context['formset'] = SectionFormSet(instance=self.object, form_kwargs={'label_suffix': ''})
         fields_per_type = {}
         for model, _ in Section.TYPES:
             ctype = ContentType.objects.get(
@@ -155,38 +177,6 @@ class TypeMixin(MenuMixin):
         context.update({
             'fields_per_type': json.dumps(fields_per_type),
         })
-        return context
-
-class BaseUpdateView(generic.UpdateView):
-    template_name = 'cms/edit.html'
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs.update({'label_suffix': ''})
-        return kwargs
-
-    def form_valid(self, form):
-        if 'delete' in self.request.POST:
-            collector = NestedObjects(using='default')
-            collector.collect([self.object])
-            self.template_name = 'cms/confirm.html'
-            return self.render_to_response(self.get_context_data(
-                deleted = collector.nested(),
-                protected = collector.protected,
-                object = self.object,
-            ))
-        else:
-            form.save()
-        return redirect(self.request.session.get('previous_url'))
-
-class UpdatePage(StaffRequiredMixin, TypeMixin, BaseUpdateView):
-    model = Page
-    form_class = PageForm
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        if 'formset' not in context:
-            context['formset'] = SectionFormSet(instance=self.object, form_kwargs={'label_suffix': ''})
         return context
 
     def post(self, request, *args, **kwargs):
@@ -202,21 +192,10 @@ class UpdatePage(StaffRequiredMixin, TypeMixin, BaseUpdateView):
     def form_invalid(self, form, formset):
         return self.render_to_response(self.get_context_data(form=form, formset=formset))
 
-class UpdateSection(StaffRequiredMixin, TypeMixin, BaseUpdateView):
-    model = Section
-    form_class = SectionForm
-
-class CreatePage(StaffRequiredMixin, MenuMixin, generic.CreateView):
+class CreatePage(generic.CreateView):
     model = Page
     form_class = PageForm
-    template_name = 'cms/new.html'
+    template_name = 'cms/edit.html'
 
-class CreateSection(StaffRequiredMixin, TypeMixin, generic.CreateView):
-    model = Section
-    form_class = SectionForm
-    template_name = 'cms/new.html'
-
-    def form_valid(self, form):
-        form.instance.page = Page.objects.get(pk=self.kwargs.get('pk'))
-        form.save()
-        return redirect(self.request.session.get('previous_url'))
+    def get_form_kwargs(self, *args, **kwargs):
+        return {'initial': {'slug': self.kwargs['slug']}}

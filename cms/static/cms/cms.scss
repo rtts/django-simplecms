@@ -66,10 +66,6 @@ div.spacer {
   clear: both;
 }
 
-header, nav, section, footer {
-  padding: 1rem;
-}
-
 nav {
   padding: 0;
 
@@ -181,9 +177,16 @@ div.edit {
   text-align: center;
   &.page {
     position: fixed;
-    left: 1em;
-    top: 1em;
+    right: 1em;
+    bottom: 1em;
     z-index: 1000;
+    img {
+      width: 75px;
+      height: auto;
+    }
+    a:before, button:before, a:after, button:after {
+      display: none;
+    }
   }
 }
 
@@ -210,7 +213,6 @@ div.edit a, div.edit button, a.edit{
 
 section {
   clear: both;
-  border-bottom: 2px solid $blue;
 
   div.image {
     img {
@@ -259,8 +261,8 @@ section.contactsection {
 /* Form elements */
 
 form.cms {
-  div.wrapper {
-    overflow: hidden;
+  section {
+    margin-top: 3em;
   }
 
   div.global_error {
@@ -288,8 +290,8 @@ form.cms {
     clear: both;
     box-sizing: border-box;
 
-    &.type, &.number {
-      width: 75%;
+    &.type, &.number, &.slug {
+      width: 77%;
       clear: none;
       float: left;
     }
@@ -308,15 +310,16 @@ form.cms {
     div.label {
       font-weight: 700;
     }
-    input, select, .textarea, div.textarea {
-      border: 1px solid black;
+    input {
+      //font-weight: bold;
     }
   }
 
   div.label, label {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     font-weight: 400;
     text-align: left;
+    margin-bottom: 2px;
   }
 
   div.input {
@@ -336,39 +339,32 @@ form.cms {
   input, select, textarea {
     background: white;
     color: black;
-    border: 1px solid #aaa;
+    border: 0.5px solid #ccc;
+    border-radius: 3px;
     font-size: 1rem;
     display: block;
     width: 100%;
     box-sizing: border-box;
     margin: 0;
-    padding: 5px;
+    padding: 5px 8px;
     font-family: inherit;
   }
   input[type=checkbox] {
+    width: auto;
     display: inline-block;
     vertical-align: middle;
   }
+  input[name$=title] {
+    font-weight: bold;
+  }
   textarea {
     font-size: 1rem;
-    padding: 5px 5px;
     height: 15em;
+    line-height: 1.5;
   }
-
-  input[type=checkbox] {
-    width: auto;
-  }
-
   select {
     background: white;
-  }
-
-  div.filefield {
-    border: 1px solid #aaa;
-    background: white;
-    padding: 4px;
-
-    input { border: none }
+    padding-left: 3px;
   }
 
   ul.errorlist {

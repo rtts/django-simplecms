@@ -60,9 +60,9 @@ class Numbered:
 
 class BasePage(Numbered, models.Model):
     '''Abstract base model for pages'''
-    number = models.PositiveIntegerField(_('number'), blank=True)
-    title = VarCharField(_('title'))
+    title = VarCharField(_('page'))
     slug = models.SlugField(_('slug'), blank=True, unique=True)
+    number = models.PositiveIntegerField(_('number'), blank=True)
     menu = models.BooleanField(_('visible in menu'), default=True)
 
     def __str__(self):
@@ -85,10 +85,10 @@ class BaseSection(Numbered, PolymorphicModel):
     '''Abstract base model for sections'''
     TYPES = [] # Will be populated by @register_model()
     page = models.ForeignKey(swapper.get_model_name('cms', 'Page'), verbose_name=_('page'), related_name='sections', on_delete=models.PROTECT)
-    type = VarCharField(_('type'), blank=True)
+    title = VarCharField(_('section'))
+    type = VarCharField(_('type'))
     number = models.PositiveIntegerField(_('number'), blank=True)
 
-    title = VarCharField(_('title'), blank=True)
     content = models.TextField(_('content'), blank=True)
     image = models.ImageField(_('image'), blank=True)
     video = EmbedVideoField(_('video'), blank=True, help_text=_('Paste a YouTube, Vimeo, or SoundCloud link'))
