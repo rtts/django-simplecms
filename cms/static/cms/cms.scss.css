@@ -176,11 +176,8 @@ section {
     text-align: center;
     padding: 1em 0; }
 
-section.contactsection div#message {
+section.contact div#message {
   display: none; }
-
-section.contactsection textarea, section.contactsection input {
-  font-family: inherit; }
 
 /* Form elements */
 form.cms section {

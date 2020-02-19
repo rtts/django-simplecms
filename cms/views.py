@@ -1,16 +1,13 @@
 import json
 import swapper
 
-from django.views import generic
-from django.http import Http404
+from django.views.generic import base, detail, edit
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import redirect
-from django.views.generic.edit import FormMixin
-from django.views.generic.detail import SingleObjectMixin
-from django.contrib.admin.utils import NestedObjects
 from django.core.exceptions import ImproperlyConfigured
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.http import HttpResponseRedirect, HttpResponseBadRequest
+#from django.http import HttpResponseRedirect, HttpResponseBadRequest
 
 from .decorators import register_view
 from .forms import PageForm, SectionForm, SectionFormSet
@@ -32,7 +29,7 @@ class SectionView:
         '''Override this to customize a section's context'''
         return kwargs
 
-class SectionFormView(FormMixin, SectionView):
+class SectionFormView(edit.FormMixin, SectionView):
     '''Generic section with associated form'''
 
     def post(self, request):
@@ -44,7 +41,7 @@ class SectionFormView(FormMixin, SectionView):
         return form
 
 class SectionFormSetView(SectionView):
-    '''Generic section with associated form'''
+    '''Generic section with associated formset'''
 
     formset_class = None
 
@@ -65,7 +62,7 @@ class SectionFormSetView(SectionView):
             kwargs['formset'] = self.get_formset()
         return super().get_context_data(**kwargs)
 
-class PageView(generic.DetailView):
+class PageView(detail.DetailView):
     '''View of a page with heterogeneous (polymorphic) sections'''
     model = Page
     template_name = 'cms/page.html'
@@ -88,7 +85,7 @@ class PageView(generic.DetailView):
             page = self.object = self.get_object()
         except Http404:
             if self.request.user.has_perm('cms_page_create'):
-                return redirect('cms:editpage', self.kwargs['slug'])
+                return redirect('cms:updatepage', self.kwargs['slug'])
             else:
                 raise
         context = self.get_context_data(**kwargs)
@@ -134,33 +131,25 @@ class PageView(generic.DetailView):
         })
         return context
 
-class EditPage(UserPassesTestMixin, generic.UpdateView):
+class EditPage(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMixin, base.View):
     model = Page
     form_class = PageForm
     template_name = 'cms/edit.html'
+
+    def test_func(self):
+        return self.request.user.has_perm('cms_page_change')
 
     def setup(self, *args, slug='', **kwargs):
         '''Supply a default argument for slug'''
         super().setup(*args, slug=slug, **kwargs)
 
-    def test_func(self):
-        return self.request.user.has_perm('cms_page_change')
-
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs.update({'label_suffix': ''})
+        kwargs.update({
+            'label_suffix': '',
+            'initial': {'slug': self.kwargs['slug']},
+        })
         return kwargs
-
-    def form_valid(self, form):
-        object = form.save()
-        return redirect(object.get_absolute_url())
-
-    def get(self, request, *args, **kwargs):
-        try:
-            page = self.object = self.get_object()
-        except Http404:
-            return CreatePage.as_view()(request, slug=self.kwargs['slug'])
-        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -179,23 +168,30 @@ class EditPage(UserPassesTestMixin, generic.UpdateView):
         })
         return context
 
+    def get_object(self):
+        try:
+            return super().get_object()
+        except:
+            return None
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return self.render_to_response(self.get_context_data())
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = self.get_form()
-        formset = SectionFormSet(request.POST, request.FILES, instance=self.object)
-        if form.is_valid() and formset.is_valid():
-            formset.save()
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form, formset)
-
-    def form_invalid(self, form, formset):
+        if form.is_valid():
+            page = form.save()
+            formset = SectionFormSet(request.POST, request.FILES, instance=page)
+            if formset.is_valid():
+                formset.save()
+                return HttpResponseRedirect(page.get_absolute_url())
         return self.render_to_response(self.get_context_data(form=form, formset=formset))
 
-class CreatePage(generic.CreateView):
-    model = Page
-    form_class = PageForm
-    template_name = 'cms/edit.html'
+class CreatePage(EditPage):
+    def get_object(self):
+        pass
 
-    def get_form_kwargs(self, *args, **kwargs):
-        return {'initial': {'slug': self.kwargs['slug']}}
+class UpdatePage(EditPage):
+    pass
