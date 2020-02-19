@@ -1,7 +1,0 @@
-{% load i18n %}
-
-{% if request.user.is_staff %}
-  <div class="edit">
-    <a href="{% url 'cms:updatesection' section.pk %}">{% trans 'edit this section' %}</a>
-  </div>
-{% endif %}

@@ -185,8 +185,15 @@ class EditPage(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMi
             page = form.save()
             formset = SectionFormSet(request.POST, request.FILES, instance=page)
             if formset.is_valid():
-                formset.save()
-                return HttpResponseRedirect(page.get_absolute_url())
+                if formset.save():
+                    if page.slug and not page.sections.exists(): # anymore
+                        page.delete()
+                        return HttpResponseRedirect('/')
+                    return HttpResponseRedirect(page.get_absolute_url())
+                else:
+                    # TODO: show sensible error
+                    formset.errors.append([{}, {'title': ['You have to add sections']}])
+        formset = SectionFormSet(request.POST, request.FILES)
         return self.render_to_response(self.get_context_data(form=form, formset=formset))
 
 class CreatePage(EditPage):

@@ -92,8 +92,7 @@ class BaseSection(Numbered, PolymorphicModel):
     content = models.TextField(_('content'), blank=True)
     image = models.ImageField(_('image'), blank=True)
     video = EmbedVideoField(_('video'), blank=True, help_text=_('Paste a YouTube, Vimeo, or SoundCloud link'))
-    button_text = VarCharField(_('button text'), blank=True)
-    button_link = VarCharField(_('button link'), blank=True)
+    href = VarCharField(_('link'), blank=True)
 
     def number_with_respect_to(self):
         return self.page.sections.all()
