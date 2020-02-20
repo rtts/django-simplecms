@@ -11,7 +11,11 @@
     {% if form %}
       <section>
         <div class="wrapper">
-          {% if form.errors or formset.errors %}
+          {% if form.non_field_errors %}
+            <div class="global_error">
+              {{form.non_field_errors}}
+            </div>
+          {% elif form.errors or formset.errors %}
             <div class="global_error">
               {% trans 'Please correct the error(s) below and save again' %}
             </div>

@@ -1,13 +1,13 @@
 import json
 import swapper
 
+from django.shortcuts import redirect
 from django.views.generic import base, detail, edit
 from django.http import Http404, HttpResponseRedirect
-from django.shortcuts import redirect
+from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ImproperlyConfigured
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.mixins import UserPassesTestMixin
-#from django.http import HttpResponseRedirect, HttpResponseBadRequest
 
 from .decorators import register_view
 from .forms import PageForm, SectionForm, SectionFormSet
@@ -37,7 +37,7 @@ class SectionFormView(edit.FormMixin, SectionView):
         form = self.get_form()
         if form.is_valid():
             form.save(request)
-            return redirect(self.get_success_url())
+            return HttpResponseRedirect(self.get_success_url())
         return form
 
 class SectionFormSetView(SectionView):
@@ -50,7 +50,7 @@ class SectionFormSetView(SectionView):
         formset = self.get_formset()
         if formset.is_valid():
             formset.save(request)
-            return redirect(self.get_success_url())
+            return HttpResponseRedirect(self.get_success_url())
         return formset
 
     def get_formset(self):
@@ -178,22 +178,26 @@ class EditPage(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMi
         self.object = self.get_object()
         return self.render_to_response(self.get_context_data())
 
+    def get_formset(self):
+        return SectionFormSet(self.request.POST, self.request.FILES, instance=self.object)
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = self.get_form()
-        if form.is_valid():
-            page = form.save()
-            formset = SectionFormSet(request.POST, request.FILES, instance=page)
-            if formset.is_valid():
-                if formset.save():
-                    if page.slug and not page.sections.exists(): # anymore
-                        page.delete()
-                        return HttpResponseRedirect('/')
-                    return HttpResponseRedirect(page.get_absolute_url())
-                else:
-                    # TODO: show sensible error
-                    formset.errors.append([{}, {'title': ['You have to add sections']}])
-        formset = SectionFormSet(request.POST, request.FILES)
+        formset = self.get_formset()
+
+        if form.is_valid() and formset.is_valid():
+            if not self.object and not formset.has_changed():
+                form.add_error(None, _('You can’t save a new page without adding any sections!'))
+            else:
+                page = form.save()
+                formset.instance = page
+                formset.save()
+                if page.slug and not page.sections.exists():
+                    page.delete()
+                    return HttpResponseRedirect('/')
+                return HttpResponseRedirect(page.get_absolute_url())
+
         return self.render_to_response(self.get_context_data(form=form, formset=formset))
 
 class CreatePage(EditPage):
