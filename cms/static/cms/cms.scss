@@ -262,6 +262,11 @@ section.contact {
 /* Form elements */
 
 form.cms {
+  margin-bottom: 3em;
+  div.wrapper {
+    overflow: hidden;
+  }
+
   section {
     margin-top: 3em;
   }
@@ -295,7 +300,7 @@ form.cms {
   div.formfield.error {
     border: 2px dotted red;
     padding: 10px;
-    margin: 0 -10px;
+    margin: 10px -10px;
     background: #f001;
   }
   div.formfield.required {
