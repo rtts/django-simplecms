@@ -137,7 +137,8 @@ class EditPage(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMi
     template_name = 'cms/edit.html'
 
     def test_func(self):
-        return self.request.user.has_perm('cms_page_change')
+        app, model = swapper.get_model_name('cms', 'page').lower().split('.')
+        return self.request.user.has_perm('f{app}_{model}_change')
 
     def setup(self, *args, slug='', **kwargs):
         '''Supply a default argument for slug'''

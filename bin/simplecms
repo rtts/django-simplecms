@@ -1,9 +1,8 @@
 #!/bin/bash -e
 
 test -z $1 && echo "Please provide a project name!" && exit 1
-test -d $dev/$1 && echo "That project already exists!" && exit 1
 
-mkdir $1 && cd $1
+mkdir -p $1 && cd $1
 pip3 freeze > requirements.txt
 example_dir=$(python3 -c 'import os,example;print(os.path.dirname(example.__file__))')
 cp -r $example_dir/{project,app,manage.py} .
