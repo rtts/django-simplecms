@@ -32,53 +32,99 @@
     {% endif %}
 
     {% if formset %}
-      {{formset.management_form}}
-      {% for form in formset %}
-        {{form.media}}
-        {% for field in form.hidden_fields %}
-          {{field}}
-        {% endfor %}
-        <section>
-          <div class="wrapper">
-            <div class="subform">
-              {% for field in form.visible_fields %}
-                {% if field.name == 'DELETE' and not form.instance.pk %}
-                  
-                {% elif field.field.widget.input_type == 'checkbox' %}
-                  {% include 'cms/formfield_checkbox.html' with field=field counter=forloop.parentloop.counter0 %}
-                {% else %}
-                  {% include 'cms/formfield.html' with field=field counter=forloop.parentloop.counter0 %}
-                {% endif %}
-              {% endfor %}
-            </div>
+      <div id="formset">
+        {{formset.management_form}}
+        {% for form in formset %}
+          <div class="formset_form">
+            {{form.media}}
+            {% for field in form.hidden_fields %}
+              {{field}}
+            {% endfor %}
+            <section>
+              <div class="wrapper">
+                <div class="subform">
+                  {% for field in form.visible_fields %}
+                    {% if field.name == 'DELETE' and not form.instance.pk %}
+                      
+                    {% elif field.field.widget.input_type == 'checkbox' %}
+                      {% include 'cms/formfield_checkbox.html' with field=field counter=forloop.parentloop.counter0 %}
+                    {% else %}
+                      {% include 'cms/formfield.html' with field=field counter=forloop.parentloop.counter0 %}
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+            </section>
           </div>
-        </section>
-      {% endfor %}
+        {% endfor %}
+      </div>
+      <style>
+        div.formset_form:last-child {
+            display: none;
+        }
+      </style>
+      <section>
+        <div class="wrapper">
+          <a class="button" href="#" onclick="addForm(); return false">+</a>
+        </div>
+      </section>
     {% endif %}
 
     <div class="edit page">
       <button><img src="{% static 'cms/ok.svg' %}"></button>
     </div>
+
   </form>
 {% endblock %}
 
 {% block extrabody %}
   <script type="text/javascript" src="/static/admin/js/urlify.js"></script>
   <script>
-    document.addEventListener("DOMContentLoaded", function(event) {
+    NodeList.prototype.last = function(){
+        return this[this.length - 1];
+    };
 
-        // Auto-resize <textarea's>
+    var formset = document.getElementById('formset');
+    var counter = formset.firstElementChild;
+    var re = /(.+)-(\d)-(.+)/;
 
+    function updateIndex(el) {
+        matches = el.name.match(re);
+        if (matches) {
+            prefix = matches[1];
+            suffix = matches[3];
+            index = parseInt(matches[2]) + 1;
+            el.name = `${prefix}-${index}-${suffix}`;
+        }
+    }
+
+    function addForm() {
+        final_form = document.querySelectorAll('div.formset_form').last();
+        extra_form = final_form.cloneNode(true);
+        inputs = extra_form.querySelectorAll("input, select, textarea");
+        for (input of inputs) {
+            updateIndex(input);
+        }
+
+        formset.appendChild(extra_form);
+        counter.value = parseInt(counter.value) + 1;
+        resizeTextareas();
+    }
+
+    function resizeTextareas() {
         var tx = document.getElementsByTagName('textarea');
         for (var i = 0; i < tx.length; i++) {
             tx[i].setAttribute('style', 'height:0;overflow-y:hidden;');
             tx[i].style.height = (tx[i].scrollHeight) + 'px';
-            tx[i].addEventListener("input", OnInput, false);
+            tx[i].addEventListener('input', function() {
+                console.log(this.scrollHeight);
+                this.style.height = (this.scrollHeight) + 1 + 'px'; // why the 1???
+            });
         }
-        function OnInput() {
-            this.style.height = '0';
-            this.style.height = (this.scrollHeight) + 'px';
-        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function(event) {
+        resizeTextareas();
 
         // My own implementation of Django's prepopulate.js
 
