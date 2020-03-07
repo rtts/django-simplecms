@@ -11,7 +11,7 @@
 
   {% if user.is_staff %}
     <div class="edit page">
-      <a href="{% if page.slug %}{% url 'cms:updatepage' page.slug %}{% else %}{% url 'cms:updatepage' %}{% endif %}"><img src="{% static 'cms/edit.svg' %}"></a>
+      <a href="{% if page.slug %}{% url 'cms:updatepage' page.slug %}{% else %}{% url 'cms:updatepage' %}{% endif %}"><img src="{% static 'cms/edit.png' %}"></a>
     </div>
   {% endif %}
 
