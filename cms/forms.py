@@ -2,7 +2,6 @@ import swapper
 from django import forms
 from django.contrib.contenttypes.models import ContentType
 from django.core.mail import EmailMessage
-from django.forms import inlineformset_factory
 from django.utils.translation import gettext_lazy as _
 
 Page = swapper.load_model('cms', 'Page')
@@ -80,4 +79,62 @@ class SectionForm(forms.ModelForm):
     # ignored entirely. Workaround to force a ChoiceField anyway:
     type = forms.ChoiceField()
 
-SectionFormSet = inlineformset_factory(Page, Section, form=SectionForm, extra=1)
+
+
+#SectionFormSet = inlineformset_factory(Page, Section, form=SectionForm, extra=1)
+
+def get_view(section):
+    if section:
+        return section.__class__.view_class()
+
+class BaseSectionFormSet(forms.BaseInlineFormSet):
+    '''Potentially nested formset based on
+    https://www.yergler.net/2013/09/03/nested-formsets-redux/
+
+    If a Section subclass provides a 'formset_class' attribute, the
+    section form generated for the edit page will be given a 'formset'
+    attribute. This way, sections can customize their edit form to
+    request additional information.
+
+    Typical usecases could be:
+    - an images section that displays multiple images
+    - a column section that displays separate colums
+    - a calendar section that displays calendar events
+    - etc...
+
+    '''
+    def add_fields(self, form, index):
+        super().add_fields(form, index)
+        section = form.instance
+        view = get_view(section)
+        if hasattr(view, 'formset_class'):
+            form.formset = view.formset_class(
+                instance=section,
+                data=form.data if self.is_bound else None,
+                files=form.files if self.is_bound else None,
+                prefix=f'{form.prefix}-{view.formset_class.get_default_prefix()}')
+            #raise ValueError(form.formset)
+
+
+    def is_valid(self):
+        result = super().is_valid()
+        if self.is_bound:
+            for form in self.forms:
+                if hasattr(form, 'formset'):
+                    result = result and form.formset.is_valid()
+        return result
+
+    def save(self, commit=True):
+        result = super().save(commit=commit)
+        for form in self:
+            if hasattr(form, 'formset'):
+                form.formset.save(commit=commit)
+        return result
+
+SectionFormSet = forms.inlineformset_factory(
+    parent_model = Page,
+    model = Section,
+    form = SectionForm,
+    formset = BaseSectionFormSet,
+    extra=1,
+)

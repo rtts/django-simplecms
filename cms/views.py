@@ -62,6 +62,9 @@ class SectionFormSetView(SectionView):
             kwargs['formset'] = self.get_formset()
         return super().get_context_data(**kwargs)
 
+def get_view(section):
+    return section.__class__.view_class()
+
 class PageView(detail.DetailView):
     '''View of a page with heterogeneous (polymorphic) sections'''
     model = Page
@@ -72,7 +75,7 @@ class PageView(detail.DetailView):
         super().setup(*args, slug=slug, **kwargs)
 
     def initialize_section(self, section):
-        section.view = section.__class__.view_class()
+        section.view = get_view(section)
         section.view.setup(self.request, section)
         section.context = section.view.get_context_data(
             request = self.request,

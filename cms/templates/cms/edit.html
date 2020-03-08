@@ -53,6 +53,21 @@
                     {% endif %}
                   {% endfor %}
                 </div>
+
+                {{form.formset.management_form}}
+                {% for form in form.formset %}
+                  <div class="anothersubform" style="padding: 10px; border:2px dotted black;margin-bottom: 10px">
+                    {% for field in form.visible_fields %}
+                      {% if field.name == 'DELETE' and not form.instance.pk %}
+                        
+                      {% elif field.field.widget.input_type == 'checkbox' %}
+                        {% include 'cms/formfield_checkbox.html' with field=field counter=forloop.parentloop.counter0 %}
+                      {% else %}
+                        {% include 'cms/formfield.html' with field=field counter=forloop.parentloop.counter0 %}
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                {% endfor %}
               </div>
             </section>
           </div>
