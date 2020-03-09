@@ -1,14 +1,26 @@
-<div class="formfield{% if field.errors %} error{% endif %}{% if field.field.required %} required{% endif %} {{field.name}}" id="{{field.name}}{{counter}}">
-  <div class="errors">
-    {{field.errors}}
-  </div>
-  <div class="label">
-    {{field.label_tag}}
-  </div>
-  <div class="input">
-    {{field}}
-  </div>
-  <div class="helptext">
+{% if field.name == 'DELETE' and not form.instance.pk %}
+  
+{% else %}
+  <div class="formfield{% if field.errors %} error{% endif %}{% if field.field.required %} required{% endif %} {{field.name}}">
+    <div class="errors">
+      {{field.errors}}
+    </div>
+
+    {% if field.field.widget.input_type == 'checkbox' %}
+      <div class="input">
+        {{field}} {{field.label_tag}}
+      </div>
+    {% else %}
+      <div class="label">
+        {{field.label_tag}}
+      </div>
+      <div class="input">
+        {{field}}
+      </div>
+    {% endif %}
+
+    <div class="helptext">
       {{field.help_text}}
+    </div>
   </div>
-</div>
+{% endif %}

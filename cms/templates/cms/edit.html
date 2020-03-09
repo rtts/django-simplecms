@@ -4,131 +4,104 @@
 {% block title %}{% trans 'Edit' %} {{form.instance}}{% endblock %}
 
 {% block content %}
-  <form method="POST" enctype="multipart/form-data" class="cms">
-    {% csrf_token %}
-    {{form.media}}
+  <div class="wrapper">
 
-    {% if form %}
-      <section>
-        <div class="wrapper">
-          {% if form.non_field_errors %}
-            <div class="global_error">
-              {{form.non_field_errors}}
-            </div>
-          {% elif form.errors or formset.errors %}
-            <div class="global_error">
-              {% trans 'Please correct the error(s) below and save again' %}
-            </div>
-          {% endif %}
-          {% for field in form %}
-            {% if field.field.widget.input_type == 'checkbox' %}
-              {% include 'cms/formfield_checkbox.html' with field=field %}
-            {% else %}
-              {% include 'cms/formfield.html' with field=field %}
-            {% endif %}
-          {% endfor %}
+    <form method="POST" enctype="multipart/form-data" class="cms">
+      {% csrf_token %}
+      {{form.media}}
+
+      {% if form.errors or formset.errors %}
+        <div class="global_error">
+          {% trans 'Please correct the error(s) below and save again' %}
         </div>
-      </section>
-    {% endif %}
+      {% endif %}
+      {% for field in form %}
+        {% include 'cms/formfield.html' with field=field %}
+      {% endfor %}
 
-    {% if formset %}
-      <div id="formset">
+      <div id="{{formset.prefix}}">
         {{formset.management_form}}
         {% for form in formset %}
-          <div class="formset_form">
+          <div class="formset_form" id="{{form.prefix}}" {% if forloop.last %}style="display:none"{% endif %}>
             {{form.media}}
             {% for field in form.hidden_fields %}
               {{field}}
             {% endfor %}
-            <section>
-              <div class="wrapper">
-                <div class="subform">
-                  {% for field in form.visible_fields %}
-                    {% if field.name == 'DELETE' and not form.instance.pk %}
-                      
-                    {% elif field.field.widget.input_type == 'checkbox' %}
-                      {% include 'cms/formfield_checkbox.html' with field=field counter=forloop.parentloop.counter0 %}
-                    {% else %}
-                      {% include 'cms/formfield.html' with field=field counter=forloop.parentloop.counter0 %}
-                    {% endif %}
-                  {% endfor %}
-                </div>
 
-                {{form.formset.management_form}}
-                {% for form in form.formset %}
-                  <div class="anothersubform" style="padding: 10px; border:2px dotted black;margin-bottom: 10px">
+            {% for field in form.visible_fields %}
+              <div class="field {{field.name}}">
+                {% include 'cms/formfield.html' with field=field %}
+              </div>
+            {% endfor %}
+
+            {% for formset in form.formsets %}
+              <div class="field {{formset.name}}" id="{{formset.prefix}}">
+                {{formset.management_form}}
+                {% for form in formset %}
+                  <div class="subform">
+                    {{form.media}}
+                    {% for field in form.hidden_fields %}
+                      {{field}}
+                    {% endfor %}
                     {% for field in form.visible_fields %}
-                      {% if field.name == 'DELETE' and not form.instance.pk %}
-                        
-                      {% elif field.field.widget.input_type == 'checkbox' %}
-                        {% include 'cms/formfield_checkbox.html' with field=field counter=forloop.parentloop.counter0 %}
-                      {% else %}
-                        {% include 'cms/formfield.html' with field=field counter=forloop.parentloop.counter0 %}
-                      {% endif %}
+                      {% include 'cms/formfield.html' with field=field %}
                     {% endfor %}
                   </div>
                 {% endfor %}
+                <img onclick="addForm(this, '{{formset.prefix}}')" src="{% static 'cms/add_small.png' %}" width="50">
               </div>
-            </section>
+            {% endfor %}
           </div>
         {% endfor %}
+        <img onclick="addForm(this, '{{formset.prefix}}')" src="{% static 'cms/add.png' %}" width="75" style="display:block;clear:both">
       </div>
-      <style>
-        div.formset_form:last-child {
-            display: none;
-        }
-      </style>
-      <section>
-        <div class="wrapper">
-          <a class="button" href="#" onclick="addForm(); return false">+</a>
-        </div>
-      </section>
-    {% endif %}
 
-    <div class="edit page">
-      <button><img src="{% static 'cms/ok.svg' %}"></button>
-    </div>
-
-  </form>
+      <div class="edit page">
+        <button><img src="{% static 'cms/save.png' %}"></button>
+      </div>
+    </form>
+  </div>
 {% endblock %}
 
 {% block extrabody %}
   <script type="text/javascript" src="/static/admin/js/urlify.js"></script>
   <script>
-    NodeList.prototype.last = function(){
+    NodeList.prototype.last = function() {
         return this[this.length - 1];
     };
 
-    var formset = document.getElementById('formset');
-    var counter = formset.firstElementChild;
-    var re = /(.+)-(\d)-(.+)/;
-
     function updateIndex(el) {
-        matches = el.name.match(re);
+        let re = /^(.+)-(\d)-(.+)$/;
+        let matches = el.name.match(re);
         if (matches) {
-            prefix = matches[1];
-            suffix = matches[3];
-            index = parseInt(matches[2]) + 1;
+            let prefix = matches[1];
+            let suffix = matches[3];
+            let index = parseInt(matches[2]) + 1;
             el.name = `${prefix}-${index}-${suffix}`;
         }
     }
 
-    function addForm() {
-        final_form = document.querySelectorAll('div.formset_form').last();
-        extra_form = final_form.cloneNode(true);
-        inputs = extra_form.querySelectorAll("input, select, textarea");
+    function addForm(node, parent_id) {
+        let base = node.previousElementSibling;
+        let parent = document.getElementById(parent_id);
+        let counter = parent.firstElementChild;
+        let extra_form = base.cloneNode(true);
+        let inputs = extra_form.querySelectorAll("input, select, textarea");
         for (input of inputs) {
             updateIndex(input);
         }
-
-        formset.appendChild(extra_form);
+        extra_form.style.display = 'block';
+        node.remove();
+        parent.appendChild(extra_form);
+        parent.appendChild(node);
         counter.value = parseInt(counter.value) + 1;
+        setEventHandlers();
         resizeTextareas();
     }
 
     function resizeTextareas() {
-        var tx = document.getElementsByTagName('textarea');
-        for (var i = 0; i < tx.length; i++) {
+        let tx = document.getElementsByTagName('textarea');
+        for (let i = 0; i < tx.length; i++) {
             tx[i].setAttribute('style', 'height:0;overflow-y:hidden;');
             tx[i].style.height = (tx[i].scrollHeight) + 'px';
             tx[i].addEventListener('input', function() {
@@ -138,76 +111,32 @@
         }
     }
 
-    document.addEventListener("DOMContentLoaded", function(event) {
-        resizeTextareas();
-
-        // My own implementation of Django's prepopulate.js
-
-        var slugfield = document.getElementById('id_slug');
-        var titlefield = document.getElementById('id_title');
-        if (slugfield && titlefield) {
-            var virgin = slugfield.value === '';
-            if (virgin) {
-                titlefield.addEventListener('input', function(event) {
-                    if (virgin) {
-                        slugfield.value = URLify(titlefield.value);
-                    }
-                });
-                slugfield.addEventListener('input', function(event) {
-                    virgin = false;
-                });
+    function showRelevantFields(form, type) {
+        let fields_per_type = {{fields_per_type|safe}};
+        for (let field of form.querySelectorAll('div.field')) {
+            field.style.display = 'none';
+        }
+        for (let name of fields_per_type[type]) {
+            for (let field of form.querySelectorAll('div.field.' + name)) {
+                field.style.display = 'block';
             }
         }
+    }
 
-        // Auto-hide non-relevant fields, based on type field
-
-        {% if fields_per_type %}
-        var typefield = document.getElementById('id_type');
-        fields_per_type = {{fields_per_type|safe}};
-
-        if (typefield) {
-            function show_relevant_fields(type) {
-                for (el of document.querySelectorAll('div.formfield')) {
-                    el.style.display = 'none';
-                }
-
-                for (field of fields_per_type[type]) {
-                    el = document.getElementById(field);
-                    el.style.display = 'block';
-                }
-            }
-
-            typefield.addEventListener('input', function(event) {
-                show_relevant_fields(typefield.value.toLowerCase());
+    function setEventHandlers() {
+        for (let typefield of document.querySelectorAll('select.type')) {
+            let form = document.getElementById(typefield.dataset.form);
+            let type = typefield.value.toLowerCase();
+            showRelevantFields(form, type);
+            typefield.addEventListener('input', function() {
+                type = typefield.value.toLowerCase();
+                showRelevantFields(form, type);
+                resizeTextareas();
             });
-            show_relevant_fields(typefield.value.toLowerCase());
         }
+    }
 
-        subforms = document.querySelectorAll('div.subform');
-        for (let i = 0; i < subforms.length; ++i) {
-            let typefield = document.getElementById('id_sections-' + i + '-type');
-
-            function show_relevant_fields(type) {
-                for (field of subforms[i].querySelectorAll('div.formfield')) {
-                    field.style.display = 'none';
-                }
-
-                delete_checkbox = document.getElementById('DELETE' + i);
-                if (delete_checkbox) {
-                    delete_checkbox.style.display = 'block';
-                }
-                for (field of fields_per_type[type]) {
-                    el = document.getElementById(field + i);
-                    el.style.display = 'block';
-                }
-            }
-
-            typefield.addEventListener('input', function(event) {
-                (show_relevant_fields(typefield.value.toLowerCase()));
-            });
-            show_relevant_fields(typefield.value.toLowerCase());
-        }
-        {% endif %}
-    });
+    setEventHandlers();
+    resizeTextareas();
   </script>
 {% endblock %}

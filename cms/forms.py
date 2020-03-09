@@ -47,6 +47,9 @@ class SectionForm(forms.ModelForm):
         self.fields['type'].choices = self._meta.model.TYPES
         self.fields['type'].initial = self._meta.model.TYPES[0][0]
 
+        self.fields['type'].widget.attrs['class'] = 'type'
+        self.fields['type'].widget.attrs['data-form'] = self.prefix
+
     def delete(self):
         instance = super().save()
         instance.delete()
@@ -83,18 +86,13 @@ class SectionForm(forms.ModelForm):
 
 #SectionFormSet = inlineformset_factory(Page, Section, form=SectionForm, extra=1)
 
-def get_view(section):
-    if section:
-        return section.__class__.view_class()
-
 class BaseSectionFormSet(forms.BaseInlineFormSet):
-    '''Potentially nested formset based on
-    https://www.yergler.net/2013/09/03/nested-formsets-redux/
+    '''If a swappable Section model defines one-to-many fields, (i.e. has
+    foreign keys pointing to it) formsets will be generated for the
+    related models and stored in the form.formsets array.
 
-    If a Section subclass provides a 'formset_class' attribute, the
-    section form generated for the edit page will be given a 'formset'
-    attribute. This way, sections can customize their edit form to
-    request additional information.
+    Based on this logic for nested formsets:
+    https://www.yergler.net/2013/09/03/nested-formsets-redux/
 
     Typical usecases could be:
     - an images section that displays multiple images
@@ -106,22 +104,23 @@ class BaseSectionFormSet(forms.BaseInlineFormSet):
     def add_fields(self, form, index):
         super().add_fields(form, index)
         section = form.instance
-        view = get_view(section)
-        if hasattr(view, 'formset_class'):
-            form.formset = view.formset_class(
-                instance=section,
-                data=form.data if self.is_bound else None,
-                files=form.files if self.is_bound else None,
-                prefix=f'{form.prefix}-{view.formset_class.get_default_prefix()}')
-            #raise ValueError(form.formset)
-
+        form.formsets = []
+        for field in section._meta.get_fields():
+            if field.one_to_many:
+                formset = forms.inlineformset_factory(Section, field.related_model, fields='__all__', extra=1)(
+                    instance=section,
+                    data=form.data if self.is_bound else None,
+                    files=form.files if self.is_bound else None,
+                    prefix=f'{form.prefix}-{field.name}')
+                formset.name = field.name
+                form.formsets.append(formset)
 
     def is_valid(self):
         result = super().is_valid()
         if self.is_bound:
             for form in self.forms:
-                if hasattr(form, 'formset'):
-                    result = result and form.formset.is_valid()
+                for formset in form.formsets:
+                    result = result and formset.is_valid()
         return result
 
     def save(self, commit=True):
@@ -131,6 +130,12 @@ class BaseSectionFormSet(forms.BaseInlineFormSet):
                 form.formset.save(commit=commit)
         return result
 
+    def get_form_kwargs(self, index):
+        kwargs = super().get_form_kwargs(index)
+        kwargs.update({'label_suffix': ''})
+        return kwargs
+
+
 SectionFormSet = forms.inlineformset_factory(
     parent_model = Page,
     model = Section,
@@ -138,3 +143,9 @@ SectionFormSet = forms.inlineformset_factory(
     formset = BaseSectionFormSet,
     extra=1,
 )
+
+# class ImagesForm(forms.ModelForm):
+#     class Meta:
+#         model = SectionImage
+#         exclude = ['section']
+# ImagesFormSet = forms.inlineformset_factory(Section, SectionImage, form=ImagesForm, extra=3)

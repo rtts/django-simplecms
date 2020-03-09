@@ -157,8 +157,7 @@ class EditPage(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMi
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if 'formset' not in context:
-            context['formset'] = SectionFormSet(instance=self.object, form_kwargs={'label_suffix': ''})
+#            context['formset'] = SectionFormSet(instance=self.object, form_kwargs={'label_suffix': ''})
         fields_per_type = {}
         for model, _ in Section.TYPES:
             ctype = ContentType.objects.get(
@@ -180,10 +179,13 @@ class EditPage(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMi
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        return self.render_to_response(self.get_context_data())
+        formset = self.get_formset()
+        return self.render_to_response(self.get_context_data(formset=formset))
 
     def get_formset(self):
-        return SectionFormSet(self.request.POST, self.request.FILES, instance=self.object)
+        if self.request.POST:
+            return SectionFormSet(self.request.POST, self.request.FILES, instance=self.object)
+        return SectionFormSet(instance=self.object)
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
