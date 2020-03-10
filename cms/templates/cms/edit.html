@@ -4,92 +4,49 @@
 {% block title %}{% trans 'Edit' %} {{form.instance}}{% endblock %}
 
 {% block content %}
-  <div class="wrapper">
-
-    <form method="POST" enctype="multipart/form-data" class="cms">
+  <form method="POST" enctype="multipart/form-data" class="cms">
+    <div class="wrapper">
       {% csrf_token %}
-      {{form.media}}
 
-      {% if form.errors or formset.errors %}
+      {% if form.errors %}
         <div class="global_error">
           {% trans 'Please correct the error(s) below and save again' %}
         </div>
       {% endif %}
-      {% for field in form %}
-        {% include 'cms/formfield.html' with field=field %}
-      {% endfor %}
 
-      <div id="{{formset.prefix}}">
-        {{formset.management_form}}
-        {% for form in formset %}
-          <div class="formset_form" id="{{form.prefix}}" {% if forloop.last %}style="display:none"{% endif %}>
-            {{form.media}}
-            {% for field in form.hidden_fields %}
-              {{field}}
-            {% endfor %}
-
-            {% for field in form.visible_fields %}
-              <div class="field {{field.name}}">
-                {% include 'cms/formfield.html' with field=field %}
-              </div>
-            {% endfor %}
-
-            {% for formset in form.formsets %}
-              <div class="field {{formset.name}}" id="{{formset.prefix}}">
-                {{formset.management_form}}
-                {% for form in formset %}
-                  <div class="subform">
-                    {{form.media}}
-                    {% for field in form.hidden_fields %}
-                      {{field}}
-                    {% endfor %}
-                    {% for field in form.visible_fields %}
-                      {% include 'cms/formfield.html' with field=field %}
-                    {% endfor %}
-                  </div>
-                {% endfor %}
-                <img onclick="addForm(this, '{{formset.prefix}}')" src="{% static 'cms/add_small.png' %}" width="50">
-              </div>
-            {% endfor %}
-          </div>
-        {% endfor %}
-        <img onclick="addForm(this, '{{formset.prefix}}')" src="{% static 'cms/add.png' %}" width="75" style="display:block;clear:both">
-      </div>
+      {% include 'cms/form.html' %}
 
       <div class="edit page">
         <button><img src="{% static 'cms/save.png' %}"></button>
       </div>
-    </form>
-  </div>
+    </div>
+  </form>
 {% endblock %}
 
 {% block extrabody %}
   <script type="text/javascript" src="/static/admin/js/urlify.js"></script>
   <script>
-    NodeList.prototype.last = function() {
-        return this[this.length - 1];
-    };
-
-    function updateIndex(el) {
-        let re = /^(.+)-(\d)-(.+)$/;
-        let matches = el.name.match(re);
-        if (matches) {
-            let prefix = matches[1];
-            let suffix = matches[3];
-            let index = parseInt(matches[2]) + 1;
-            el.name = `${prefix}-${index}-${suffix}`;
-        }
-    }
-
-    function addForm(node, parent_id) {
+    function addForm(node) {
         let base = node.previousElementSibling;
-        let parent = document.getElementById(parent_id);
+        let parent = node.parentNode;
         let counter = parent.firstElementChild;
         let extra_form = base.cloneNode(true);
-        let inputs = extra_form.querySelectorAll("input, select, textarea");
-        for (input of inputs) {
-            updateIndex(input);
+        let prefix = extra_form.id
+
+        increment(extra_form, prefix, 'id');
+        for (let el of extra_form.querySelectorAll(`*[id^=${prefix}]`)) {
+            increment(el, prefix, 'id');
         }
+        for (let el of extra_form.querySelectorAll(`*[name^=${prefix}]`)) {
+            increment(el, prefix, 'name');
+        }
+        for (let el of extra_form.querySelectorAll(`*[id^=id_${prefix}]`)) {
+            increment(el, 'id_' + prefix, 'id');
+        }
+        for (let el of extra_form.querySelectorAll(`*[for^=id_${prefix}]`)) {
+            increment(el, 'id_' + prefix, 'for');
+        }
+
         extra_form.style.display = 'block';
         node.remove();
         parent.appendChild(extra_form);
@@ -97,6 +54,19 @@
         counter.value = parseInt(counter.value) + 1;
         setEventHandlers();
         resizeTextareas();
+    }
+
+    function increment(node, prefix, attr) {
+        let re = RegExp(`${prefix}(.*)`);
+        let matches = node.getAttribute(attr).match(re);
+        if (matches) {
+            let suffix = matches[1];
+            let name = prefix.replace(/-\d+$/, '');
+            let index = parseInt(prefix.replace(/.*-/, ''));
+            index++;
+            let new_prefix = `${name}-${index}`;
+            node.setAttribute(attr, new_prefix + suffix);
+        }
     }
 
     function resizeTextareas() {
@@ -112,12 +82,16 @@
     }
 
     function showRelevantFields(form, type) {
+        console.log(form, type);
         let fields_per_type = {{fields_per_type|safe}};
-        for (let field of form.querySelectorAll('div.field')) {
+        for (let field of form.querySelectorAll(`fieldset#${form.id} > div`)) {
             field.style.display = 'none';
         }
+        for (let field of form.querySelectorAll(`fieldset#${form.id} > div.DELETE`)) {
+            field.style.display = 'block';
+        }
         for (let name of fields_per_type[type]) {
-            for (let field of form.querySelectorAll('div.field.' + name)) {
+            for (let field of form.querySelectorAll(`fieldset#${form.id} > div.${name}`)) {
                 field.style.display = 'block';
             }
         }

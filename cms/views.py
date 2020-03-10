@@ -157,7 +157,7 @@ class EditPage(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMi
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-#            context['formset'] = SectionFormSet(instance=self.object, form_kwargs={'label_suffix': ''})
+        context['form'].formsets = [context['formset']]
         fields_per_type = {}
         for model, _ in Section.TYPES:
             ctype = ContentType.objects.get(

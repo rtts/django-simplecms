@@ -262,24 +262,26 @@ section.contact {
 /* Form elements */
 
 form.cms {
-  margin-bottom: 3em;
-  div.wrapper {
-    overflow: hidden;
-  }
+  //margin: 0.5em auto;
 
-  section {
-    margin-top: 3em;
+  div.wrapper {
+    margin: 0 auto;
+    padding: 0 0.5em;
   }
 
   fieldset {
-    padding: 2em;
-    margin-bottom: 2em;
-    border: 0.5px solid black;
-    border-radius: 3px;
+    border: 0.5px solid #ccc;
+    clear: both;
+    margin: 0.5em 0em;
+    padding: 0.5em;
+    border-radius: 0.25em;
+  }
 
-    legend {
-      font-size: 1.15em;
-    }
+  img {
+    display: block;
+    clear: both;
+    width: 50px;
+    cursor: pointer;
   }
 
   div.formfield {
