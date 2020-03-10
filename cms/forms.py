@@ -34,6 +34,35 @@ class ContactForm(forms.Form):
         email.send()
 
 class PageForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.formsets = [SectionFormSet(
+            data=self.data if self.is_bound else None,
+            files=self.files if self.is_bound else None,
+            instance=self.instance,
+            form_kwargs={'label_suffix': self.label_suffix},
+        )]
+
+    def is_valid(self):
+        return super().is_valid() and self.formsets[0].is_valid()
+
+    def clean(self):
+        super().clean()
+        if not self.formsets[0].is_valid():
+            self.add_error(None, _('There’s a problem saving one of the sections'))
+        if not self.instance and not self.formsets[0].has_changed():
+            self.add_error(None, _('You can’t save a new page without adding any sections!'))
+
+    def save(self, *args, **kwargs):
+        page = super().save()
+        formset = self.formsets[0]
+        formset.instance = page
+        formset.save()
+        if page.slug and not page.sections.exists():
+            page.delete()
+            return None
+        return page
+
     class Meta:
         model = Page
         fields = '__all__'
@@ -107,11 +136,17 @@ class BaseSectionFormSet(forms.BaseInlineFormSet):
         form.formsets = []
         for field in section._meta.get_fields():
             if field.one_to_many:
-                formset = forms.inlineformset_factory(Section, field.related_model, fields='__all__', extra=1)(
+                if getattr(section, field.name).exists():
+                    extra = 1
+                else:
+                    extra = 2
+                formset = forms.inlineformset_factory(Section, field.related_model, fields='__all__', extra=extra)(
                     instance=section,
                     data=form.data if self.is_bound else None,
                     files=form.files if self.is_bound else None,
-                    prefix=f'{form.prefix}-{field.name}')
+                    prefix=f'{form.prefix}-{field.name}',
+                    form_kwargs=self.form_kwargs,
+                )
                 formset.name = field.name
                 form.formsets.append(formset)
 
@@ -126,15 +161,9 @@ class BaseSectionFormSet(forms.BaseInlineFormSet):
     def save(self, commit=True):
         result = super().save(commit=commit)
         for form in self:
-            if hasattr(form, 'formset'):
-                form.formset.save(commit=commit)
+            for formset in form.formsets:
+                formset.save(commit=commit)
         return result
-
-    def get_form_kwargs(self, index):
-        kwargs = super().get_form_kwargs(index)
-        kwargs.update({'label_suffix': ''})
-        return kwargs
-
 
 SectionFormSet = forms.inlineformset_factory(
     parent_model = Page,
@@ -143,9 +172,3 @@ SectionFormSet = forms.inlineformset_factory(
     formset = BaseSectionFormSet,
     extra=1,
 )
-
-# class ImagesForm(forms.ModelForm):
-#     class Meta:
-#         model = SectionImage
-#         exclude = ['section']
-# ImagesFormSet = forms.inlineformset_factory(Section, SectionImage, form=ImagesForm, extra=3)

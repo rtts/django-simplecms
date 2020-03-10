@@ -157,7 +157,6 @@ class EditPage(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMi
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'].formsets = [context['formset']]
         fields_per_type = {}
         for model, _ in Section.TYPES:
             ctype = ContentType.objects.get(
@@ -179,32 +178,18 @@ class EditPage(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMi
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        formset = self.get_formset()
-        return self.render_to_response(self.get_context_data(formset=formset))
-
-    def get_formset(self):
-        if self.request.POST:
-            return SectionFormSet(self.request.POST, self.request.FILES, instance=self.object)
-        return SectionFormSet(instance=self.object)
+        return self.render_to_response(self.get_context_data())
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = self.get_form()
-        formset = self.get_formset()
 
-        if form.is_valid() and formset.is_valid():
-            if not self.object and not formset.has_changed():
-                form.add_error(None, _('You can’t save a new page without adding any sections!'))
-            else:
-                page = form.save()
-                formset.instance = page
-                formset.save()
-                if page.slug and not page.sections.exists():
-                    page.delete()
-                    return HttpResponseRedirect('/')
+        if form.is_valid():
+            page = form.save()
+            if page:
                 return HttpResponseRedirect(page.get_absolute_url())
-
-        return self.render_to_response(self.get_context_data(form=form, formset=formset))
+            return HttpResponseRedirect('/')
+        return self.render_to_response(self.get_context_data(form=form))
 
 class CreatePage(EditPage):
     def get_object(self):

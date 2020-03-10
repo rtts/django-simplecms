@@ -4,7 +4,7 @@
 {% block title %}{% trans 'Edit' %} {{form.instance}}{% endblock %}
 
 {% block content %}
-  <form method="POST" enctype="multipart/form-data" class="cms">
+  <form method="POST" enctype="multipart/form-data" class="cms" novalidate>
     <div class="wrapper">
       {% csrf_token %}
 
@@ -17,7 +17,7 @@
       {% include 'cms/form.html' %}
 
       <div class="edit page">
-        <button><img src="{% static 'cms/save.png' %}"></button>
+        <button><img src="{% static 'cms/save.png' %}" width="75"></button>
       </div>
     </div>
   </form>
@@ -47,10 +47,10 @@
             increment(el, 'id_' + prefix, 'for');
         }
 
-        extra_form.style.display = 'block';
         node.remove();
         parent.appendChild(extra_form);
         parent.appendChild(node);
+        base.hidden = false;
         counter.value = parseInt(counter.value) + 1;
         setEventHandlers();
         resizeTextareas();
@@ -75,24 +75,22 @@
             tx[i].setAttribute('style', 'height:0;overflow-y:hidden;');
             tx[i].style.height = (tx[i].scrollHeight) + 'px';
             tx[i].addEventListener('input', function() {
-                console.log(this.scrollHeight);
                 this.style.height = (this.scrollHeight) + 1 + 'px'; // why the 1???
             });
         }
     }
 
     function showRelevantFields(form, type) {
-        console.log(form, type);
         let fields_per_type = {{fields_per_type|safe}};
         for (let field of form.querySelectorAll(`fieldset#${form.id} > div`)) {
-            field.style.display = 'none';
+            field.hidden = true;
         }
         for (let field of form.querySelectorAll(`fieldset#${form.id} > div.DELETE`)) {
-            field.style.display = 'block';
+            field.hidden = false;
         }
         for (let name of fields_per_type[type]) {
             for (let field of form.querySelectorAll(`fieldset#${form.id} > div.${name}`)) {
-                field.style.display = 'block';
+                field.hidden = false;
             }
         }
     }

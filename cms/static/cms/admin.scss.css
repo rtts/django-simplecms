@@ -1,0 +1,121 @@
+body {
+  font-family: Merriweather, sans-serif;
+  line-height: 2; }
+
+/* Form elements */
+form.cms {
+  background: #bfb;
+  overflow: hidden;
+  min-height: 100vh;
+  padding-bottom: 125px; }
+  form.cms div.wrapper {
+    margin: 0 auto;
+    padding: 0 0.5em; }
+  form.cms fieldset {
+    background: #fff6;
+    border: 0.5px solid #ccc;
+    clear: both;
+    margin: 0.5em 0em;
+    padding: 0.5em;
+    border-radius: 0.25em; }
+  form.cms img {
+    display: block;
+    clear: both;
+    width: 50px;
+    cursor: pointer;
+    float: right; }
+  form.cms div.formfield {
+    margin-bottom: 10px;
+    clear: both;
+    box-sizing: border-box; }
+    form.cms div.formfield.type, form.cms div.formfield.number, form.cms div.formfield.slug {
+      width: 77%;
+      clear: none;
+      float: left; }
+    form.cms div.formfield.number {
+      width: 20%;
+      float: right; }
+  form.cms div.formfield.error {
+    border: 2px dotted red;
+    border-radius: 3px;
+    padding: 0.5em;
+    background: #f001; }
+    form.cms div.formfield.error select, form.cms div.formfield.error input, form.cms div.formfield.error textarea {
+      background: white; }
+  form.cms div.formfield.required div.label {
+    font-weight: 700; }
+  form.cms div.label, form.cms label {
+    font-size: 0.7rem;
+    font-weight: 400;
+    text-align: left;
+    margin-bottom: 2px; }
+  form.cms div.input {
+    overflow: hidden; }
+  form.cms div.helptext, form.cms span.required {
+    color: #666;
+    font-size: 12px !important;
+    font-weight: 400 !important; }
+  form.cms span.required {
+    font-style: italic; }
+  form.cms input, form.cms select, form.cms textarea {
+    background: #fff6;
+    color: black;
+    border: 0.5px solid #ccc;
+    border-radius: 3px;
+    font-size: 1rem;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 5px 8px;
+    font-family: inherit; }
+  form.cms input[type=checkbox] {
+    width: auto;
+    display: inline-block;
+    vertical-align: middle; }
+  form.cms input[name$=title] {
+    font-weight: 700; }
+  form.cms textarea {
+    font-size: 1rem;
+    height: 15em;
+    line-height: 1.5; }
+  form.cms select {
+    padding-left: 3px; }
+  form.cms ul.errorlist {
+    margin: 0;
+    margin-bottom: 1em;
+    padding: 0;
+    list-style: none;
+    color: red;
+    font-size: 12px; }
+    form.cms ul.errorlist li {
+      margin: 0;
+      padding: 0; }
+  form.cms div.global_error {
+    border: 2px dotted red;
+    border-radius: 3px;
+    padding: 10px;
+    margin: 0.5em 0;
+    background: #f001;
+    color: red;
+    font-weight: 700; }
+    form.cms div.global_error ul.errorlist {
+      margin: 0;
+      font-size: inherit; }
+  form.cms .errors {
+    color: red;
+    font-weight: 700; }
+
+@font-face {
+  font-family: 'Merriweather';
+  font-style: normal;
+  font-weight: 300;
+  src: url("Merriweather_300.woff2") format("woff2"); }
+
+@font-face {
+  font-family: 'Merriweather';
+  font-style: normal;
+  font-weight: 700;
+  src: url("Merriweather_700.woff2") format("woff2"); }
+
+/*# sourceMappingURL=admin.scss.css.map */
