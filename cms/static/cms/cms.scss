@@ -254,7 +254,19 @@ section {
 }
 
 section.contact {
-  div#message {
+  div.message {
     display: none;
+  }
+  div.formfield {
+    padding: 0.5em 0;
+  }
+  form input, form textarea {
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: inherit;
+    display: block;
+    width: 100%;
+    padding: 0.5em;
+    margin: 0;
   }
 }

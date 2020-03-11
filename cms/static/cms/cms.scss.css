@@ -179,7 +179,19 @@ section {
     text-align: center;
     padding: 1em 0; }
 
-section.contact div#message {
+section.contact div.message {
   display: none; }
+
+section.contact div.formfield {
+  padding: 0.5em 0; }
+
+section.contact form input, section.contact form textarea {
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: inherit;
+  display: block;
+  width: 100%;
+  padding: 0.5em;
+  margin: 0; }
 
 /*# sourceMappingURL=cms.scss.css.map */
