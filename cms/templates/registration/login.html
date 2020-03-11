@@ -1,23 +1,21 @@
-{% extends "base.html" %}
+{% extends "admin.html" %}
+{% load static %}
 {% load i18n %}
 
-{% block nav %}
-{% endblock %}
-
 {% block content %}
-  <form method="post" class="cms">
-    {% csrf_token %}
-
-    <section>
-      <div class="wrapper">
+  <form method="post" class="cms" novalidate>
+    <div class="wrapper">
+      {% csrf_token %}
+      <fieldset>
         {{form.non_field_errors}}
-        <h1>{% trans 'Log in' %}</h1>
         {% for field in form %}
           {% include 'cms/formfield.html' with field=field %}
         {% endfor %}
-        <button class="button">{% trans 'Log in' %}</button>
-      </div>
-    </section>
+      </fieldset>
+    </div>
 
+    <div class="edit page">
+      <button><img src="{% static 'cms/save.png' %}"></button>
+    </div>
   </form>
 {% endblock %}

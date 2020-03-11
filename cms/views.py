@@ -10,7 +10,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.mixins import UserPassesTestMixin
 
 from .decorators import register_view
-from .forms import PageForm, SectionForm, SectionFormSet
+from .forms import PageForm
 
 Page = swapper.load_model('cms', 'Page')
 Section = swapper.load_model('cms', 'Section')

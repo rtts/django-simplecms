@@ -1,15 +1,20 @@
-body {
+html, body {
   font-family: Merriweather, sans-serif;
-  line-height: 2; }
+  line-height: 2;
+  margin: 0;
+  padding: 0; }
 
 /* Form elements */
 form.cms {
   background: #bfb;
   overflow: hidden;
   min-height: 100vh;
-  padding-bottom: 125px; }
+  display: flex;
+  align-items: center;
+  justify-content: center; }
   form.cms div.wrapper {
-    margin: 0 auto;
+    max-width: none;
+    flex: 0 1 640px;
     padding: 0 0.5em; }
   form.cms fieldset {
     background: #fff6;
@@ -22,8 +27,7 @@ form.cms {
     display: block;
     clear: both;
     width: 50px;
-    cursor: pointer;
-    float: right; }
+    cursor: pointer; }
   form.cms div.formfield {
     margin-bottom: 10px;
     clear: both;

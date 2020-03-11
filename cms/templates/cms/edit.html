@@ -96,8 +96,9 @@
     }
 
     function setEventHandlers() {
-        for (let typefield of document.querySelectorAll('select.type')) {
-            let form = document.getElementById(typefield.dataset.form);
+        for (let typefield of document.querySelectorAll('select[name$=-type]')) {
+            let formId = typefield.name.replace(/-type$/, '');
+            let form = document.getElementById(formId);
             let type = typefield.value.toLowerCase();
             showRelevantFields(form, type);
             typefield.addEventListener('input', function() {

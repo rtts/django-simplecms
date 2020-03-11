@@ -1,8 +1,10 @@
 $font: Merriweather, sans-serif;
 
-body {
+html, body {
   font-family: $font;
   line-height: 2;
+  margin: 0;
+  padding: 0;
 }
 
 /* Form elements */
@@ -12,10 +14,13 @@ form.cms {
   overflow: hidden;
   min-height: 100vh;
   $background: #fff6;
-  padding-bottom: 125px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   div.wrapper {
-    margin: 0 auto;
+    max-width: none;
+    flex: 0 1 640px;
     padding: 0 0.5em;
   }
 
@@ -33,7 +38,6 @@ form.cms {
     clear: both;
     width: 50px;
     cursor: pointer;
-    float: right;
   }
 
   div.formfield {

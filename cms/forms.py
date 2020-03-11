@@ -7,41 +7,24 @@ from django.utils.translation import gettext_lazy as _
 Page = swapper.load_model('cms', 'Page')
 Section = swapper.load_model('cms', 'Section')
 
-class ConfirmationForm(forms.Form):
-    pass
-
-class ContactForm(forms.Form):
-    sender = forms.EmailField(label=_('Your email address'))
-    spam_protection = forms.CharField(label=_('Your message'), widget=forms.Textarea())
-    message = forms.CharField(label=_('Your message'), widget=forms.Textarea(), initial='Hi there!')
-
-    def save(self, request):
-        hostname = request.get_host()
-        body = self.cleaned_data.get('spam_protection')
-        if len(body.split()) < 7:
-            return
-        spamcheck = self.cleaned_data.get('message')
-        if spamcheck != 'Hi there!':
-            return
-
-        email = EmailMessage(
-            to = ['info@' + hostname],
-            from_email = 'noreply@' + hostname,
-            body = body,
-            subject = _('Contact form at %(hostname)s.') % {'hostname': hostname},
-            headers = {'Reply-To': self.cleaned_data.get('sender')},
-        )
-        email.send()
-
 class PageForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.formsets = [SectionFormSet(
+        extra = 1 if self.instance.pk else 2
+        self.formsets = [forms.inlineformset_factory(
+            parent_model = Page,
+            model = Section,
+            form = SectionForm,
+            formset = BaseSectionFormSet,
+            extra=extra,
+        )(
             data=self.data if self.is_bound else None,
             files=self.files if self.is_bound else None,
             instance=self.instance,
             form_kwargs={'label_suffix': self.label_suffix},
         )]
+        if not self.instance.pk:
+            self.formsets[0][0].empty_permitted = False
 
     def is_valid(self):
         return super().is_valid() and self.formsets[0].is_valid()
@@ -76,9 +59,6 @@ class SectionForm(forms.ModelForm):
         self.fields['type'].choices = self._meta.model.TYPES
         self.fields['type'].initial = self._meta.model.TYPES[0][0]
 
-        self.fields['type'].widget.attrs['class'] = 'type'
-        self.fields['type'].widget.attrs['data-form'] = self.prefix
-
     def delete(self):
         instance = super().save()
         instance.delete()
@@ -111,10 +91,6 @@ class SectionForm(forms.ModelForm):
     # ignored entirely. Workaround to force a ChoiceField anyway:
     type = forms.ChoiceField()
 
-
-
-#SectionFormSet = inlineformset_factory(Page, Section, form=SectionForm, extra=1)
-
 class BaseSectionFormSet(forms.BaseInlineFormSet):
     '''If a swappable Section model defines one-to-many fields, (i.e. has
     foreign keys pointing to it) formsets will be generated for the
@@ -136,11 +112,13 @@ class BaseSectionFormSet(forms.BaseInlineFormSet):
         form.formsets = []
         for field in section._meta.get_fields():
             if field.one_to_many:
-                if getattr(section, field.name).exists():
-                    extra = 1
-                else:
-                    extra = 2
-                formset = forms.inlineformset_factory(Section, field.related_model, fields='__all__', extra=extra)(
+                extra = 1 if getattr(section, field.name).exists() else 2
+
+                formset = forms.inlineformset_factory(
+                    Section, field.related_model,
+                    fields='__all__',
+                    extra=extra,
+                )(
                     instance=section,
                     data=form.data if self.is_bound else None,
                     files=form.files if self.is_bound else None,
@@ -165,10 +143,25 @@ class BaseSectionFormSet(forms.BaseInlineFormSet):
                 formset.save(commit=commit)
         return result
 
-SectionFormSet = forms.inlineformset_factory(
-    parent_model = Page,
-    model = Section,
-    form = SectionForm,
-    formset = BaseSectionFormSet,
-    extra=1,
-)
+class ContactForm(forms.Form):
+    sender = forms.EmailField(label=_('Your email address'))
+    spam_protection = forms.CharField(label=_('Your message'), widget=forms.Textarea())
+    message = forms.CharField(label=_('Your message'), widget=forms.Textarea(), initial='Hi there!')
+
+    def save(self, request):
+        hostname = request.get_host()
+        body = self.cleaned_data.get('spam_protection')
+        if len(body.split()) < 7:
+            return
+        spamcheck = self.cleaned_data.get('message')
+        if spamcheck != 'Hi there!':
+            return
+
+        email = EmailMessage(
+            to = ['info@' + hostname],
+            from_email = 'noreply@' + hostname,
+            body = body,
+            subject = _('Contact form at %(hostname)s.') % {'hostname': hostname},
+            headers = {'Reply-To': self.cleaned_data.get('sender')},
+        )
+        email.send()
