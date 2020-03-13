@@ -4,7 +4,7 @@
 
 {% block content %}
   <form method="post" class="cms" novalidate>
-    <div class="wrapper">
+    <div class="wrapper" style="max-width: 300px">
       {% csrf_token %}
       <fieldset>
         {{form.non_field_errors}}

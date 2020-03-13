@@ -29,7 +29,8 @@ form.cms {
     border: 0.5px solid #ccc;
     clear: both;
     margin: 0.5em 0em;
-    padding: 0.5em;
+    padding: 0.25em 0.5em;
+    padding-top: 0;
     border-radius: 0.25em;
   }
 
@@ -41,7 +42,7 @@ form.cms {
   }
 
   div.formfield {
-    margin-bottom: 10px;
+    margin: 0.25em 0;
     clear: both;
     box-sizing: border-box;
 
@@ -54,43 +55,38 @@ form.cms {
       width: 20%;
       float: right;
     }
-  }
-  div.formfield.error {
-    border: 2px dotted red;
-    border-radius: 3px;
-    padding: 0.5em;
-    //margin: 10px -50px;
-    background: #f001;
-
-    select, input, textarea {
-      background: white;
-    }
-  }
-  div.formfield.required {
-    div.label {
+    &.title {
       font-weight: 700;
     }
-  }
 
-  div.label, label {
-    font-size: 0.7rem;
-    font-weight: 400;
-    text-align: left;
-    margin-bottom: 2px;
-  }
+    &.error {
+      border: 2px dotted red;
+      border-radius: 3px;
+      padding: 0.5em;
+      margin-top: 0.5em;
+      background: #f001;
 
-  div.input {
-    overflow: hidden;
-  }
+      select, input, textarea {
+        background: white;
+      }
+    }
 
-  div.helptext, span.required {
-    color: #666;
-    font-size: 12px !important;
-    font-weight: 400 !important;
-  }
+    div.label, label {
+      font-size: 0.7rem;
+      font-weight: 400;
+      text-align: left;
+      margin-bottom: 2px;
+    }
 
-  span.required {
-    font-style: italic;
+    div.input {
+      overflow: hidden;
+    }
+
+    div.helptext {
+      color: #666;
+      font-size: 12px !important;
+      font-weight: 400 !important;
+    }
   }
 
   input, select, textarea {
@@ -105,14 +101,12 @@ form.cms {
     margin: 0;
     padding: 5px 8px;
     font-family: inherit;
+    font-weight: inherit;
   }
   input[type=checkbox] {
     width: auto;
     display: inline-block;
     vertical-align: middle;
-  }
-  input[name$=title] {
-    font-weight: 700;
   }
   textarea {
     font-size: 1rem;

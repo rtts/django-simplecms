@@ -1,7 +1,7 @@
 {% if field.name == 'DELETE' and not form.instance.pk %}
   
 {% else %}
-  <div class="formfield{% if field.errors %} error{% endif %}{% if field.field.required %} required{% endif %} {{field.name}}">
+  <div class="formfield {{field.name}}{% if field.errors %} error{% endif %}" id="formfield_{{field.html_name}}">
     <div class="errors">
       {{field.errors}}
     </div>

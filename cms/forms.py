@@ -51,6 +51,8 @@ class PageForm(forms.ModelForm):
         fields = '__all__'
 
 class SectionForm(forms.ModelForm):
+    type = forms.ChoiceField()
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -80,16 +82,17 @@ class SectionForm(forms.ModelForm):
             section.save()
         return section
 
+    core_field_names = ['title', 'type', 'number', 'content', 'image', 'video', 'href']
+
+    def core_fields(self):
+        return [field for field in self.visible_fields() if field.name in self.core_field_names]
+
+    def extra_fields(self):
+        return [field for field in self.visible_fields() if field.name not in self.core_field_names]
+
     class Meta:
         model = Section
         exclude = ['page']
-        #field_classes = {
-        #    'type': forms.ChoiceField,
-        #}
-
-    # There is definitely a bug in Django, since the above 'field_classes' gets
-    # ignored entirely. Workaround to force a ChoiceField anyway:
-    type = forms.ChoiceField()
 
 class BaseSectionFormSet(forms.BaseInlineFormSet):
     '''If a swappable Section model defines one-to-many fields, (i.e. has

@@ -5,11 +5,13 @@
   {% for field in form.hidden_fields %}
     {{field}}
   {% endfor %}
+
   {% for field in form.visible_fields %}
     {% include 'cms/formfield.html' with field=field %}
   {% endfor %}
+
   {% for formset in form.formsets %}
-    <div id="{{formset.prefix}}" class="formset {{formset.name}}">
+    <div class="formfield {{formset.name}}" id="formfield_{{formset.prefix}}">
       {{formset.management_form}}
       {% for form in formset %}
         {% include 'cms/form.html' %}

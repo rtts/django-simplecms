@@ -21,7 +21,8 @@ form.cms {
     border: 0.5px solid #ccc;
     clear: both;
     margin: 0.5em 0em;
-    padding: 0.5em;
+    padding: 0.25em 0.5em;
+    padding-top: 0;
     border-radius: 0.25em; }
   form.cms img {
     display: block;
@@ -29,7 +30,7 @@ form.cms {
     width: 50px;
     cursor: pointer; }
   form.cms div.formfield {
-    margin-bottom: 10px;
+    margin: 0.25em 0;
     clear: both;
     box-sizing: border-box; }
     form.cms div.formfield.type, form.cms div.formfield.number, form.cms div.formfield.slug {
@@ -39,28 +40,27 @@ form.cms {
     form.cms div.formfield.number {
       width: 20%;
       float: right; }
-  form.cms div.formfield.error {
-    border: 2px dotted red;
-    border-radius: 3px;
-    padding: 0.5em;
-    background: #f001; }
-    form.cms div.formfield.error select, form.cms div.formfield.error input, form.cms div.formfield.error textarea {
-      background: white; }
-  form.cms div.formfield.required div.label {
-    font-weight: 700; }
-  form.cms div.label, form.cms label {
-    font-size: 0.7rem;
-    font-weight: 400;
-    text-align: left;
-    margin-bottom: 2px; }
-  form.cms div.input {
-    overflow: hidden; }
-  form.cms div.helptext, form.cms span.required {
-    color: #666;
-    font-size: 12px !important;
-    font-weight: 400 !important; }
-  form.cms span.required {
-    font-style: italic; }
+    form.cms div.formfield.title {
+      font-weight: 700; }
+    form.cms div.formfield.error {
+      border: 2px dotted red;
+      border-radius: 3px;
+      padding: 0.5em;
+      margin-top: 0.5em;
+      background: #f001; }
+      form.cms div.formfield.error select, form.cms div.formfield.error input, form.cms div.formfield.error textarea {
+        background: white; }
+    form.cms div.formfield div.label, form.cms div.formfield label {
+      font-size: 0.7rem;
+      font-weight: 400;
+      text-align: left;
+      margin-bottom: 2px; }
+    form.cms div.formfield div.input {
+      overflow: hidden; }
+    form.cms div.formfield div.helptext {
+      color: #666;
+      font-size: 12px !important;
+      font-weight: 400 !important; }
   form.cms input, form.cms select, form.cms textarea {
     background: #fff6;
     color: black;
@@ -72,13 +72,12 @@ form.cms {
     box-sizing: border-box;
     margin: 0;
     padding: 5px 8px;
-    font-family: inherit; }
+    font-family: inherit;
+    font-weight: inherit; }
   form.cms input[type=checkbox] {
     width: auto;
     display: inline-block;
     vertical-align: middle; }
-  form.cms input[name$=title] {
-    font-weight: 700; }
   form.cms textarea {
     font-size: 1rem;
     height: 15em;

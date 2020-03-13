@@ -171,9 +171,10 @@ class EditPage(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMi
         return context
 
     def get_object(self):
+        '''Prevent 404 by serving the new object form'''
         try:
             return super().get_object()
-        except:
+        except Http404:
             return None
 
     def get(self, request, *args, **kwargs):

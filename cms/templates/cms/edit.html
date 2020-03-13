@@ -46,6 +46,9 @@
         for (let el of extra_form.querySelectorAll(`*[for^=id_${prefix}]`)) {
             increment(el, 'id_' + prefix, 'for');
         }
+        for (let el of extra_form.querySelectorAll(`*[id^=formfield_${prefix}]`)) {
+            increment(el, 'formfield_' + prefix, 'id');
+        }
 
         node.remove();
         parent.appendChild(extra_form);
@@ -82,16 +85,13 @@
 
     function showRelevantFields(form, type) {
         let fields_per_type = {{fields_per_type|safe}};
-        for (let field of form.querySelectorAll(`fieldset#${form.id} > div`)) {
-            field.hidden = true;
-        }
-        for (let field of form.querySelectorAll(`fieldset#${form.id} > div.DELETE`)) {
-            field.hidden = false;
+        for (let field of form.querySelectorAll(`fieldset#${form.id} > div.formfield`)) {
+            if (!field.id.endsWith('DELETE')) {
+                field.hidden = true;
+            }
         }
         for (let name of fields_per_type[type]) {
-            for (let field of form.querySelectorAll(`fieldset#${form.id} > div.${name}`)) {
-                field.hidden = false;
-            }
+            document.getElementById(`formfield_${form.id}-${name}`).hidden = false;
         }
     }
 
