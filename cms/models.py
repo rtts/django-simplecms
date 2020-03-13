@@ -22,11 +22,14 @@ class Numbered:
     def number_with_respect_to(self):
         return self.__class__.objects.all()
 
+    def get_field_name(self):
+        return self.__class__._meta.ordering[-1].lstrip('-')
+
     def _renumber(self):
         '''Renumbers the queryset while preserving the instance's number'''
 
         queryset = self.number_with_respect_to()
-        field_name = self.__class__._meta.ordering[-1].lstrip('-')
+        field_name = self.get_field_name()
         this_nr = getattr(self, field_name)
         if this_nr is None:
             this_nr = len(queryset) + 1
@@ -55,8 +58,9 @@ class Numbered:
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        super().delete(*args, **kwargs)
+        setattr(self, self.get_field_name(), 9999) # hack
         self._renumber()
+        super().delete(*args, **kwargs)
 
 class BasePage(Numbered, models.Model):
     '''Abstract base model for pages'''

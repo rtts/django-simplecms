@@ -10,7 +10,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.mixins import UserPassesTestMixin
 
 from .decorators import register_view
-from .forms import PageForm
+from .forms import PageForm, SectionForm
 
 Page = swapper.load_model('cms', 'Page')
 Section = swapper.load_model('cms', 'Section')
@@ -143,16 +143,10 @@ class EditPage(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMi
         app, model = swapper.get_model_name('cms', 'page').lower().split('.')
         return self.request.user.has_perm('f{app}_{model}_change')
 
-    def setup(self, *args, slug='', **kwargs):
-        '''Supply a default argument for slug'''
-        super().setup(*args, slug=slug, **kwargs)
-
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs.update({
-            'label_suffix': '',
-            'initial': {'slug': self.kwargs['slug']},
-        })
+        if 'slug' in self.kwargs:
+            kwargs.update({'initial': {'slug': self.kwargs['slug']}})
         return kwargs
 
     def get_context_data(self, **kwargs):
@@ -194,7 +188,77 @@ class EditPage(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMi
 
 class CreatePage(EditPage):
     def get_object(self):
-        pass
+        return Page()
 
 class UpdatePage(EditPage):
+    pass
+
+class EditSection(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMixin, base.View):
+    model = Section
+    form_class = SectionForm
+    template_name = 'cms/edit.html'
+
+    def test_func(self):
+        app, model = swapper.get_model_name('cms', 'section').lower().split('.')
+        return self.request.user.has_perm('f{app}_{model}_change')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({
+            'prefix': 'section',
+        })
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        fields_per_type = {}
+        for model, _ in Section.TYPES:
+            ctype = ContentType.objects.get(
+                app_label = Section._meta.app_label,
+                model = model.lower(),
+            )
+            fields_per_type[ctype.model] = ['type', 'number'] + ctype.model_class().fields
+
+        context.update({
+            'fields_per_type': json.dumps(fields_per_type),
+        })
+        return context
+
+    def get_object(self, queryset=None):
+        try:
+            self.page = Page.objects.get(slug=self.kwargs['slug'])
+        except Page.DoesNotExist:
+            raise Http404()
+        return self.get_section()
+
+    def get_section(self):
+        try:
+            section = self.page.sections.get(number=self.kwargs['number'])
+        except Section.DoesNotExist:
+            raise Http404()
+        return section
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return self.render_to_response(self.get_context_data())
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+
+        if form.is_valid():
+            section = form.save()
+            if section:
+                return HttpResponseRedirect(section.page.get_absolute_url())
+            elif self.page.sections.exists():
+                return HttpResponseRedirect(self.page.get_absolute_url())
+            else:
+                return HttpResponseRedirect('/')
+        return self.render_to_response(self.get_context_data(form=form))
+
+class CreateSection(EditSection):
+    def get_section(self):
+        return Section(page=self.page)
+
+class UpdateSection(EditSection):
     pass

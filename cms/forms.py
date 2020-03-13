@@ -10,12 +10,13 @@ Section = swapper.load_model('cms', 'Section')
 class PageForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.label_suffix = ''
         extra = 1 if self.instance.pk else 2
+
         self.formsets = [forms.inlineformset_factory(
             parent_model = Page,
             model = Section,
             form = SectionForm,
-            formset = BaseSectionFormSet,
             extra=extra,
         )(
             data=self.data if self.is_bound else None,
@@ -33,8 +34,6 @@ class PageForm(forms.ModelForm):
         super().clean()
         if not self.formsets[0].is_valid():
             self.add_error(None, _('There’s a problem saving one of the sections'))
-        if not self.instance and not self.formsets[0].has_changed():
-            self.add_error(None, _('You can’t save a new page without adding any sections!'))
 
     def save(self, *args, **kwargs):
         page = super().save()
@@ -55,18 +54,48 @@ class SectionForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.label_suffix = ''
+        self.fields['DELETE'] = forms.BooleanField(label=_('Delete'), required=False)
 
         # Repopulate the 'choices' attribute of the type field from
         # the child model.
         self.fields['type'].choices = self._meta.model.TYPES
         self.fields['type'].initial = self._meta.model.TYPES[0][0]
 
-    def delete(self):
-        instance = super().save()
-        instance.delete()
+        section = self.instance
+        self.formsets = []
+        for field in section._meta.get_fields():
+            if field.one_to_many:
+                extra = 1 if getattr(section, field.name).exists() else 2
+                formset = forms.inlineformset_factory(
+                    Section, field.related_model,
+                    fields='__all__',
+                    extra=extra,
+                )(
+                    instance=section,
+                    data=self.data if self.is_bound else None,
+                    files=self.files if self.is_bound else None,
+                    prefix=f'{self.prefix}-{field.name}',
+                    form_kwargs={'label_suffix': self.label_suffix},
+                )
+                formset.name = field.name
+                self.formsets.append(formset)
+
+    def is_valid(self):
+        result = super().is_valid()
+        if self.is_bound:
+            for formset in self.formsets:
+                result = result and formset.is_valid()
+        return result
 
     def save(self, commit=True):
-        section = super().save()
+        section = super().save(commit=commit)
+
+        if self.cleaned_data['DELETE']:
+            section.delete()
+            if section.page.slug and not section.page.sections.exists():
+                section.page.delete()
+            return
 
         # Explanation: get the content type of the model that the user
         # supplied when filling in this form, and save it's id to the
@@ -80,71 +109,14 @@ class SectionForm(forms.ModelForm):
 
         if commit:
             section.save()
+        for formset in self.formsets:
+            formset.save(commit=commit)
+
         return section
-
-    core_field_names = ['title', 'type', 'number', 'content', 'image', 'video', 'href']
-
-    def core_fields(self):
-        return [field for field in self.visible_fields() if field.name in self.core_field_names]
-
-    def extra_fields(self):
-        return [field for field in self.visible_fields() if field.name not in self.core_field_names]
 
     class Meta:
         model = Section
         exclude = ['page']
-
-class BaseSectionFormSet(forms.BaseInlineFormSet):
-    '''If a swappable Section model defines one-to-many fields, (i.e. has
-    foreign keys pointing to it) formsets will be generated for the
-    related models and stored in the form.formsets array.
-
-    Based on this logic for nested formsets:
-    https://www.yergler.net/2013/09/03/nested-formsets-redux/
-
-    Typical usecases could be:
-    - an images section that displays multiple images
-    - a column section that displays separate colums
-    - a calendar section that displays calendar events
-    - etc...
-
-    '''
-    def add_fields(self, form, index):
-        super().add_fields(form, index)
-        section = form.instance
-        form.formsets = []
-        for field in section._meta.get_fields():
-            if field.one_to_many:
-                extra = 1 if getattr(section, field.name).exists() else 2
-
-                formset = forms.inlineformset_factory(
-                    Section, field.related_model,
-                    fields='__all__',
-                    extra=extra,
-                )(
-                    instance=section,
-                    data=form.data if self.is_bound else None,
-                    files=form.files if self.is_bound else None,
-                    prefix=f'{form.prefix}-{field.name}',
-                    form_kwargs=self.form_kwargs,
-                )
-                formset.name = field.name
-                form.formsets.append(formset)
-
-    def is_valid(self):
-        result = super().is_valid()
-        if self.is_bound:
-            for form in self.forms:
-                for formset in form.formsets:
-                    result = result and formset.is_valid()
-        return result
-
-    def save(self, commit=True):
-        result = super().save(commit=commit)
-        for form in self:
-            for formset in form.formsets:
-                formset.save(commit=commit)
-        return result
 
 class ContactForm(forms.Form):
     sender = forms.EmailField(label=_('Your email address'))
