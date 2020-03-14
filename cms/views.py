@@ -40,31 +40,6 @@ class SectionFormView(edit.FormMixin, SectionView):
             return HttpResponseRedirect(self.get_success_url())
         return form
 
-class SectionFormSetView(SectionView):
-    '''Generic section with associated formset'''
-
-    formset_class = None
-
-    def post(self, request):
-        '''Process form'''
-        formset = self.get_formset()
-        if formset.is_valid():
-            formset.save(request)
-            return HttpResponseRedirect(self.get_success_url())
-        return formset
-
-    def get_formset(self):
-        # todo: handle initials!
-        return self.formset_class()
-
-    def get_context_data(self, **kwargs):
-        if 'formset' not in kwargs:
-            kwargs['formset'] = self.get_formset()
-        return super().get_context_data(**kwargs)
-
-def get_view(section):
-    return section.__class__.view_class()
-
 class PageView(detail.DetailView):
     '''View of a page with heterogeneous (polymorphic) sections'''
     model = Page
@@ -75,7 +50,7 @@ class PageView(detail.DetailView):
         super().setup(*args, slug=slug, **kwargs)
 
     def initialize_section(self, section):
-        section.view = get_view(section)
+        section.view = section.__class__.view_class()
         section.view.setup(self.request, section)
         section.context = section.view.get_context_data(
             request = self.request,
