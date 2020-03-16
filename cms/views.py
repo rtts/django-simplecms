@@ -224,7 +224,7 @@ class EditSection(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateRespons
         if form.is_valid():
             section = form.save()
             if section:
-                return HttpResponseRedirect(section.page.get_absolute_url())
+                return HttpResponseRedirect(section.get_absolute_url())
             elif self.page.sections.exists():
                 return HttpResponseRedirect(self.page.get_absolute_url())
             else:

@@ -6,6 +6,7 @@
 
 {% block content %}
   {% for section in sections %}
+    <div id="{{section.title|slugify}}"></div>
     {% include_section section %}
   {% endfor %}
 

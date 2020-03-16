@@ -3,6 +3,7 @@ import swapper
 from django.db import models
 from django.urls import reverse
 from django.forms import TextInput, Select
+from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 from embed_video.fields import EmbedVideoField
 from polymorphic.models import PolymorphicModel
@@ -100,6 +101,9 @@ class BaseSection(Numbered, PolymorphicModel):
 
     def number_with_respect_to(self):
         return self.page.sections.all()
+
+    def get_absolute_url(self):
+        return self.page.get_absolute_url() + '#' + slugify(self.title)
 
     def __str__(self):
         if not self.pk:
