@@ -7,6 +7,4 @@ class CmsConfig(AppConfig):
     verbose_name = _('Content Management System')
 
     def ready(self):
-        # Need to load view models of all installed apps to make the
-        # register_view decorator work
-        autodiscover_modules('views')
+        autodiscover_modules('cms')

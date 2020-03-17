@@ -38,6 +38,9 @@
       </div>
     {% endif %}
 
-    {% include 'cms/editlink.html' %}
+    {% if request.user.is_staff %}
+      <a class="edit" href="edit/{{section.number}}/">{% trans 'edit' %}</a>
+    {% endif %}
+
   </div>
 </section>
