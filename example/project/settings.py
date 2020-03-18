@@ -9,6 +9,7 @@ except ImportError:
 PROJECT_NAME = 'example'
 KEYFILE = f'/tmp/{PROJECT_NAME}.secret'
 ADMINS = [('JJ Vens', 'jj@rtts.eu')]
+DEFAULT_TO_EMAIL = ADMINS
 ALLOWED_HOSTS = ['*']
 ROOT_URLCONF = 'project.urls'
 WSGI_APPLICATION = 'project.wsgi.application'

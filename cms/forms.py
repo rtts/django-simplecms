@@ -1,5 +1,6 @@
 import swapper
 from django import forms
+from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.core.mail import EmailMessage
 from django.utils.translation import gettext_lazy as _
@@ -133,8 +134,7 @@ class ContactForm(forms.Form):
             return
 
         email = EmailMessage(
-            to = ['info@' + hostname],
-            from_email = 'noreply@' + hostname,
+            to = [settings.DEFAULT_TO_EMAIL],
             body = body,
             subject = _('Contact form at %(hostname)s.') % {'hostname': hostname},
             headers = {'Reply-To': self.cleaned_data.get('sender')},
