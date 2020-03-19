@@ -84,9 +84,14 @@ class SectionForm(forms.ModelForm):
 
     def is_valid(self):
         result = super().is_valid()
-        if self.is_bound:
-            for formset in self.formsets:
-                result = result and formset.is_valid()
+        for formset in self.formsets:
+            result = result and formset.is_valid() # AND
+        return result
+
+    def has_changed(self):
+        result = super().has_changed()
+        for formset in self.formsets:
+            result = result or formset.has_changed() # OR
         return result
 
     def save(self, commit=True):
