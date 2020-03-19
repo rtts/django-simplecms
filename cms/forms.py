@@ -132,7 +132,7 @@ class SectionForm(forms.ModelForm):
 class ContactForm(forms.Form):
     sender = forms.EmailField(label=_('Your email address'))
     spam_protection = forms.CharField(label=_('Your message'), widget=forms.Textarea())
-    message = forms.CharField(label=_('Your message'), widget=forms.Textarea(attrs={'class': 'ftp'}), initial='Hi there!')
+    message = forms.CharField(label=_('Your message'), widget=forms.Textarea(), initial='Hi there!')
 
     def save(self, request):
         hostname = request.get_host()
@@ -144,7 +144,7 @@ class ContactForm(forms.Form):
             return
 
         email = EmailMessage(
-            to = settings.DEFAULT_TO_EMAIL,
+            to = [settings.DEFAULT_TO_EMAIL],
             body = body,
             subject = _('Contact form at %(hostname)s.') % {'hostname': hostname},
             headers = {'Reply-To': self.cleaned_data.get('sender')},
