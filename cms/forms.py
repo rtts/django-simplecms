@@ -31,6 +31,9 @@ class PageForm(forms.ModelForm):
     def is_valid(self):
         return super().is_valid() and self.formsets[0].is_valid()
 
+    def has_changed(self):
+        return super().has_changed() or self.formsets[0].has_changed()
+
     def clean(self):
         super().clean()
         if not self.formsets[0].is_valid():
@@ -63,17 +66,19 @@ class SectionForm(forms.ModelForm):
         self.fields['type'].choices = self._meta.model.TYPES
         self.fields['type'].initial = self._meta.model.TYPES[0][0]
 
-        section = self.instance
+
+        # Populate the 'formsets' attribute if the Section was
+        # extendend with one_to_many fields
         self.formsets = []
-        for field in section._meta.get_fields():
+        for field in self.instance._meta.get_fields():
             if field.one_to_many:
-                extra = 1 if getattr(section, field.name).exists() else 2
+                extra = 1 if getattr(self.instance, field.name).exists() else 2
                 formset = forms.inlineformset_factory(
                     Section, field.related_model,
                     fields='__all__',
                     extra=extra,
                 )(
-                    instance=section,
+                    instance=self.instance,
                     data=self.data if self.is_bound else None,
                     files=self.files if self.is_bound else None,
                     prefix=f'{self.prefix}-{field.name}',
@@ -127,7 +132,7 @@ class SectionForm(forms.ModelForm):
 class ContactForm(forms.Form):
     sender = forms.EmailField(label=_('Your email address'))
     spam_protection = forms.CharField(label=_('Your message'), widget=forms.Textarea())
-    message = forms.CharField(label=_('Your message'), widget=forms.Textarea(), initial='Hi there!')
+    message = forms.CharField(label=_('Your message'), widget=forms.Textarea(attrs={'class': 'ftp'}), initial='Hi there!')
 
     def save(self, request):
         hostname = request.get_host()
@@ -139,7 +144,7 @@ class ContactForm(forms.Form):
             return
 
         email = EmailMessage(
-            to = [settings.DEFAULT_TO_EMAIL],
+            to = settings.DEFAULT_TO_EMAIL,
             body = body,
             subject = _('Contact form at %(hostname)s.') % {'hostname': hostname},
             headers = {'Reply-To': self.cleaned_data.get('sender')},
