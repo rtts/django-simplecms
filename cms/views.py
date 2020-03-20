@@ -3,7 +3,7 @@ import swapper
 
 from django.shortcuts import redirect
 from django.views.generic import base, detail, edit
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ImproperlyConfigured
 from django.contrib.contenttypes.models import ContentType
@@ -92,6 +92,8 @@ class PageView(detail.DetailView):
             if section.pk == pk:
                 result = section.view.post(request)
                 if isinstance(result, HttpResponseRedirect):
+                    return result
+                if isinstance(result, HttpResponse):
                     return result
                 section.context['form'] = result
 
