@@ -14,12 +14,17 @@ class IncludeSectionNode(template.Node):
     def __init__(self, section):
         self.section = template.Variable(section)
         self.csrf_token = template.Variable('csrf_token')
+        self.perms = template.Variable('perms')
         super().__init__()
 
     def render(self, context):
         section = self.section.resolve(context)
         template_name = section.view.template_name
         csrf_token = self.csrf_token.resolve(context)
-        section.context.update({'csrf_token': csrf_token})
+        perms = self.perms.resolve(context)
+        section.context.update({
+            'csrf_token': csrf_token,
+            'perms': perms,
+        })
         t = context.template.engine.get_template(template_name)
         return t.render(template.Context(section.context))
