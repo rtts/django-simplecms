@@ -9,6 +9,7 @@ except ImportError:
 PROJECT_NAME = 'example'
 KEYFILE = f'/tmp/{PROJECT_NAME}.secret'
 ADMINS = [('JJ Vens', 'jj@rtts.eu')]
+DEFAULT_FROM_EMAIL = 'noreply@rtts.eu'
 DEFAULT_TO_EMAIL = 'jj@rtts.eu'
 ALLOWED_HOSTS = ['*']
 ROOT_URLCONF = 'project.urls'
@@ -24,8 +25,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = '/srv/' + PROJECT_NAME + '/media'
 LOGIN_REDIRECT_URL = '/'
 CMS_SECTION_MODEL = 'app.Section'
-CMS_PAGE_MODEL = 'app.Page' # https://github.com/wq/django-swappable-models/issues/18#issuecomment-514039164
-MARKDOWN_EXTENSIONS = ['extra', 'smarty']
+CMS_PAGE_MODEL = 'app.Page'
 
 def read(file):
     with open(file) as f:
@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'cms',
-    'polymorphic',
     'embed_video',
     'easy_thumbnails',
     'django_extensions',

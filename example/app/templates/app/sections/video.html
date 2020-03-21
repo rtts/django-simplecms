@@ -1,13 +1,15 @@
-{% load embed_video_tags %}
+{% load embed_video_tags i18n %}
 
 <section class="video">
-  <div class="wrapper">
-    {% if section.video %}
-      <div class="video">
-        <div class="iframe">
-          {% video section.video '800x600' %}
-        </div>
+  {% if section.video %}
+    <div class="video">
+      <div class="iframe">
+        {% video section.video '800x600' %}
       </div>
-    {% endif %}
-  </div>
+    </div>
+  {% endif %}
+
+  {% if perms.cms_section_change %}
+    <a class="edit" href="{% url 'cms:updatesection' section.number %}">{% trans 'edit' %}</a><br>
+  {% endif %}
 </section>

@@ -4,6 +4,20 @@ html, body {
   margin: 0;
   padding: 0; }
 
+div.edit {
+  position: fixed;
+  right: 1em;
+  bottom: 1em;
+  z-index: 1000; }
+  div.edit button {
+    padding: 0;
+    outline: none;
+    background: none;
+    border: none; }
+  div.edit img {
+    width: 75px !important;
+    height: auto; }
+
 /* Form elements */
 form.cms {
   background: #bfb;

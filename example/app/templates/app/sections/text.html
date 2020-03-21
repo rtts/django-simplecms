@@ -1,4 +1,4 @@
-{% load markdown %}
+{% load eval i18n %}
 
 <section class="text">
   <div class="wrapper">
@@ -9,7 +9,11 @@
     </div>
 
     <div class="content">
-      {{section.content|markdown}}
+      {% eval section.content %}
     </div>
   </div>
+
+  {% if perms.cms_section_change %}
+    <a class="edit" href="{% url 'cms:updatesection' section.number %}">{% trans 'edit' %}</a><br>
+  {% endif %}
 </section>

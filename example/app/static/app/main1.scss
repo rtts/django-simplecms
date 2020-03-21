@@ -1,10 +1,43 @@
-$small: 500px;
-$medium: 800px;
 $font: sans-serif;
 $titlefont: sans-serif;
+$small: 500px;
+$medium: 800px;
+$max-width: 700px;
+$color1: #3573a8;
 
-body {
+html, body {
   font-family: $font;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: $color1;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+a.button, button.button {
+  cursor: pointer;
+  font-family: $titlefont
+  font-size: 1.5em;
+  line-height: 1.25;
+  border-radius: 5px;
+  display: inline-block;
+  text-decoration: none;
+  border: none;
+  padding: 5px 20px;
+  background: $color1;
+  color: white;
+  box-sizing: border-box;
+  &:hover {
+    color: $color1;
+    background: white;
+    box-shadow: inset 0 0 0 2px $color1;
+  }
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -16,32 +49,232 @@ h2 { font-size: 1.5em }
 h3 { font-size: 1.25em }
 h4, h5, h6 { font-size: 1em }
 
-a {
-  &:hover {
+a.edit {
+  color: red;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: normal;
+  &:before { content: '[ ' }
+  &:after { content: ' ]' }
+}
+section a.edit {
+  position: absolute;
+  bottom: 0;
+  right: 1em;
+}
+
+table {
+  border-collapse: collapse;
+  th, td {
+    padding: 1em;
+  }
+  th {
+    border-bottom: 2px solid $color1;
   }
 }
 
-a.button {
-  &:hover {
-  }
+div.wrapper {
+  box-sizing: border-box;
+  max-width: $max-width;
+  margin: auto;
+  padding: 0 1rem;
+}
+
+div.spacer {
+  height: 1rem;
+  clear: both;
 }
 
 header {
-  h1 {
-    text-align: center;
-  }
-  img {
-    display: block;
-    width: 100%;
-    max-width: 400px;
-    margin: auto;
-  }
+  text-align: center;
 }
 
 nav {
+  button#hamburger {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 0;
+
+    .hamburger-inner, .hamburger-inner:before, .hamburger-inner:after {
+      background: $color1;
+    }
+    &.is-active {
+      position: fixed;
+    }
+    &:hover {
+      opacity: 1 !important;
+    }
+    &:focus {
+      outline: none !important;
+    }
+  }
+
+  ul {
+    border-top: 2px solid $color1;
+    border-bottom: 2px solid $color1;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: start;
+
+    li {
+      margin: 0;
+      padding: 0;
+      display: inline-block;
+
+      a {
+        font-size: 1.25rem;
+        padding: 5px .5em;
+        transition: .1s ease;
+        display: inline-block;
+        font-weight: bold;
+      }
+    }
+  }
+
+  @media(min-width: $small) {
+    a:hover:not(.edit), a.current {
+      text-decoration: none;
+      color: white;
+      background: $color1;
+    }
+
+    button#hamburger {
+      display: none;
+    }
+  }
+
+  @media(max-width: $small) {
+    padding: 0;
+
+    button#hamburger {
+      display: block;
+    }
+    ul#menu {
+      position: fixed;
+      overflow-y: auto;
+      z-index: 1;
+      margin: 0;
+      padding: 0;
+      padding-top: 2em;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: white;
+      list-style: none;
+
+      li {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 1em;
+        margin: 0 1em;
+        border-bottom: 1px solid #ddd;
+        line-height: 1.5;
+        text-align: center;
+
+        a {
+          text-decoration: none;
+        }
+      }
+
+      transition: .5s ease;
+      transform: translatex(100%);
+      &.visible {
+        transform: translatex(0);
+      }
+    }
+  }
+}
+
+div.edit {
+  position: fixed;
+  right: 1em;
+  bottom: 1em;
+  z-index: 1000;
+
+  button {
+    padding: 0;
+    outline: none;
+    background: none;
+    border: none;
+  }
+  img {
+    width: 75px;
+    height: auto;
+  }
+}
+
+section {
+  clear: both;
+  position: relative;
+
+  div.title {
+    text-align: center;
+  }
+
+  div.video {
+    div.iframe {
+      width: 100%;
+      padding-bottom: 56%;
+      position: relative;
+
+      iframe {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+      }
+    }
+  }
+}
+
+section.images {
+  div.images {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0.25em;
+    justify-content: center;
+
+    div.image {
+      flex: 1 1 100px;
+      max-width: $max-width;
+      margin: 0.5em;
+
+      img {
+        display: block;
+        width: 100%;
+      }
+    }
+  }
+}
+
+section.contact {
+  div.message {
+    display: none;
+  }
+  div.formfield {
+    padding: 0.5em 0;
+  }
+  form input, form textarea {
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: inherit;
+    display: block;
+    width: 100%;
+    padding: 0.5em;
+    margin: 0;
+  }
 }
 
 footer {
-  margin-top: 4em;
-  min-height: 400px;
+  min-height: 10em;
 }

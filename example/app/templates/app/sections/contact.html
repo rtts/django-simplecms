@@ -15,4 +15,8 @@
       </form>
     </div>
   </div>
+
+  {% if perms.cms_section_change %}
+    <a class="edit" href="{% url 'cms:updatesection' section.number %}">{% trans 'edit' %}</a><br>
+  {% endif %}
 </section>

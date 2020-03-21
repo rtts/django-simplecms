@@ -1,6 +1,7 @@
 import swapper
 from django import forms
 from django.conf import settings
+from django.db.models import Prefetch
 from django.contrib.contenttypes.models import ContentType
 from django.core.mail import EmailMessage
 from django.utils.translation import gettext_lazy as _
@@ -13,7 +14,6 @@ class PageForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.label_suffix = ''
         extra = 1 if self.instance.pk else 2
-
         self.formsets = [forms.inlineformset_factory(
             parent_model = Page,
             model = Section,
@@ -37,7 +37,7 @@ class PageForm(forms.ModelForm):
     def clean(self):
         super().clean()
         if not self.formsets[0].is_valid():
-            self.add_error(None, _('There’s a problem saving one of the sections'))
+            self.add_error(None, repr(self.formsets[0].errors))
 
     def save(self, *args, **kwargs):
         page = super().save()
@@ -60,21 +60,21 @@ class SectionForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.label_suffix = ''
         self.fields['DELETE'] = forms.BooleanField(label=_('Delete'), required=False)
+        extra = 1 if self.instance.pk else 2
 
         # Repopulate the 'choices' attribute of the type field from
         # the child model.
         self.fields['type'].choices = self._meta.model.TYPES
         self.fields['type'].initial = self._meta.model.TYPES[0][0]
 
-
         # Populate the 'formsets' attribute if the Section was
         # extendend with one_to_many fields
         self.formsets = []
         for field in self.instance._meta.get_fields():
             if field.one_to_many:
-                extra = 1 if getattr(self.instance, field.name).exists() else 2
                 formset = forms.inlineformset_factory(
-                    Section, field.related_model,
+                    parent_model=Section,
+                    model=field.related_model,
                     fields='__all__',
                     extra=extra,
                 )(
@@ -107,19 +107,9 @@ class SectionForm(forms.ModelForm):
             if section.page.slug and not section.page.sections.exists():
                 section.page.delete()
             return
-
-        # Explanation: get the content type of the model that the user
-        # supplied when filling in this form, and save it's id to the
-        # 'polymorphic_ctype_id' field. The next time the object is
-        # requested from the database, django-polymorphic will convert
-        # it to the correct subclass.
-        section.polymorphic_ctype = ContentType.objects.get(
-            app_label=section._meta.app_label,
-            model=section.type.lower(),
-        )
-
-        if commit:
+        elif commit:
             section.save()
+
         for formset in self.formsets:
             formset.save(commit=commit)
 

@@ -2,11 +2,12 @@ import swapper
 
 from django.db import models
 from django.urls import reverse
-from django.forms import TextInput, Select
 from django.utils.text import slugify
+from django.forms import TextInput, Select
 from django.utils.translation import gettext_lazy as _
+from django.core.exceptions import ImproperlyConfigured
+
 from embed_video.fields import EmbedVideoField
-from polymorphic.models import PolymorphicModel
 
 class VarCharField(models.TextField):
     '''Variable width CharField'''
@@ -86,9 +87,13 @@ class BasePage(Numbered, models.Model):
         verbose_name_plural = _('Pages')
         ordering = ['number']
 
-class BaseSection(Numbered, PolymorphicModel):
+class BaseSection(Numbered, models.Model):
     '''Abstract base model for sections'''
-    TYPES = [] # Will be populated by @register_model()
+
+    # These will be populated by @register
+    TYPES = []
+    _cms_views = {}
+
     page = models.ForeignKey(swapper.get_model_name('cms', 'Page'), verbose_name=_('page'), related_name='sections', on_delete=models.PROTECT)
     title = VarCharField(_('section'))
     type = VarCharField(_('type'))
@@ -112,6 +117,21 @@ class BaseSection(Numbered, PolymorphicModel):
             return str(_('Untitled'))
         else:
             return self.title
+
+    def get_view(self, request):
+        '''Try to instantiate the registered view for this section'''
+        try:
+            return self.__class__._cms_views[self.type](request)
+        except:
+            raise ImproperlyConfigured(
+                f'No view registered for sections of type {self.type}!')
+
+    @classmethod
+    def get_fields_per_type(cls):
+        fields_per_type = {}
+        for name, view in cls._cms_views.items():
+            fields_per_type[name] = ['type', 'number'] + view.fields
+        return fields_per_type
 
     class Meta:
         abstract = True

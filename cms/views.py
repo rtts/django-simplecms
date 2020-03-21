@@ -3,45 +3,16 @@ import swapper
 
 from django.shortcuts import redirect
 from django.views.generic import base, detail, edit
-from django.http import Http404, HttpResponse, HttpResponseRedirect
-from django.utils.translation import gettext_lazy as _
-from django.core.exceptions import ImproperlyConfigured
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 
-from .decorators import register_view
 from .forms import PageForm, SectionForm
 
 Page = swapper.load_model('cms', 'Page')
 Section = swapper.load_model('cms', 'Section')
 
-@register_view(Section)
-class SectionView:
-    '''Generic section view'''
-    template_name = 'cms/sections/section.html'
-
-    def setup(self, request, section):
-        '''Initialize request and section attributes'''
-        self.request = request
-        self.section = section
-
-    def get_context_data(self, **kwargs):
-        '''Override this to customize a section's context'''
-        return kwargs
-
-class SectionFormView(edit.FormMixin, SectionView):
-    '''Generic section with associated form'''
-
-    def post(self, request):
-        '''Process form'''
-        form = self.get_form()
-        if form.is_valid():
-            form.save(request)
-            return HttpResponseRedirect(self.get_success_url())
-        return form
-
 class PageView(detail.DetailView):
-    '''View of a page with heterogeneous (polymorphic) sections'''
+    '''View of a page with heterogeneous sections'''
     model = Page
     template_name = 'cms/page.html'
 
@@ -49,27 +20,16 @@ class PageView(detail.DetailView):
         '''Supply a default argument for slug'''
         super().setup(*args, slug=slug, **kwargs)
 
-    def initialize_section(self, section):
-        section.view = section.__class__.view_class()
-        section.view.setup(self.request, section)
-        section.context = section.view.get_context_data(
-            request = self.request,
-            section = section,
-        )
-
     def get(self, request, *args, **kwargs):
-        '''Initialize sections and render final response'''
+        '''Instantiate section views and render final response'''
         try:
             page = self.object = self.get_object()
         except Http404:
             if self.request.user.has_perm('cms_page_create'):
                 return redirect('cms:updatepage', self.kwargs['slug'])
-            else:
-                raise
+            raise
         context = self.get_context_data(**kwargs)
         sections = page.sections.all()
-        for section in sections:
-            self.initialize_section(section)
         context.update({
             'page': page,
             'sections': sections,
@@ -77,8 +37,7 @@ class PageView(detail.DetailView):
         return self.render_to_response(context)
 
     def post(self, request, **kwargs):
-        '''Initialize sections and call the post() function of the correct
-        section view'''
+        '''Call the post() method of the correct section view'''
         try:
             pk = int(self.request.POST.get('section'))
         except:
@@ -88,11 +47,9 @@ class PageView(detail.DetailView):
         context = self.get_context_data(**kwargs)
         sections = page.sections.all()
         for section in sections:
-            self.initialize_section(section)
             if section.pk == pk:
-                result = section.view.post(request)
-                if isinstance(result, HttpResponseRedirect):
-                    return result
+                view = section.get_view(request)
+                result = view.post(request)
                 if isinstance(result, HttpResponse):
                     return result
                 section.context['form'] = result
@@ -112,33 +69,26 @@ class PageView(detail.DetailView):
         return context
 
 class EditPage(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMixin, base.View):
+    '''Base view with nested forms for editing the page and all its sections'''
     model = Page
     form_class = PageForm
     template_name = 'cms/edit.html'
 
     def test_func(self):
-        app, model = swapper.get_model_name('cms', 'page').lower().split('.')
-        return self.request.user.has_perm('f{app}_{model}_change')
+        '''Only allow users with the correct permissions'''
+        return self.request.user.has_perm('cms_page_change')
 
     def get_form_kwargs(self):
+        '''Set the default slug to the current URL for new pages'''
         kwargs = super().get_form_kwargs()
         if 'slug' in self.kwargs:
             kwargs.update({'initial': {'slug': self.kwargs['slug']}})
         return kwargs
 
     def get_context_data(self, **kwargs):
+        '''Populate the fields_per_type dict for use in javascript'''
         context = super().get_context_data(**kwargs)
-        fields_per_type = {}
-        for model, _ in Section.TYPES:
-            ctype = ContentType.objects.get(
-                app_label = Section._meta.app_label,
-                model = model.lower(),
-            )
-            fields_per_type[ctype.model] = ['type', 'number'] + ctype.model_class().fields
-
-        context.update({
-            'fields_per_type': json.dumps(fields_per_type),
-        })
+        context['fields_per_type'] = json.dumps(Section.get_fields_per_type())
         return context
 
     def get_object(self):
@@ -148,11 +98,13 @@ class EditPage(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMi
         except Http404:
             return None
 
-    def get(self, request, *args, **kwargs):
+    def get(self, *args, **kwargs):
+        '''Handle GET requests'''
         self.object = self.get_object()
-        return self.render_to_response(self.get_context_data())
+        return self.render_to_response(self.get_context_data(**kwargs))
 
-    def post(self, request, *args, **kwargs):
+    def post(self, *args, **kwargs):
+        '''Handle POST requests'''
         self.object = self.get_object()
         form = self.get_form()
 
@@ -161,14 +113,15 @@ class EditPage(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMi
             if page:
                 return HttpResponseRedirect(page.get_absolute_url())
             return HttpResponseRedirect('/')
-        return self.render_to_response(self.get_context_data(form=form))
+        return self.render_to_response(self.get_context_data(form=form, **kwargs))
 
 class CreatePage(EditPage):
+    '''View for creating new pages'''
     def get_object(self):
         return Page()
 
 class UpdatePage(EditPage):
-    pass
+    '''View for editing existing pages'''
 
 class EditSection(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMixin, base.View):
     model = Section
@@ -176,8 +129,7 @@ class EditSection(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateRespons
     template_name = 'cms/edit.html'
 
     def test_func(self):
-        app, model = swapper.get_model_name('cms', 'section').lower().split('.')
-        return self.request.user.has_perm('f{app}_{model}_change')
+        return self.request.user.has_perm('cms_section_change')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -188,17 +140,7 @@ class EditSection(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateRespons
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        fields_per_type = {}
-        for model, _ in Section.TYPES:
-            ctype = ContentType.objects.get(
-                app_label = Section._meta.app_label,
-                model = model.lower(),
-            )
-            fields_per_type[ctype.model] = ['type', 'number'] + ctype.model_class().fields
-
-        context.update({
-            'fields_per_type': json.dumps(fields_per_type),
-        })
+        context['fields_per_type'] = json.dumps(Section.get_fields_per_type())
         return context
 
     def get_object(self, queryset=None):
@@ -215,11 +157,11 @@ class EditSection(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateRespons
             raise Http404()
         return section
 
-    def get(self, request, *args, **kwargs):
+    def get(self, *args, **kwargs):
         self.object = self.get_object()
-        return self.render_to_response(self.get_context_data())
+        return self.render_to_response(self.get_context_data(**kwargs))
 
-    def post(self, request, *args, **kwargs):
+    def post(self, *args, **kwargs):
         self.object = self.get_object()
         form = self.get_form()
 
@@ -231,7 +173,7 @@ class EditSection(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateRespons
                 return HttpResponseRedirect(self.page.get_absolute_url())
             else:
                 return HttpResponseRedirect('/')
-        return self.render_to_response(self.get_context_data(form=form))
+        return self.render_to_response(self.get_context_data(form=form, **kwargs))
 
 class CreateSection(EditSection):
     def get_section(self):

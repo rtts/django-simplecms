@@ -1,0 +1,15 @@
+{% load thumbnail i18n %}
+
+<section class="images">
+  <div class="images">
+    {% for image in section.images.all %}
+      <div class="image">
+        <img src="{% thumbnail image.image 700x700 %}">
+      </div>
+    {% endfor %}
+  </div>
+
+  {% if perms.cms_section_change %}
+    <a class="edit" href="{% url 'cms:updatesection' section.number %}">{% trans 'edit' %}</a><br>
+  {% endif %}
+</section>
