@@ -1,4 +1,4 @@
-{% load embed_video_tags i18n %}
+{% load embed_video_tags i18n cms %}
 
 <section class="video">
   {% if section.video %}
@@ -9,7 +9,5 @@
     </div>
   {% endif %}
 
-  {% if perms.cms_section_change %}
-    <a class="edit" href="{% url 'cms:updatesection' section.number %}">{% trans 'edit' %}</a><br>
-  {% endif %}
+  {% edit %}
 </section>

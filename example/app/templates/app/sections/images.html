@@ -1,4 +1,4 @@
-{% load thumbnail i18n %}
+{% load thumbnail i18n cms %}
 
 <section class="images">
   <div class="images">
@@ -9,7 +9,5 @@
     {% endfor %}
   </div>
 
-  {% if perms.cms_section_change %}
-    <a class="edit" href="{% url 'cms:updatesection' section.number %}">{% trans 'edit' %}</a><br>
-  {% endif %}
+  {% edit %}
 </section>

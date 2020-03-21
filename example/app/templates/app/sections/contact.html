@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n cms %}
 <section class="contact">
   <div class="wrapper">
     <div class="title">
@@ -16,7 +16,5 @@
     </div>
   </div>
 
-  {% if perms.cms_section_change %}
-    <a class="edit" href="{% url 'cms:updatesection' section.number %}">{% trans 'edit' %}</a><br>
-  {% endif %}
+  {% edit %}
 </section>

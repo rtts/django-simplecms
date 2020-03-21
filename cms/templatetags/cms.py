@@ -1,12 +1,40 @@
-from django import template
+from markdown import markdown as md
 
+from django import template
+from django.shortcuts import reverse
+from django.utils.safestring import mark_safe
+from django.utils.translation import gettext_lazy as _
+
+MARKDOWN_EXTENSIONS = ['extra', 'smarty']
 register = template.Library()
+
+@register.simple_tag(takes_context=True)
+def eval(context, expr):
+    '''USE WITH CAUTION!!!
+
+    This template tag runs its argument through Django's templating
+    system using the current context, placing all power into the
+    hands of the content editors.
+
+    Also, it applies Markdown.
+
+    '''
+    result = template.Template(expr).render(context)
+    return mark_safe(md(result, extensions=MARKDOWN_EXTENSIONS))
+
+@register.simple_tag(takes_context=True)
+def edit(context):
+    '''Renders a simple link to edit the current section'''
+    if context['request'].user.has_perms('cms_section_change'):
+        slug = context['section'].page.slug
+        number = context['section'].number
+        url = reverse('cms:updatesection', args=[slug, number])  if slug else reverse('cms:updatesection', args=[number])
+        return mark_safe(f'<a class="edit" href="{url}">{_("edit")}</a>')
+    return ''
 
 @register.tag('include_section')
 def do_include(parser, token):
-    '''Renders the section with its own context
-
-    '''
+    '''Renders the section with its own context'''
     _, section = token.split_contents()
     return IncludeSectionNode(section)
 
