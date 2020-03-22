@@ -1,24 +1,29 @@
-import cms
+from cms.views import SectionView, SectionFormView
+from cms.decorators import section_view
 from cms.forms import ContactForm
 from django.utils.translation import gettext_lazy as _
 
-@cms.register(_('Text'))
-class Text(cms.SectionView):
+@section_view
+class Text(SectionView):
+    verbose_name = _('Text')
     fields = ['title', 'content']
     template_name = 'app/sections/text.html'
 
-@cms.register(_('Images'))
-class Images(cms.SectionView):
+@section_view
+class Images(SectionView):
+    verbose_name = _('Images')
     fields = ['title', 'images']
     template_name = 'app/sections/images.html'
 
-@cms.register(_('Video'))
-class Video(cms.SectionView):
+@section_view
+class Video(SectionView):
+    verbose_name = _('Video')
     fields = ['title', 'video']
     template_name = 'app/sections/video.html'
 
-@cms.register(_('Contact'))
-class Contact(cms.SectionFormView):
+@section_view
+class Contact(SectionFormView):
+    verbose_name = _('Contact')
     fields = ['title']
     form_class = ContactForm
     success_url = '/thanks/'

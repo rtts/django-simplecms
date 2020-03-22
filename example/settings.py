@@ -1,19 +1,13 @@
 import os, random, string
-try:
-    import uwsgi
-    DEBUG = False
-except ImportError:
-    DEBUG = True
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-PROJECT_NAME = 'example'
+PROJECT_NAME = os.path.basename(os.path.dirname(os.path.abspath(__file__)))
 KEYFILE = f'/tmp/{PROJECT_NAME}.secret'
 ADMINS = [('JJ Vens', 'jj@rtts.eu')]
 DEFAULT_FROM_EMAIL = 'noreply@rtts.eu'
 DEFAULT_TO_EMAIL = 'jj@rtts.eu'
 ALLOWED_HOSTS = ['*']
-ROOT_URLCONF = 'project.urls'
-WSGI_APPLICATION = 'project.wsgi.application'
+ROOT_URLCONF = PROJECT_NAME + '.urls'
+WSGI_APPLICATION = PROJECT_NAME + '.wsgi.application'
 LANGUAGE_CODE = 'nl'
 TIME_ZONE = 'Europe/Amsterdam'
 USE_I18N = True
@@ -24,8 +18,13 @@ STATIC_ROOT = '/srv/' + PROJECT_NAME + '/static'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = '/srv/' + PROJECT_NAME + '/media'
 LOGIN_REDIRECT_URL = '/'
-CMS_SECTION_MODEL = 'app.Section'
-CMS_PAGE_MODEL = 'app.Page'
+
+try:
+    import uwsgi
+    DEBUG = False
+except ImportError:
+    DEBUG = True
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 def read(file):
     with open(file) as f:
@@ -40,7 +39,7 @@ except IOError:
     write(KEYFILE, SECRET_KEY)
 
 INSTALLED_APPS = [
-    'app',
+    PROJECT_NAME,
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

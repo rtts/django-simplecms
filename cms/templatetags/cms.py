@@ -5,6 +5,8 @@ from django.shortcuts import reverse
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
+from cms import registry
+
 MARKDOWN_EXTENSIONS = ['extra', 'smarty']
 register = template.Library()
 
@@ -51,7 +53,7 @@ class IncludeSectionNode(template.Node):
         csrf_token = self.csrf_token.resolve(context)
         request = self.request.resolve(context)
         perms = self.perms.resolve(context)
-        view = section.get_view(request)
+        view = registry.get_view(section, request)
         section_context = view.get_context_data(
             csrf_token=csrf_token,
             section=section,

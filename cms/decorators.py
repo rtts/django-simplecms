@@ -1,25 +1,17 @@
-def register(verbose_name):
-    import swapper
-    Section = swapper.load_model('cms', 'Section')
+from cms import registry
 
-    '''Decorator to register a specific section type'''
-    def wrapper(view):
-        Section._cms_views[view.__name__.lower()] = view
-        Section.TYPES.append((view.__name__.lower(), verbose_name))
-        return view
-    return wrapper
+def page_model(cls):
+    '''Decorator to register the Page model'''
+    registry.page_class = cls
+    return cls
 
-# def register_model(verbose_name):
-#     '''Decorator to register a section subclass'''
-#     def wrapper(model):
-#         parent_model = model.__bases__[-1]
-#         parent_model.TYPES.append((model.__name__.lower(), verbose_name))
-#         return model
-#     return wrapper
+def section_model(cls):
+    '''Decorator to register the Section model'''
+    registry.section_class = cls
+    return cls
 
-# def register_view(section_class):
-#     '''Decorator to connect a section model to a view class'''
-#     def wrapper(model):
-#         section_class.view_class = model
-#         return model
-#     return wrapper
+def section_view(cls):
+    '''Decorator to register a view for a specific section'''
+    registry.views_per_type[cls.__name__.lower()] = cls
+    registry.section_class.TYPES.append((cls.__name__.lower(), cls.verbose_name))
+    return cls

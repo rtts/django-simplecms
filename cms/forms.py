@@ -1,4 +1,3 @@
-import swapper
 from django import forms
 from django.conf import settings
 from django.db.models import Prefetch
@@ -6,8 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.mail import EmailMessage
 from django.utils.translation import gettext_lazy as _
 
-Page = swapper.load_model('cms', 'Page')
-Section = swapper.load_model('cms', 'Section')
+from . import registry
 
 class PageForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -15,8 +13,8 @@ class PageForm(forms.ModelForm):
         self.label_suffix = ''
         extra = 1 if self.instance.pk else 2
         self.formsets = [forms.inlineformset_factory(
-            parent_model = Page,
-            model = Section,
+            parent_model = registry.page_class,
+            model = registry.section_class,
             form = SectionForm,
             extra=extra,
         )(
@@ -50,7 +48,7 @@ class PageForm(forms.ModelForm):
         return page
 
     class Meta:
-        model = Page
+        model = registry.page_class
         fields = '__all__'
 
 class SectionForm(forms.ModelForm):
@@ -73,7 +71,7 @@ class SectionForm(forms.ModelForm):
         for field in self.instance._meta.get_fields():
             if field.one_to_many:
                 formset = forms.inlineformset_factory(
-                    parent_model=Section,
+                    parent_model=registry.section_class,
                     model=field.related_model,
                     fields='__all__',
                     extra=extra,
@@ -116,7 +114,7 @@ class SectionForm(forms.ModelForm):
         return section
 
     class Meta:
-        model = Section
+        model = registry.section_class
         exclude = ['page']
 
 class ContactForm(forms.Form):

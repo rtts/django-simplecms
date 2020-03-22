@@ -1,19 +1,39 @@
 import json
-import swapper
 
 from django.shortcuts import redirect
 from django.views.generic import base, detail, edit
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 
+from . import registry
 from .forms import PageForm, SectionForm
 
-Page = swapper.load_model('cms', 'Page')
-Section = swapper.load_model('cms', 'Section')
+class SectionView:
+    '''Generic section view'''
+    template_name = 'cms/sections/section.html'
+
+    def __init__(self, request):
+        '''Initialize request attribute'''
+        self.request = request
+
+    def get_context_data(self, **kwargs):
+        '''Override this to customize a section's context'''
+        return kwargs
+
+class SectionFormView(edit.FormMixin, SectionView):
+    '''Generic section with associated form'''
+
+    def post(self, request):
+        '''Process form'''
+        form = self.get_form()
+        if form.is_valid():
+            form.save(request)
+            return HttpResponseRedirect(self.get_success_url())
+        return form
 
 class PageView(detail.DetailView):
     '''View of a page with heterogeneous sections'''
-    model = Page
+    model = registry.page_class
     template_name = 'cms/page.html'
 
     def setup(self, *args, slug='', **kwargs):
@@ -25,9 +45,14 @@ class PageView(detail.DetailView):
         try:
             page = self.object = self.get_object()
         except Http404:
-            if self.request.user.has_perm('cms_page_create'):
+            if self.kwargs['slug'] == '':
+                page = registry.page_class(title='Homepage', slug='')
+                page.save()
+                self.object = page
+            elif self.request.user.has_perm('cms_page_create'):
                 return redirect('cms:updatepage', self.kwargs['slug'])
-            raise
+            else:
+                raise
         context = self.get_context_data(**kwargs)
         sections = page.sections.all()
         context.update({
@@ -48,7 +73,7 @@ class PageView(detail.DetailView):
         sections = page.sections.all()
         for section in sections:
             if section.pk == pk:
-                view = section.get_view(request)
+                view = registry.get_view(section, request)
                 result = view.post(request)
                 if isinstance(result, HttpResponse):
                     return result
@@ -62,7 +87,7 @@ class PageView(detail.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        pages = Page.objects.filter(menu=True)
+        pages = registry.page_class.objects.filter(menu=True)
         context.update({
             'pages': pages,
         })
@@ -70,7 +95,7 @@ class PageView(detail.DetailView):
 
 class EditPage(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMixin, base.View):
     '''Base view with nested forms for editing the page and all its sections'''
-    model = Page
+    model = registry.page_class
     form_class = PageForm
     template_name = 'cms/edit.html'
 
@@ -88,7 +113,7 @@ class EditPage(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMi
     def get_context_data(self, **kwargs):
         '''Populate the fields_per_type dict for use in javascript'''
         context = super().get_context_data(**kwargs)
-        context['fields_per_type'] = json.dumps(Section.get_fields_per_type())
+        context['fields_per_type'] = json.dumps(registry.get_fields_per_type())
         return context
 
     def get_object(self):
@@ -118,13 +143,13 @@ class EditPage(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMi
 class CreatePage(EditPage):
     '''View for creating new pages'''
     def get_object(self):
-        return Page()
+        return registry.page_class()
 
 class UpdatePage(EditPage):
     '''View for editing existing pages'''
 
 class EditSection(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMixin, base.View):
-    model = Section
+    model = registry.section_class
     form_class = SectionForm
     template_name = 'cms/edit.html'
 
@@ -140,20 +165,20 @@ class EditSection(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateRespons
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['fields_per_type'] = json.dumps(Section.get_fields_per_type())
+        context['fields_per_type'] = json.dumps(registry.get_fields_per_type())
         return context
 
     def get_object(self, queryset=None):
         try:
-            self.page = Page.objects.get(slug=self.kwargs['slug'])
-        except Page.DoesNotExist:
+            self.page = registry.page_class.objects.get(slug=self.kwargs['slug'])
+        except registry.page_class.DoesNotExist:
             raise Http404()
         return self.get_section()
 
     def get_section(self):
         try:
             section = self.page.sections.get(number=self.kwargs['number'])
-        except Section.DoesNotExist:
+        except self.page.sections.DoesNotExist:
             raise Http404()
         return section
 
@@ -177,7 +202,7 @@ class EditSection(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateRespons
 
 class CreateSection(EditSection):
     def get_section(self):
-        return Section(page=self.page)
+        return registry.section_class(page=self.page)
 
 class UpdateSection(EditSection):
     pass

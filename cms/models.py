@@ -1,5 +1,3 @@
-import swapper
-
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
@@ -89,16 +87,10 @@ class BasePage(Numbered, models.Model):
 
 class BaseSection(Numbered, models.Model):
     '''Abstract base model for sections'''
-
-    # These will be populated by @register
     TYPES = []
-    _cms_views = {}
-
-    page = models.ForeignKey(swapper.get_model_name('cms', 'Page'), verbose_name=_('page'), related_name='sections', on_delete=models.PROTECT)
     title = VarCharField(_('section'))
     type = VarCharField(_('type'))
     number = models.PositiveIntegerField(_('number'), blank=True)
-
     content = models.TextField(_('content'), blank=True)
     image = models.ImageField(_('image'), blank=True)
     video = EmbedVideoField(_('video'), blank=True, help_text=_('Paste a YouTube, Vimeo, or SoundCloud link'))
@@ -118,33 +110,8 @@ class BaseSection(Numbered, models.Model):
         else:
             return self.title
 
-    def get_view(self, request):
-        '''Try to instantiate the registered view for this section'''
-        try:
-            return self.__class__._cms_views[self.type](request)
-        except:
-            raise ImproperlyConfigured(
-                f'No view registered for sections of type {self.type}!')
-
-    @classmethod
-    def get_fields_per_type(cls):
-        fields_per_type = {}
-        for name, view in cls._cms_views.items():
-            fields_per_type[name] = ['type', 'number'] + view.fields
-        return fields_per_type
-
     class Meta:
         abstract = True
         verbose_name = _('section')
         verbose_name_plural = _('sections')
         ordering = ['number']
-
-class Page(BasePage):
-    '''Swappable page model'''
-    class Meta(BasePage.Meta):
-        swappable = swapper.swappable_setting('cms', 'Page')
-
-class Section(BaseSection):
-    '''Swappable section model'''
-    class Meta(BaseSection.Meta):
-        swappable = swapper.swappable_setting('cms', 'Section')
