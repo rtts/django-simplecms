@@ -11,20 +11,18 @@ class PageForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label_suffix = ''
-        extra = 1 if self.instance.pk else 2
+
         self.formsets = [forms.inlineformset_factory(
-            parent_model = registry.page_class,
-            model = registry.section_class,
-            form = SectionForm,
-            extra=extra,
+            parent_model=registry.page_class,
+            model=registry.section_class,
+            form=SectionForm,
+            extra=1,
         )(
             data=self.data if self.is_bound else None,
             files=self.files if self.is_bound else None,
             instance=self.instance,
-            form_kwargs={'label_suffix': self.label_suffix},
         )]
-        if not self.instance.pk:
-            self.formsets[0][0].empty_permitted = False
+        self.formsets[0][0].empty_permitted = True
 
     def is_valid(self):
         return super().is_valid() and self.formsets[0].is_valid()
@@ -42,9 +40,6 @@ class PageForm(forms.ModelForm):
         formset = self.formsets[0]
         formset.instance = page
         formset.save()
-        if page.slug and not page.sections.exists():
-            page.delete()
-            return None
         return page
 
     class Meta:
@@ -58,12 +53,8 @@ class SectionForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.label_suffix = ''
         self.fields['DELETE'] = forms.BooleanField(label=_('Delete'), required=False)
-        extra = 1 if self.instance.pk else 2
-
-        # Repopulate the 'choices' attribute of the type field from
-        # the child model.
-        self.fields['type'].choices = self._meta.model.TYPES
-        self.fields['type'].initial = self._meta.model.TYPES[0][0]
+        self.fields['type'].choices = registry.get_types()
+        self.fields['type'].initial = registry.get_types()[0][0]
 
         # Populate the 'formsets' attribute if the Section was
         # extendend with one_to_many fields
@@ -74,7 +65,7 @@ class SectionForm(forms.ModelForm):
                     parent_model=registry.section_class,
                     model=field.related_model,
                     fields='__all__',
-                    extra=extra,
+                    extra=1,
                 )(
                     instance=self.instance,
                     data=self.data if self.is_bound else None,

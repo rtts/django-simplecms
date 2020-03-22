@@ -26,17 +26,13 @@ except ImportError:
     DEBUG = True
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-def read(file):
-    with open(file) as f:
-        return f.read()
-def write(file, content):
-    with open(file, 'w') as f:
-        f.write(content)
 try:
-    SECRET_KEY = read(KEYFILE)
+    with open(KEYFILE) as f:
+        SECRET_KEY = f.read()
 except IOError:
     SECRET_KEY = ''.join(random.choice(string.printable) for x in range(50))
-    write(KEYFILE, SECRET_KEY)
+    with open(KEYFILE, 'w') as f:
+        f.write(SECRET_KEY)
 
 INSTALLED_APPS = [
     PROJECT_NAME,
@@ -45,12 +41,13 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
     'cms',
     'embed_video',
     'easy_thumbnails',
     'django_extensions',
 ]
+if not DEBUG:
+    INSTALLED_APPS += ['django.contrib.staticfiles']
 
 MIDDLEWARE = [
     'cms.middleware.SassMiddleware',

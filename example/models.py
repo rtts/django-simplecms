@@ -19,7 +19,7 @@ class Section(BaseSection):
     page = models.ForeignKey(Page, verbose_name=_('page'), related_name='sections', on_delete=models.PROTECT)
 
 class SectionImage(models.Model):
-    #section = models.ForeignKey(Section, related_name='images', on_delete=models.CASCADE)
+    section = models.ForeignKey(Section, related_name='images', on_delete=models.CASCADE)
     image = models.ImageField(_('Image'))
 
     class Meta:

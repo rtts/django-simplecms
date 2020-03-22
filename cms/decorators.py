@@ -12,6 +12,6 @@ def section_model(cls):
 
 def section_view(cls):
     '''Decorator to register a view for a specific section'''
-    registry.views_per_type[cls.__name__.lower()] = cls
-    registry.section_class.TYPES.append((cls.__name__.lower(), cls.verbose_name))
+    registry.view_per_type[cls.__name__.lower()] = cls
+    registry.section_types.append((cls.__name__.lower(), cls.verbose_name))
     return cls

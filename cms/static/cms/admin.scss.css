@@ -34,7 +34,7 @@ form.cms {
     background: #fff6;
     border: 0.5px solid #ccc;
     clear: both;
-    margin: 0.5em 0em;
+    margin: 0.25em 0em;
     padding: 0.25em 0.5em;
     padding-top: 0;
     border-radius: 0.25em; }
@@ -44,13 +44,16 @@ form.cms {
     width: 50px;
     cursor: pointer; }
   form.cms div.formfield {
-    margin: 0.25em 0;
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+    overflow: hidden;
     clear: both;
     box-sizing: border-box; }
     form.cms div.formfield.type, form.cms div.formfield.number, form.cms div.formfield.slug {
       width: 77%;
       clear: none;
-      float: left; }
+      float: left;
+      margin-top: 0; }
     form.cms div.formfield.number {
       width: 20%;
       float: right; }
@@ -76,6 +79,7 @@ form.cms {
       font-size: 12px !important;
       font-weight: 400 !important; }
   form.cms input, form.cms select, form.cms textarea {
+    height: 32px;
     background: #fff6;
     color: black;
     border: 0.5px solid #ccc;
@@ -95,7 +99,8 @@ form.cms {
   form.cms textarea {
     font-size: 1rem;
     height: 15em;
-    line-height: 1.5; }
+    line-height: 1.5;
+    overflow-y: hidden; }
   form.cms select {
     padding-left: 3px; }
   form.cms ul.errorlist {

@@ -11,6 +11,7 @@
       {% if form.errors %}
         <div class="global_error">
           {% trans 'Please correct the error(s) below and save again' %}
+          {{form.errors}}
         </div>
       {% endif %}
 
@@ -75,8 +76,7 @@
     function resizeTextareas() {
         let tx = document.getElementsByTagName('textarea');
         for (let i = 0; i < tx.length; i++) {
-            tx[i].setAttribute('style', 'height:0;overflow-y:hidden;');
-            tx[i].style.height = (tx[i].scrollHeight) + 'px';
+            tx[i].style.height = (tx[i].scrollHeight) + 1 + 'px';
             tx[i].addEventListener('input', function() {
                 this.style.height = (this.scrollHeight) + 1 + 'px'; // why the 1???
             });

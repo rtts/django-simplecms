@@ -46,7 +46,7 @@ form.cms {
     background: $background;
     border: 0.5px solid #ccc;
     clear: both;
-    margin: 0.5em 0em;
+    margin: 0.25em 0em;
     padding: 0.25em 0.5em;
     padding-top: 0;
     border-radius: 0.25em;
@@ -60,7 +60,9 @@ form.cms {
   }
 
   div.formfield {
-    margin: 0.25em 0;
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+    overflow: hidden;
     clear: both;
     box-sizing: border-box;
 
@@ -68,6 +70,7 @@ form.cms {
       width: 77%;
       clear: none;
       float: left;
+      margin-top: 0;
     }
     &.number {
       width: 20%;
@@ -108,6 +111,7 @@ form.cms {
   }
 
   input, select, textarea {
+    height: 32px;
     background: $background;
     color: black;
     border: 0.5px solid #ccc;
@@ -130,6 +134,7 @@ form.cms {
     font-size: 1rem;
     height: 15em;
     line-height: 1.5;
+    overflow-y: hidden;
   }
   select {
     padding-left: 3px;

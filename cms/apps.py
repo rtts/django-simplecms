@@ -7,4 +7,4 @@ class CmsConfig(AppConfig):
     verbose_name = _('Content Management System')
 
     def ready(self):
-        autodiscover_modules('cms')
+        autodiscover_modules('views')
