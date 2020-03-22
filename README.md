@@ -1,7 +1,7 @@
 # Django Simple CMS
 
-*A super simple but very extensible content management system for
-Django websites.*
+***A super simple but very extensible content management system for
+Django websites.***
 
 SimpleCMS provides the reusable Django app `cms` which contains
 everything you need to create websites that can be easily edited by
@@ -13,8 +13,8 @@ Contrary to 'regular' Django websites, SimpleCMS allows you to write a
 view for each *section*, rather than for each *page* on your website.
 On which pages these sections appear, and in which order, is left to
 the content editor rather than the programmer. After authenticating,
-the editor can use the {page,section}{create,update} forms to fill the
-website with various types of content.
+the user can use the "Edit" interface to fill the website with various
+types of content.
 
 Here's an example `views.py` of an app using SimpleCMS:
 
@@ -30,6 +30,7 @@ Here's an example `views.py` of an app using SimpleCMS:
         def get_context_data(self, **kwargs):
             context = super()get_context_data(**kwargs)
             context['message'] = 'Hello World!'
+            return context
 
 And here is the contents of `hello.html`:
 
@@ -38,9 +39,9 @@ And here is the contents of `hello.html`:
       {{section.content}}
     </section>
 
-Everytime a section needs to be rendered, your section view will be
-called by SimpleCMS and return a response which will get inserted into
-the final rendered page.
+Everytime a section needs to be rendered, SimpleCMS will call the
+appropriate section view and insert the rendered result into the final
+rendered page.
 
 ## The "Edit" Interface
 
@@ -58,7 +59,7 @@ are stored in the same database table.
 
 ## Batteries included!
 
-SimpleCMS has been specifically crafted to fit my own personal needs
+SimpleCMS has been specifically crafted to fit our own personal needs
 when building websites for customers. Therefore it includes a variety
 of useful template tags, default *Page* and *Section* models, and all
 the other boilerplate code needed for new projects.
@@ -93,3 +94,8 @@ Finally, run the development server and visit
 http://localhost:8000/login/ in your browser to log in!
 
     $ ./manage.py runserver
+
+## Getting help or contributing
+
+We'd love to hear from you! If you have any questions or contributions,
+don't hesitate to contact us at info@returntothesource.nl
