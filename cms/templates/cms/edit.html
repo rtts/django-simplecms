@@ -98,7 +98,6 @@
     function setEventHandlers() {
         for (let typefield of document.querySelectorAll('select[name$=-type]')) {
             let formId = typefield.name.replace(/-type$/, '');
-            console.log(formId + 'huh');
             let form = document.getElementById(formId);
             let type = typefield.value.toLowerCase();
             showRelevantFields(form, type);
@@ -110,7 +109,9 @@
         }
     }
 
-    setEventHandlers();
-    resizeTextareas();
+    document.addEventListener("DOMContentLoaded", function(event) {
+        setEventHandlers();
+        resizeTextareas();
+    });
   </script>
 {% endblock %}

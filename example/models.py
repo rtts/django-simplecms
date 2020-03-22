@@ -16,7 +16,7 @@ class Section(BaseSection):
     number, content, image, video, href
 
     '''
-    page = models.ForeignKey(Page, verbose_name=_('page'), related_name='sections', on_delete=models.PROTECT)
+    page = models.ForeignKey(Page, related_name='sections', on_delete=models.PROTECT)
 
 class SectionImage(models.Model):
     section = models.ForeignKey(Section, related_name='images', on_delete=models.CASCADE)

@@ -43,6 +43,13 @@ Everytime a section needs to be rendered, SimpleCMS will call the
 appropriate section view and insert the rendered result into the final
 rendered page.
 
+But that's not all! SimpleCMS is easily extendable. You can add custom
+fields to your Page and Section models. You can even add one-to-many
+fields by defining new models with a foreign key to the Section model,
+and the Edit interface will automagically show the user nested
+formsets to edit the related instances! For a complete example see the
+included `example` app.
+
 ## The "Edit" Interface
 
 Somewhat like the Django Admin site, SimpleCMS comes with its own
