@@ -4,7 +4,6 @@ from django.conf import settings
 
 def locate(filename):
     for path, dirs, files in os.walk(os.getcwd(), followlinks=True):
-        print(dirs)
         for f in files:
             if f == filename:
                 return os.path.join(path, filename)
