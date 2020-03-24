@@ -12,5 +12,6 @@ urlpatterns += [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('login/', RedirectView.as_view(url='/accounts/login/')),
+    path('logout/', RedirectView.as_view(url='/accounts/logout/')),
     path('', include('cms.urls', namespace='cms')),
 ]

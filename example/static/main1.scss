@@ -49,18 +49,29 @@ h2 { font-size: 1.5em }
 h3 { font-size: 1.25em }
 h4, h5, h6 { font-size: 1em }
 
-a.edit {
-  color: red;
-  text-decoration: none;
-  font-size: 1rem;
-  font-weight: normal;
-  &:before { content: '[ ' }
-  &:after { content: ' ]' }
+a.page.edit {
+  position: fixed;
+  right: 1em;
+  bottom: 1em;
+  z-index: 1000;
+  img {
+    display: block;
+    width: 75px;
+    height: auto;
+  }
 }
-section a.edit {
+a.section.edit {
   position: absolute;
   bottom: 0;
-  left: 1em;
+  right: 0;
+  img {
+    display: block;
+    width: 35px;
+  }
+}
+// Will be supported in the near future! :)
+section:has(> a.edit) {
+  background: #eee;
 }
 
 table {
