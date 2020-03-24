@@ -48,6 +48,7 @@ if not DEBUG:
     INSTALLED_APPS += ['django.contrib.staticfiles']
 
 MIDDLEWARE = [
+    'django.middleware.cache.UpdateCacheMiddleware',
     'cms.middleware.SassMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -56,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
 TEMPLATES = [

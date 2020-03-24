@@ -25,13 +25,30 @@ def eval(context, expr):
     return mark_safe(md(result, extensions=MARKDOWN_EXTENSIONS))
 
 @register.simple_tag(takes_context=True)
-def edit(context):
+def editsection(context, inner):
     '''Renders a simple link to edit the current section'''
-    if context['request'].user.has_perms('cms_section_change'):
-        slug = context['section'].page.slug
-        number = context['section'].number
-        url = reverse('cms:updatesection', args=[slug, number])  if slug else reverse('cms:updatesection', args=[number])
-        return mark_safe(f'<a class="edit" href="{url}">{_("edit")}</a>')
+    section = context['section']
+    user = context['request'].user
+    app_label = section._meta.app_label
+    model_name = section._meta.model_name
+    if user.has_perms(f'{app_label}_{model_name}_change'):
+        slug = section.page.slug
+        number = section.number
+        url = reverse('cms:updatesection', args=[slug, number]) if slug else reverse('cms:updatesection', args=[number])
+        return mark_safe(f'<a class="edit section" href="{url}">{inner}</a>')
+    return ''
+
+@register.simple_tag(takes_context=True)
+def editpage(context, inner):
+    '''Renders a simple link to edit the current page'''
+    page = context['page']
+    user = context['request'].user
+    app_label = page._meta.app_label
+    model_name = page._meta.model_name
+    if user.has_perms(f'{app_label}_{model_name}_change'):
+        slug = page.slug
+        url = reverse('cms:updatepage', args=[slug]) if slug else reverse('cms:updatepage')
+        return mark_safe(f'<a class="edit page" href="{url}">{inner}</a>')
     return ''
 
 @register.tag('include_section')

@@ -1,18 +1,12 @@
 {% extends 'base.html' %}
-{% load static cms %}
+{% load cms %}
 
 {% block title %}{{block.super}} - {{page.title}}{% endblock %}
 
 {% block content %}
   {% for section in sections %}
-    <div id="{{section.title|slugify}}"></div>
     {% include_section section %}
   {% endfor %}
 
-  {% if perms.cms_page.change %}
-    <div class="edit">
-      <a href="{% if page.slug %}{% url 'cms:updatepage' page.slug %}{% else %}{% url 'cms:updatepage' %}{% endif %}"><img src="{% static 'cms/edit.png' %}"></a>
-    </div>
-  {% endif %}
-
+  {% editpage '<img src="/static/cms/edit.png">' %}
 {% endblock %}
