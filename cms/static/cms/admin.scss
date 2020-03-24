@@ -9,19 +9,21 @@ html, body {
 
 div.edit {
   position: fixed;
-  right: 1em;
-  bottom: 1em;
+  bottom: 1.1em;
+  right: 1.1em;
   z-index: 1000;
 
   button {
+    display: block;
     padding: 0;
     outline: none;
     background: none;
     border: none;
-  }
-  img {
-    width: 75px !important;
-    height: auto;
+
+    img {
+      width: 65px;
+      height: auto;
+    }
   }
 }
 
@@ -38,8 +40,9 @@ form.cms {
 
   div.wrapper {
     max-width: none;
-    flex: 0 1 640px;
+    flex: 1 1 800px;
     padding: 0 0.5em;
+    padding-top: 0.25em;
   }
 
   fieldset {
