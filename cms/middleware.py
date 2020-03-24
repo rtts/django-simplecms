@@ -19,17 +19,17 @@ class SassMiddleware:
     def __call__(self, request):
         if settings.DEBUG and request.path.endswith('.css'):
             css_file = request.path.rsplit('/',1)[1]
-            css_path = locate(css_file)
-            if css_path:
-                sass_path = css_path[:-4]
+            sass_file = css_file[:-4]
+            sass_path = locate(sass_file)
+            if sass_path and os.path.exists(sass_path):
+                css_path = sass_path + '.css'
                 map_path = css_path + '.map'
-                if os.path.exists(sass_path):
-                    css = compile(filename=sass_path, output_style='nested')
-                    css, mapping = compile(filename=sass_path, source_map_filename=map_path)
-                    with open(css_path, 'w') as f:
-                        f.write(css)
-                    with open(map_path, 'w') as f:
-                        f.write(mapping)
+                css = compile(filename=sass_path, output_style='nested')
+                css, mapping = compile(filename=sass_path, source_map_filename=map_path)
+                with open(css_path, 'w') as f:
+                    f.write(css)
+                with open(map_path, 'w') as f:
+                    f.write(mapping)
 
         response = self.get_response(request)
         return response

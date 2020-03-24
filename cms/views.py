@@ -2,6 +2,8 @@ import json
 
 from django.shortcuts import redirect
 from django.views.generic import base, detail, edit
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 
@@ -93,6 +95,7 @@ class PageView(detail.DetailView):
         })
         return context
 
+@method_decorator(never_cache, name='dispatch')
 class EditPage(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMixin, base.View):
     '''Base view with nested forms for editing the page and all its sections'''
     model = registry.page_class
@@ -148,6 +151,7 @@ class CreatePage(EditPage):
 class UpdatePage(EditPage):
     '''View for editing existing pages'''
 
+@method_decorator(never_cache, name='dispatch')
 class EditSection(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMixin, base.View):
     model = registry.section_class
     form_class = SectionForm

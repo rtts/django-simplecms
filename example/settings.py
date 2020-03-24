@@ -83,3 +83,12 @@ DATABASES = {
         'NAME': PROJECT_NAME,
     }
 }
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+        'LOCATION': '127.0.0.1:11211',
+        'KEY_PREFIX': PROJECT_NAME,
+    }
+}
+if DEBUG:
+    CACHE_MIDDLEWARE_SECONDS = 0

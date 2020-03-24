@@ -2,9 +2,12 @@
   
 {% else %}
   <div class="formfield {{field.name}}{% if field.errors %} error{% endif %}" id="formfield_{{field.html_name}}">
-    <div class="errors">
-      {{field.errors}}
-    </div>
+
+    {% if field.errors %}
+      <div class="errors">
+        {{field.errors}}
+      </div>
+    {% endif %}
 
     {% if field.field.widget.input_type == 'checkbox' %}
       <div class="input">
@@ -19,8 +22,10 @@
       </div>
     {% endif %}
 
-    <div class="helptext">
-      {{field.help_text}}
-    </div>
+    {% if field.help_text %}
+      <div class="helptext">
+        {{field.help_text}}
+      </div>
+    {% endif %}
   </div>
 {% endif %}
