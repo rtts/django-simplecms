@@ -20,6 +20,7 @@ Successfully created project "$1"!
 
 Things to do next:
 - create a database
+- ./manage.py makemigrations
 - ./manage.py migrate
 - ./manage.py createsuperuser
 - ./manage.py runserver --nostatic

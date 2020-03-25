@@ -41,6 +41,7 @@ form.cms {
   div.wrapper {
     max-width: none;
     flex: 1 1 800px;
+    @media(min-width: 1000px) { flex: 0 1 800px }
     padding: 0 0.5em;
     padding-top: 0.25em;
   }

@@ -70,12 +70,17 @@ class IncludeSectionNode(template.Node):
         csrf_token = self.csrf_token.resolve(context)
         request = self.request.resolve(context)
         perms = self.perms.resolve(context)
+
         view = registry.get_view(section, request)
-        section_context = view.get_context_data(
-            csrf_token=csrf_token,
-            section=section,
-            request=request,
-            perms=perms,
-        )
+        initial_context = {
+            'csrf_token': csrf_token,
+            'section': section,
+            'request': request,
+            'perms': perms,
+        }
+        if hasattr(section, 'invalid_form'):
+            context['form'] = section.invalid_form
+
+        section_context = view.get_context_data(**initial_context)
         t = context.template.engine.get_template(view.template_name)
         return t.render(template.Context(section_context))

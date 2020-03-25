@@ -79,7 +79,7 @@ class PageView(detail.DetailView):
                 result = view.post(request)
                 if isinstance(result, HttpResponse):
                     return result
-                section.context['form'] = result
+                section.invalid_form = result
 
         context.update({
             'page': page,
