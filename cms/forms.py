@@ -113,8 +113,7 @@ class ContactForm(forms.Form):
     spam_protection = forms.CharField(label=_('Your message'), widget=forms.Textarea())
     message = forms.CharField(label=_('Your message'), widget=forms.Textarea(), initial='Hi there!')
 
-    def save(self, request):
-        hostname = request.get_host()
+    def save(self):
         body = self.cleaned_data.get('spam_protection')
         if len(body.split()) < 7:
             return
@@ -125,7 +124,7 @@ class ContactForm(forms.Form):
         email = EmailMessage(
             to = [settings.DEFAULT_TO_EMAIL],
             body = body,
-            subject = _('Contact form at %(hostname)s.') % {'hostname': hostname},
+            subject = _('Contact form'),
             headers = {'Reply-To': self.cleaned_data.get('sender')},
         )
         email.send()

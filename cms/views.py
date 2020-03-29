@@ -15,23 +15,37 @@ class SectionView:
     template_name = 'cms/sections/section.html'
 
     def __init__(self, request):
-        '''Initialize request attribute'''
         self.request = request
 
     def get_context_data(self, **kwargs):
-        '''Override this to customize a section's context'''
         return kwargs
 
-class SectionFormView(edit.FormMixin, SectionView):
+class SectionFormView(SectionView):
     '''Generic section with associated form'''
+    form_class = None
+    success_url = None
 
-    def post(self, request):
-        '''Process form'''
-        form = self.get_form()
-        if form.is_valid():
-            form.save(request)
-            return HttpResponseRedirect(self.get_success_url())
-        return form
+    def get_context_data(self, **kwargs):
+        if 'form' not in kwargs:
+            kwargs['form'] = self.get_form()
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        return HttpResponseRedirect(self.success_url)
+
+    def get_form_kwargs(self):
+        return {}
+
+    def get_form(self, method='get'):
+        form_class = self.form_class
+        kwargs = self.get_form_kwargs()
+        if method == 'post':
+            kwargs.update({
+                'data': self.request.POST,
+                'files': self.request.FILES,
+            })
+        return form_class(**kwargs)
 
 class PageView(detail.DetailView):
     '''View of a page with heterogeneous sections'''
@@ -51,8 +65,6 @@ class PageView(detail.DetailView):
                 page = registry.page_class(title='Homepage', slug='')
                 page.save()
                 self.object = page
-            elif self.request.user.has_perm('cms_page_create'):
-                return redirect('cms:updatepage', self.kwargs['slug'])
             else:
                 raise
         context = self.get_context_data(**kwargs)
@@ -76,10 +88,10 @@ class PageView(detail.DetailView):
         for section in sections:
             if section.pk == pk:
                 view = registry.get_view(section, request)
-                result = view.post(request)
-                if isinstance(result, HttpResponse):
-                    return result
-                section.invalid_form = result
+                form = view.get_form(method='post')
+                if form.is_valid():
+                    return view.form_valid(form)
+                section.invalid_form = form
 
         context.update({
             'page': page,

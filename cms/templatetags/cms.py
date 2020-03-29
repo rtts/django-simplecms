@@ -79,7 +79,7 @@ class IncludeSectionNode(template.Node):
             'perms': perms,
         }
         if hasattr(section, 'invalid_form'):
-            context['form'] = section.invalid_form
+            initial_context['form'] = section.invalid_form
 
         section_context = view.get_context_data(**initial_context)
         t = context.template.engine.get_template(view.template_name)
