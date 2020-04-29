@@ -122,7 +122,7 @@ class ContactForm(forms.Form):
             return
 
         email = EmailMessage(
-            to = [settings.DEFAULT_TO_EMAIL],
+            to = settings.DEFAULT_TO_EMAIL,
             body = body,
             subject = _('Contact form'),
             headers = {'Reply-To': self.cleaned_data.get('sender')},
