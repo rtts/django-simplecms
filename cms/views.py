@@ -116,9 +116,8 @@ class EditPage(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMi
 
     def test_func(self):
         '''Only allow users with the correct permissions'''
-        self.object = self.get_object()
-        app_label = self.object._meta.app_label
-        model_name = self.object._meta.model_name
+        app_label = registry.page_class._meta.app_label
+        model_name = registry.page_class._meta.model_name
         return self.request.user.has_perm(f'{app_label}.change_{model_name}')
 
     def get_form_kwargs(self):
@@ -143,10 +142,12 @@ class EditPage(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMi
 
     def get(self, *args, **kwargs):
         '''Handle GET requests'''
+        self.object = self.get_object()
         return self.render_to_response(self.get_context_data(**kwargs))
 
     def post(self, *args, **kwargs):
         '''Handle POST requests'''
+        self.object = self.get_object()
         form = self.get_form()
 
         if form.is_valid():
@@ -172,9 +173,8 @@ class EditSection(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateRespons
 
     def test_func(self):
         '''Only allow users with the correct permissions'''
-        self.object = self.get_object()
-        app_label = self.object._meta.app_label
-        model_name = self.object._meta.model_name
+        app_label = registry.section_class._meta.app_label
+        model_name = registry.section_class._meta.model_name
         return self.request.user.has_perm(f'{app_label}.change_{model_name}')
 
     def get_form_kwargs(self):
@@ -204,9 +204,11 @@ class EditSection(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateRespons
         return section
 
     def get(self, *args, **kwargs):
+        self.object = self.get_object()
         return self.render_to_response(self.get_context_data(**kwargs))
 
     def post(self, *args, **kwargs):
+        self.object = self.get_object()
         form = self.get_form()
 
         if form.is_valid():
