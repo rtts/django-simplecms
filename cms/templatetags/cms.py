@@ -31,7 +31,7 @@ def editsection(context, inner):
     user = context['request'].user
     app_label = section._meta.app_label
     model_name = section._meta.model_name
-    if user.has_perms(f'{app_label}_{model_name}_change'):
+    if user.has_perm(f'{app_label}.change_{model_name}'):
         slug = section.page.slug
         number = section.number
         url = reverse('cms:updatesection', args=[slug, number]) if slug else reverse('cms:updatesection', args=[number])
@@ -45,7 +45,7 @@ def editpage(context, inner):
     user = context['request'].user
     app_label = page._meta.app_label
     model_name = page._meta.model_name
-    if user.has_perms(f'{app_label}_{model_name}_change'):
+    if user.has_perm(f'{app_label}.change_{model_name}'):
         slug = page.slug
         url = reverse('cms:updatepage', args=[slug]) if slug else reverse('cms:updatepage')
         return mark_safe(f'<a class="edit page" href="{url}">{inner}</a>')
