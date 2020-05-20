@@ -61,10 +61,17 @@ class PageView(detail.DetailView):
         try:
             page = self.object = self.get_object()
         except Http404:
+            app_label = registry.page_class._meta.app_label
+            model_name = registry.page_class._meta.model_name
             if self.kwargs['slug'] == '':
                 page = registry.page_class(title='Homepage', slug='')
                 page.save()
                 self.object = page
+
+            # Special case: Don't serve 404 pages to authorized users,
+            # but redirect to the edit page form with the slug pre-filled
+            elif (self.request.user.has_perm(f'{app_label}.change_{model_name}')):
+                return redirect('cms:updatepage', slug=self.kwargs['slug'])
             else:
                 raise
         context = self.get_context_data(**kwargs)
@@ -78,7 +85,7 @@ class PageView(detail.DetailView):
     def post(self, request, **kwargs):
         '''Call the post() method of the correct section view'''
         try:
-            pk = int(self.request.POST.get('section'))
+             pk = int(self.request.POST.get('section'))
         except:
             return HttpResponseBadRequest()
 
