@@ -116,7 +116,10 @@ class EditPage(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMi
 
     def test_func(self):
         '''Only allow users with the correct permissions'''
-        return self.request.user.has_perm('cms_page_change')
+        self.object = self.get_object()
+        app_label = self.object._meta.app_label
+        model_name = self.object._meta.model_name
+        return self.request.user.has_perm(f'{app_label}.change_{model_name}')
 
     def get_form_kwargs(self):
         '''Set the default slug to the current URL for new pages'''
@@ -140,12 +143,10 @@ class EditPage(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateResponseMi
 
     def get(self, *args, **kwargs):
         '''Handle GET requests'''
-        self.object = self.get_object()
         return self.render_to_response(self.get_context_data(**kwargs))
 
     def post(self, *args, **kwargs):
         '''Handle POST requests'''
-        self.object = self.get_object()
         form = self.get_form()
 
         if form.is_valid():
@@ -170,7 +171,11 @@ class EditSection(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateRespons
     template_name = 'cms/edit.html'
 
     def test_func(self):
-        return self.request.user.has_perm('cms_section_change')
+        '''Only allow users with the correct permissions'''
+        self.object = self.get_object()
+        app_label = self.object._meta.app_label
+        model_name = self.object._meta.model_name
+        return self.request.user.has_perm(f'{app_label}.change_{model_name}')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -199,11 +204,9 @@ class EditSection(UserPassesTestMixin, edit.ModelFormMixin, base.TemplateRespons
         return section
 
     def get(self, *args, **kwargs):
-        self.object = self.get_object()
         return self.render_to_response(self.get_context_data(**kwargs))
 
     def post(self, *args, **kwargs):
-        self.object = self.get_object()
         form = self.get_form()
 
         if form.is_valid():
