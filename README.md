@@ -66,10 +66,9 @@ are stored in the same database table.
 
 ## Batteries included!
 
-SimpleCMS has been specifically crafted to fit our own personal needs
-when building websites for customers. Therefore it includes a variety
-of useful template tags, default *Page* and *Section* models, and all
-the other boilerplate code needed for new projects.
+SimpleCMS includes a variety of useful template tags, default *Page*
+and *Section* models, and all the other boilerplate code needed for
+new projects.
 
 One notable inclusion is the `eval` template tag. It will pass its
 argument first through Django's templating system and then through
@@ -104,5 +103,5 @@ http://localhost:8000/login/ in your browser to log in!
 
 ## Getting help or contributing
 
-We'd love to hear from you! If you have any questions or contributions,
-don't hesitate to contact us at info@returntothesource.nl
+I'd love to hear from you! If you have any questions or contributions,
+don't hesitate to contact me via jj [at] rtts.eu.
