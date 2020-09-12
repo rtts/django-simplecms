@@ -1,12 +1,23 @@
 import os
 from sass import compile
 from django.conf import settings
+from django.middleware import cache
 
 def locate(filename):
     for path, dirs, files in os.walk(os.getcwd(), followlinks=True):
         for f in files:
             if f == filename:
                 yield os.path.join(path, filename)
+
+class FetchFromCacheMiddleware(cache.FetchFromCacheMiddleware):
+    '''Minor change to the original middleware that prevents caching of
+    requests that have a `sessionid` cookie. This should be the
+    Django default, IMHO.
+
+    '''
+    def process_request(self, request):
+        if 'sessionid' not in request.COOKIES:
+            return super().process_request(request)
 
 class SassMiddleware:
     '''Simple SASS middleware that intercepts requests for .css files and
