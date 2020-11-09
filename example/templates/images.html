@@ -4,7 +4,9 @@
   <div class="images">
     {% for image in section.images.all %}
       <div class="image">
-        <img src="{% thumbnail image.image 700x700 %}">
+        <div>
+          <img src="{% thumbnail image.image 700x700 %}">
+        </div>
       </div>
     {% endfor %}
   </div>

@@ -242,9 +242,16 @@ section.images {
       max-width: $max-width;
       margin: 0.5em;
 
-      img {
-        display: block;
-        width: 100%;
+      div {
+        position: relative;
+        padding-bottom: 56%;
+
+        img {
+          position: absolute;
+          object-fit: cover;
+          height: 100%;
+          width: 100%;
+        }
       }
     }
   }
