@@ -93,6 +93,7 @@ create a superuser:
 
     $ cd mysite
     $ sudo su postgres -c "createuser mysite; createdb -O mysite mysite"
+    $ ./manage.py makemigrations
     $ ./manage.py migrate
     $ ./manage.py createsuperuser
 
@@ -100,8 +101,3 @@ Finally, run the development server and visit
 http://localhost:8000/login/ in your browser to log in!
 
     $ ./manage.py runserver
-
-## Getting help or contributing
-
-I'd love to hear from you! If you have any questions or contributions,
-don't hesitate to contact me via jj [at] rtts.eu.
