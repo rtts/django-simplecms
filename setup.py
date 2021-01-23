@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import cms
 from setuptools import setup, find_packages
 
 with open('README.md', 'r') as fh:
@@ -7,7 +8,7 @@ with open('README.md', 'r') as fh:
 setup(
     name = 'django-simplecms',
     description = 'Simple Django CMS',
-    version = '1.0.3',
+    version = cms.__version__,
     author = 'Jaap Joris Vens',
     author_email = 'jj+cms@rtts.eu',
     url = 'https://github.com/rtts/django-simplecms',

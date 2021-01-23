@@ -85,7 +85,7 @@ Another useful feature is the automatic compilation of `SCSS` files to
 Use the provided helper command `simplecms` to quickly setup a new
 project:
 
-    $ pip install https://github.com/rtts/django-simplecms.git
+    $ pip install django-simplecms
     $ simplecms mysite
 
 After the project files have been created, initialize the database and

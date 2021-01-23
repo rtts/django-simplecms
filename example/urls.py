@@ -5,8 +5,7 @@ from django.conf.urls.static import static
 from django.views.generic import RedirectView
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-admin.site.site_header = settings.PROJECT_NAME.capitalize()
-admin.site.site_title = settings.PROJECT_NAME.capitalize()
+admin.site.site_header = admin.site.site_title = settings.PROJECT_NAME.replace('_', ' ').title()
 urlpatterns = staticfiles_urlpatterns() + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += [
     path('admin/', admin.site.urls),
