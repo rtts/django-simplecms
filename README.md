@@ -2,8 +2,8 @@
 
 **This is the CMS framework used by the web consultancy company
   [Return to the Source](https://rtts.eu/), provided here for everyone
-  to use under the [AGPL])LICENSE] license as part of our free and
-  open source philosophy. Also checkout our [other projects](../)!**
+  to use under the [AGPL](LICENSE) license as part of our free and
+  open source philosophy. Also checkout our [other projects](/rtts)!**
 
 ## Getting started
 
@@ -20,12 +20,11 @@ included [example](example) project.
 ## Architecture
 
 SimpleCMS has a rather unique take on Django's MVT architecture.
-Contrary to 'regular' Django websites, SimpleCMS allows you to write a
-view for each *section*, rather than for each *page* on your website.
-On which pages these sections appear, and in which order, is left to
-the content editor rather than the programmer. The included edit
-interface lets the users assign sections to pages and fill sections
-with content.
+Contrary to "regular" Django websites, it allows you to write a view
+for each *section*, rather than for each *page* on your website. On
+which pages these sections appear, and in which order, is left to the
+content editors rather than the programmer. The included edit interface
+lets them assign sections to pages and fill sections with content.
 
 Here's an example `views.py` of an app using SimpleCMS:
 
@@ -39,7 +38,7 @@ Here's an example `views.py` of an app using SimpleCMS:
         template_name = 'hello.html'
 
         def get_context_data(self, **kwargs):
-            context = super()get_context_data(**kwargs)
+            context = super().get_context_data(**kwargs)
             context['message'] = 'Hello World!'
             return context
 
@@ -58,9 +57,8 @@ rendered page.
 
 Somewhat like the Django Admin site, SimpleCMS comes with its own
 editing environment, albeit much simpler and only suitable for editing
-pages and sections. After authenticating, the content editor can click
-the "edit" button on any page of the website to alter, add or
-rearrange sections.
+pages and sections. After authenticating, you can click the "edit"
+button on any page of the website to alter, add or rearrange sections.
 
 For each section, the section type can be selected from a dropdown
 menu. As you can see in `views.py` above, each section type comes with
@@ -86,5 +84,5 @@ Another useful feature is the automatic compilation of `SCSS` files to
 
 ## Feedback and support
 
-We would love to hear from you! Feel free to [open an issue](issues)
-or [send us an email](mailto:jj+cms@rtts.eu).
+We would love to hear from you! Feel free to [open an
+issue](../../issues) or [send us an email](mailto:jj+cms@rtts.eu).
