@@ -3,7 +3,7 @@
 **This is the CMS framework used by the web consultancy company
   [Return to the Source](https://rtts.eu/), provided here for everyone
   to use under the [AGPL](LICENSE) license as part of our free and
-  open source philosophy. Also checkout our [other projects](/rtts)!**
+  open source philosophy. Also check out our [other projects](../../../)!**
 
 ## Getting started
 
