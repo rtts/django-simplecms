@@ -1,20 +1,31 @@
 ![SimpleCMS](logo.gif)
 
-***A super simple but very extensible content management system for
-Django websites.***
+**This is the CMS framework used by the web consultancy company
+  [Return to the Source](https://rtts.eu/), provided here for everyone
+  to use under the [AGPL])LICENSE] license as part of our free and
+  open source philosophy. Also checkout our [other projects](../)!**
 
-SimpleCMS provides the reusable Django app `cms` which contains
-everything you need to create websites that can be easily edited by
-end users.
+## Getting started
 
-## How does it work?
+SimpleCMS provides everything to create websites that can be edited by
+end users. Here's how to start a new project:
 
+    $ pip install django-simplecms
+    $ simplecms my_awesome_website
+
+This will create a new directory containing a fully configured Django
+project with models, views and templates. It is a renamed copy of the
+included [example](example) project.
+
+## Architecture
+
+SimpleCMS has a rather unique take on Django's MVT architecture.
 Contrary to 'regular' Django websites, SimpleCMS allows you to write a
 view for each *section*, rather than for each *page* on your website.
 On which pages these sections appear, and in which order, is left to
-the content editor rather than the programmer. After authenticating,
-the user can use the "Edit" interface to fill the website with various
-types of content.
+the content editor rather than the programmer. The included edit
+interface lets the users assign sections to pages and fill sections
+with content.
 
 Here's an example `views.py` of an app using SimpleCMS:
 
@@ -43,14 +54,7 @@ Everytime a section needs to be rendered, SimpleCMS will call the
 appropriate section view and insert the rendered result into the final
 rendered page.
 
-But that's not all! SimpleCMS is easily extendable. You can add custom
-fields to your Page and Section models. You can even add one-to-many
-fields by defining new models with a foreign key to the Section model,
-and the Edit interface will automagically show the user nested
-formsets to edit the related instances! For a complete example see the
-included `example` app.
-
-## The "Edit" Interface
+## The edit interface
 
 Somewhat like the Django Admin site, SimpleCMS comes with its own
 editing environment, albeit much simpler and only suitable for editing
@@ -80,24 +84,7 @@ with caution!)
 Another useful feature is the automatic compilation of `SCSS` files to
 `CSS` files using a custom middleware.
 
-## Installation
+## Feedback and support
 
-Use the provided helper command `simplecms` to quickly setup a new
-project:
-
-    $ pip install django-simplecms
-    $ simplecms mysite
-
-After the project files have been created, initialize the database and
-create a superuser:
-
-    $ cd mysite
-    $ sudo su postgres -c "createuser mysite; createdb -O mysite mysite"
-    $ ./manage.py makemigrations
-    $ ./manage.py migrate
-    $ ./manage.py createsuperuser
-
-Finally, run the development server and visit
-http://localhost:8000/login/ in your browser to log in!
-
-    $ ./manage.py runserver
+We would love to hear from you! Feel free to [open an issue](issues)
+or [send us an email](mailto:jj+cms@rtts.eu).
