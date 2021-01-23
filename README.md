@@ -1,4 +1,4 @@
-# Django Simple CMS
+# SimpleCMS
 
 ***A super simple but very extensible content management system for
 Django websites.***
