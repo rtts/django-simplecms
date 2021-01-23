@@ -1,1 +1,2 @@
-recursive-include ** *
+recursive-include cms *
+recursive-include example *
