@@ -1,7 +1,11 @@
-import os, sys, random, string
+import os
+import random
+import string
+import sys
+
+PROJECT_NAME = os.path.basename(os.path.dirname(os.path.abspath(__file__)))
 
 DEBUG = 'runserver' in sys.argv
-PROJECT_NAME = os.path.basename(os.path.dirname(os.path.abspath(__file__)))
 KEYFILE = f'/tmp/{PROJECT_NAME}.secret'
 ADMINS = [('JJ Vens', 'jj@rtts.eu')]
 DEFAULT_FROM_EMAIL = 'noreply@rtts.eu'
@@ -20,6 +24,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = '/srv/' + PROJECT_NAME + '/media'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
