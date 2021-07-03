@@ -10,6 +10,8 @@ from . import fields, mixins
 class Model(models.Model):
     """Felt cute, might delete later."""
 
+    id = models.BigAutoField(primary_key=True)
+
     class Meta:
         abstract = True
 
