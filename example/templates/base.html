@@ -3,77 +3,77 @@
 
 <!DOCTYPE html>
 <html lang="{{lang}}">
-  <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="{% static 'favicon.png' %}">
-    <link rel="stylesheet" href="{% static 'main.scss.css' %}">
-    <link rel="stylesheet" href="{% static 'hamburgers.css' %}">
-    <title>{% block title %}Awesome Website{% endblock %}</title>
-    {% block extrahead %}{% endblock %}
-  </head>
-  <body>
-    {% block main %}
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="{% static 'favicon.png' %}">
+        <link rel="stylesheet" href="{% static 'main.scss.css' %}">
+        <link rel="stylesheet" href="{% static 'hamburgers.css' %}">
+        <title>{% block title %}Awesome Website{% endblock %}</title>
+        {% block extrahead %}{% endblock %}
+    </head>
+    <body>
+        {% block main %}
 
-      <header>
-        {% block header %}
-          <h1><a href="/">Awesome Website</a></h1>
+            <header>
+                {% block header %}
+                    <h1><a href="/">Awesome Website</a></h1>
+                {% endblock %}
+            </header>
+
+            <nav>
+                {% block nav %}
+                    {% if pages %}
+                        <ul id="menu">
+                            {% for p in pages %}
+                                <li><a href="{% if p.slug %}{% url 'cms:page' p.slug %}{% else %}{% url 'cms:page' %}{% endif %}" {% if p.pk == page.pk %}class="current"{% endif %}>{{p.title}}</a></li>
+                            {% endfor %}
+                            {% if perms.cms_page_create %}
+                                <li><a class="edit" href="{% url 'cms:createpage' %}">+ {% trans 'new page' %}</a></li>
+                            {% endif %}
+                        </ul>
+                    {% endif %}
+                    <button class="hamburger hamburger--collapse" id='hamburger'>
+                        <span class="hamburger-box">
+                            <span class="hamburger-inner"></span>
+                        </span>
+                    </button>
+                {% endblock %}
+            </nav>
+
+            <article>
+                {% block content %}
+                {% endblock %}
+            </article>
+
+            <footer>
+                {% block footer %}
+                {% endblock %}
+            </footer>
+
         {% endblock %}
-      </header>
+        <script>
+            document.addEventListener("DOMContentLoaded", function(event) {
+                var hamburger = document.getElementById('hamburger');
+                var menu = document.getElementById('menu');
+                hamburger.addEventListener('click', function(e) {
+                    hamburger.classList.toggle('is-active');
+                    menu.classList.toggle('visible');
+                });
 
-      <nav>
-        {% block nav %}
-          {% if pages %}
-            <ul id="menu">
-              {% for p in pages %}
-                <li><a href="{% if p.slug %}{% url 'cms:page' p.slug %}{% else %}{% url 'cms:page' %}{% endif %}" {% if p.pk == page.pk %}class="current"{% endif %}>{{p.title}}</a></li>
-              {% endfor %}
-              {% if perms.cms_page_create %}
-                <li><a class="edit" href="{% url 'cms:createpage' %}">+ {% trans 'new page' %}</a></li>
-              {% endif %}
-            </ul>
-          {% endif %}
-          <button class="hamburger hamburger--collapse" id='hamburger'>
-            <span class="hamburger-box">
-              <span class="hamburger-inner"></span>
-            </span>
-          </button>
-        {% endblock %}
-      </nav>
-
-      <article>
-        {% block content %}
-        {% endblock %}
-      </article>
-
-      <footer>
-        {% block footer %}
-        {% endblock %}
-      </footer>
-
-    {% endblock %}
-    <script>
-      document.addEventListener("DOMContentLoaded", function(event) {
-          var hamburger = document.getElementById('hamburger');
-          var menu = document.getElementById('menu');
-          hamburger.addEventListener('click', function(e) {
-              hamburger.classList.toggle('is-active');
-              menu.classList.toggle('visible');
-          });
-
-          var links = document.querySelectorAll('a');
-          for (var link of links) {
-              var a = new RegExp('/' + window.location.host + '/');
-              if (!a.test(link.href)) {
-                  link.addEventListener('click', function(event) {
-                      event.preventDefault();
-                      event.stopPropagation();
-                      window.open(this.href, '_blank');
-                  });
-              }
-          }
-      });
-    </script>
-    {% block extrabody %}{% endblock %}
-  </body>
+                var links = document.querySelectorAll('a');
+                for (var link of links) {
+                    var a = new RegExp('/' + window.location.host + '/');
+                    if (!a.test(link.href)) {
+                        link.addEventListener('click', function(event) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            window.open(this.href, '_blank');
+                        });
+                    }
+                }
+            });
+        </script>
+        {% block extrabody %}{% endblock %}
+    </body>
 </html>

@@ -1,17 +1,17 @@
 {% load i18n cms %}
 
 <section class="text">
-  <div class="wrapper">
-    <div class="title">
-      <h1>
-        {{section.title}}
-      </h1>
+    <div class="wrapper">
+        <div class="title">
+            <h1>
+                {{section.title}}
+            </h1>
+        </div>
+
+        <div class="content">
+            {% eval section.content %}
+        </div>
     </div>
 
-    <div class="content">
-      {% eval section.content %}
-    </div>
-  </div>
-
-  {% editsection '<img src="/static/cms/edit.png">' %}
+    {% editsection '<img src="/static/cms/edit.png">' %}
 </section>

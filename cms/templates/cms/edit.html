@@ -4,113 +4,113 @@
 {% block title %}{% trans 'Edit' %} {{form.instance}}{% endblock %}
 
 {% block content %}
-  <form method="POST" enctype="multipart/form-data" class="cms" novalidate>
-    <div class="wrapper">
-      {% csrf_token %}
+    <form method="POST" enctype="multipart/form-data" class="cms" novalidate>
+        <div class="wrapper">
+            {% csrf_token %}
 
-      {% if form.errors %}
-        <div class="global_error">
-          {% trans 'Please correct the error(s) below and save again' %}
+            {% if form.errors %}
+                <div class="global_error">
+                    {% trans 'Please correct the error(s) below and save again' %}
+                </div>
+            {% endif %}
+
+            {% include 'cms/form.html' %}
+
+            <div class="edit page">
+                <button><img src="{% static 'cms/save.png' %}" width="75"></button>
+            </div>
         </div>
-      {% endif %}
-
-      {% include 'cms/form.html' %}
-
-      <div class="edit page">
-        <button><img src="{% static 'cms/save.png' %}" width="75"></button>
-      </div>
-    </div>
-  </form>
+    </form>
 {% endblock %}
 
 {% block extrabody %}
-  <script type="text/javascript" src="/static/admin/js/urlify.js"></script>
-  <script>
-    function addForm(node) {
-        let base = node.previousElementSibling;
-        let parent = node.parentNode;
-        let counter = parent.firstElementChild;
-        let extra_form = base.cloneNode(true);
-        let prefix = extra_form.id
+    <script type="text/javascript" src="/static/admin/js/urlify.js"></script>
+    <script>
+        function addForm(node) {
+            let base = node.previousElementSibling;
+            let parent = node.parentNode;
+            let counter = parent.firstElementChild;
+            let extra_form = base.cloneNode(true);
+            let prefix = extra_form.id
 
-        increment(extra_form, prefix, 'id');
-        for (let el of extra_form.querySelectorAll(`*[id^=${prefix}]`)) {
-            increment(el, prefix, 'id');
-        }
-        for (let el of extra_form.querySelectorAll(`*[name^=${prefix}]`)) {
-            increment(el, prefix, 'name');
-        }
-        for (let el of extra_form.querySelectorAll(`*[id^=id_${prefix}]`)) {
-            increment(el, 'id_' + prefix, 'id');
-        }
-        for (let el of extra_form.querySelectorAll(`*[for^=id_${prefix}]`)) {
-            increment(el, 'id_' + prefix, 'for');
-        }
-        for (let el of extra_form.querySelectorAll(`*[id^=formfield_${prefix}]`)) {
-            increment(el, 'formfield_' + prefix, 'id');
+            increment(extra_form, prefix, 'id');
+            for (let el of extra_form.querySelectorAll(`*[id^=${prefix}]`)) {
+                increment(el, prefix, 'id');
+            }
+            for (let el of extra_form.querySelectorAll(`*[name^=${prefix}]`)) {
+                increment(el, prefix, 'name');
+            }
+            for (let el of extra_form.querySelectorAll(`*[id^=id_${prefix}]`)) {
+                increment(el, 'id_' + prefix, 'id');
+            }
+            for (let el of extra_form.querySelectorAll(`*[for^=id_${prefix}]`)) {
+                increment(el, 'id_' + prefix, 'for');
+            }
+            for (let el of extra_form.querySelectorAll(`*[id^=formfield_${prefix}]`)) {
+                increment(el, 'formfield_' + prefix, 'id');
+            }
+
+            node.remove();
+            parent.appendChild(extra_form);
+            parent.appendChild(node);
+            base.hidden = false;
+            counter.value = parseInt(counter.value) + 1;
+            setEventHandlers();
+            resizeTextareas();
         }
 
-        node.remove();
-        parent.appendChild(extra_form);
-        parent.appendChild(node);
-        base.hidden = false;
-        counter.value = parseInt(counter.value) + 1;
-        setEventHandlers();
-        resizeTextareas();
-    }
-
-    function increment(node, prefix, attr) {
-        let re = RegExp(`${prefix}(.*)`);
-        let matches = node.getAttribute(attr).match(re);
-        if (matches) {
-            let suffix = matches[1];
-            let name = prefix.replace(/-\d+$/, '');
-            let index = parseInt(prefix.replace(/.*-/, ''));
-            index++;
-            let new_prefix = `${name}-${index}`;
-            node.setAttribute(attr, new_prefix + suffix);
-        }
-    }
-
-    function resizeTextareas() {
-        let tx = document.getElementsByTagName('textarea');
-        for (let i = 0; i < tx.length; i++) {
-            tx[i].style.height = (tx[i].scrollHeight) + 1 + 'px';
-            tx[i].addEventListener('input', function() {
-                this.style.height = (this.scrollHeight) + 1 + 'px'; // why the 1???
-            });
-        }
-    }
-
-    function showRelevantFields(form, type) {
-        let fields_per_type = {{fields_per_type|safe}};
-        for (let field of form.querySelectorAll(`fieldset#${form.id} > div.formfield`)) {
-            if (!field.id.endsWith('DELETE')) {
-                field.hidden = true;
+        function increment(node, prefix, attr) {
+            let re = RegExp(`${prefix}(.*)`);
+            let matches = node.getAttribute(attr).match(re);
+            if (matches) {
+                let suffix = matches[1];
+                let name = prefix.replace(/-\d+$/, '');
+                let index = parseInt(prefix.replace(/.*-/, ''));
+                index++;
+                let new_prefix = `${name}-${index}`;
+                node.setAttribute(attr, new_prefix + suffix);
             }
         }
-        for (let name of fields_per_type[type]) {
-            document.getElementById(`formfield_${form.id}-${name}`).hidden = false;
-        }
-    }
 
-    function setEventHandlers() {
-        for (let typefield of document.querySelectorAll('select[name$=-type]')) {
-            let formId = typefield.name.replace(/-type$/, '');
-            let form = document.getElementById(formId);
-            let type = typefield.value.toLowerCase();
-            showRelevantFields(form, type);
-            typefield.addEventListener('input', function() {
-                type = typefield.value.toLowerCase();
+        function resizeTextareas() {
+            let tx = document.getElementsByTagName('textarea');
+            for (let i = 0; i < tx.length; i++) {
+                tx[i].style.height = (tx[i].scrollHeight) + 1 + 'px';
+                tx[i].addEventListener('input', function() {
+                    this.style.height = (this.scrollHeight) + 1 + 'px'; // why the 1???
+                });
+            }
+        }
+
+        function showRelevantFields(form, type) {
+            let fields_per_type = {{fields_per_type|safe}};
+            for (let field of form.querySelectorAll(`fieldset#${form.id} > div.formfield`)) {
+                if (!field.id.endsWith('DELETE')) {
+                    field.hidden = true;
+                }
+            }
+            for (let name of fields_per_type[type]) {
+                document.getElementById(`formfield_${form.id}-${name}`).hidden = false;
+            }
+        }
+
+        function setEventHandlers() {
+            for (let typefield of document.querySelectorAll('select[name$=-type]')) {
+                let formId = typefield.name.replace(/-type$/, '');
+                let form = document.getElementById(formId);
+                let type = typefield.value.toLowerCase();
                 showRelevantFields(form, type);
-                resizeTextareas();
-            });
+                typefield.addEventListener('input', function() {
+                    type = typefield.value.toLowerCase();
+                    showRelevantFields(form, type);
+                    resizeTextareas();
+                });
+            }
         }
-    }
 
-    document.addEventListener("DOMContentLoaded", function(event) {
-        setEventHandlers();
-        resizeTextareas();
-    });
-  </script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            setEventHandlers();
+            resizeTextareas();
+        });
+    </script>
 {% endblock %}

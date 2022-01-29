@@ -1,23 +1,23 @@
 {% load static %}
 
 <fieldset id="{{form.prefix}}" class="form" {% if forloop.last %}hidden{% endif %}>
-  {{form.media}}
-  {% for field in form.hidden_fields %}
-    {{field}}
-  {% endfor %}
+    {{form.media}}
+    {% for field in form.hidden_fields %}
+        {{field}}
+    {% endfor %}
 
-  {% for field in form.visible_fields %}
-    {% include 'cms/formfield.html' with field=field %}
-  {% endfor %}
+    {% for field in form.visible_fields %}
+        {% include 'cms/formfield.html' with field=field %}
+    {% endfor %}
 
-  {% for formset in form.formsets %}
-    <div class="formfield {{formset.name}}" id="formfield_{{formset.prefix}}">
-      {{formset.management_form}}
-      {% for form in formset %}
-        {% include 'cms/form.html' %}
-      {% endfor %}
-      <img onclick="addForm(this, '{{formset.prefix}}')" src="{% static 'cms/add.png' %}" width="75">
-    </div>
-  {% endfor %}
+    {% for formset in form.formsets %}
+        <div class="formfield {{formset.name}}" id="formfield_{{formset.prefix}}">
+            {{formset.management_form}}
+            {% for form in formset %}
+                {% include 'cms/form.html' %}
+            {% endfor %}
+            <img onclick="addForm(this, '{{formset.prefix}}')" src="{% static 'cms/add.png' %}" width="75">
+        </div>
+    {% endfor %}
 </fieldset>
 

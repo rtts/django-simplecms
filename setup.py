@@ -34,6 +34,7 @@ setup(
         "easy-thumbnails",
         "libsass",
         "markdown",
+        "pre-commit",
         "psycopg2",
         "pylibmc",
     ],

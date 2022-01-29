@@ -1,8 +1,7 @@
-from django.utils.translation import gettext_lazy as _
-
 from cms.decorators import section_view
 from cms.forms import ContactForm
 from cms.views import SectionFormView, SectionView
+from django.utils.translation import gettext_lazy as _
 
 
 @section_view

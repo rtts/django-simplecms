@@ -4,9 +4,9 @@
 {% block title %}{{block.super}} - {{page.title}}{% endblock %}
 
 {% block content %}
-  {% for section in sections %}
-    {% include_section section %}
-  {% endfor %}
+    {% for section in sections %}
+        {% include_section section %}
+    {% endfor %}
 
-  {% editpage '<img src="/static/cms/edit.png">' %}
+    {% editpage '<img src="/static/cms/edit.png">' %}
 {% endblock %}

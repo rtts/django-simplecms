@@ -1,31 +1,31 @@
 {% if field.name == 'DELETE' and not form.instance.pk %}
-  
+
 {% else %}
-  <div class="formfield {{field.name}}{% if field.errors %} error{% endif %}" id="formfield_{{field.html_name}}">
+    <div class="formfield {{field.name}}{% if field.errors %} error{% endif %}" id="formfield_{{field.html_name}}">
 
-    {% if field.errors %}
-      <div class="errors">
-        {{field.errors}}
-      </div>
-    {% endif %}
+        {% if field.errors %}
+            <div class="errors">
+                {{field.errors}}
+            </div>
+        {% endif %}
 
-    {% if field.field.widget.input_type == 'checkbox' %}
-      <div class="input">
-        {{field}} {{field.label_tag}}
-      </div>
-    {% else %}
-      <div class="label">
-        {{field.label_tag}}
-      </div>
-      <div class="input">
-        {{field}}
-      </div>
-    {% endif %}
+        {% if field.field.widget.input_type == 'checkbox' %}
+            <div class="input">
+                {{field}} {{field.label_tag}}
+            </div>
+        {% else %}
+            <div class="label">
+                {{field.label_tag}}
+            </div>
+            <div class="input">
+                {{field}}
+            </div>
+        {% endif %}
 
-    {% if field.help_text %}
-      <div class="helptext">
-        {{field.help_text}}
-      </div>
-    {% endif %}
-  </div>
+        {% if field.help_text %}
+            <div class="helptext">
+                {{field.help_text}}
+            </div>
+        {% endif %}
+    </div>
 {% endif %}

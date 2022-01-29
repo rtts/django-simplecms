@@ -1,13 +1,13 @@
 {% load embed_video_tags i18n cms %}
 
 <section class="video">
-  {% if section.video %}
-    <div class="video">
-      <div class="iframe">
-        {% video section.video '800x600' %}
-      </div>
-    </div>
-  {% endif %}
+    {% if section.video %}
+        <div class="video">
+            <div class="iframe">
+                {% video section.video '800x600' %}
+            </div>
+        </div>
+    {% endif %}
 
-  {% editsection '<img src="/static/cms/edit.png">' %}
+    {% editsection '<img src="/static/cms/edit.png">' %}
 </section>

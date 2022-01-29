@@ -1,15 +1,15 @@
 {% load thumbnail i18n cms %}
 
 <section class="images">
-  <div class="images">
-    {% for image in section.images.all %}
-      <div class="image">
-        <div>
-          <img src="{% thumbnail image.image 700x700 %}">
-        </div>
-      </div>
-    {% endfor %}
-  </div>
+    <div class="images">
+        {% for image in section.images.all %}
+            <div class="image">
+                <div>
+                    <img src="{% thumbnail image.image 700x700 %}">
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 
-  {% editsection '<img src="/static/cms/edit.png">' %}
+    {% editsection '<img src="/static/cms/edit.png">' %}
 </section>

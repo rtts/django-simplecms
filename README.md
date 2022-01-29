@@ -45,8 +45,8 @@ Here's an example `views.py` of an app using SimpleCMS:
 And here is the contents of `hello.html`:
 
     <section type="helloworld">
-      <h1>{{message}}</h1>
-      {{section.content}}
+        <h1>{{ message }}</h1>
+        {{ section.content }}
     </section>
 
 Everytime a section needs to be rendered, SimpleCMS will call the
@@ -72,17 +72,7 @@ SimpleCMS includes a variety of useful template tags, default *Page*
 and *Section* models, and all the other boilerplate code needed for
 new projects.
 
-One notable inclusion is the `eval` template tag. It will pass its
-argument first through Django's templating system and then through
-Markdown, making for instance the following possible. (Disclaimer: use
-with caution!)
-
-    Welcome to **{% now 'Y' %}!**
-
-Another useful feature is the automatic compilation of `SCSS` files to
-`CSS` files using a custom middleware.
-
 ## Feedback and support
 
 We would love to hear from you! Feel free to [open an
-issue](../../issues) or [send us an email](mailto:jj+cms@rtts.eu).
+issue](../../issues) or [send us an email](mailto:cms@jj.rtts.eu).

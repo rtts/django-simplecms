@@ -3,19 +3,19 @@
 {% load i18n %}
 
 {% block content %}
-  <form method="post" class="cms" novalidate>
-    <div class="wrapper" style="max-width: 300px">
-      {% csrf_token %}
-      <fieldset>
-        {{form.non_field_errors}}
-        {% for field in form %}
-          {% include 'cms/formfield.html' with field=field %}
-        {% endfor %}
-      </fieldset>
-    </div>
+    <form method="post" class="cms" novalidate>
+        <div class="wrapper" style="max-width: 300px">
+            {% csrf_token %}
+            <fieldset>
+                {{form.non_field_errors}}
+                {% for field in form %}
+                    {% include 'cms/formfield.html' with field=field %}
+                {% endfor %}
+            </fieldset>
+        </div>
 
-    <div class="edit page">
-      <button><img src="{% static 'cms/save.png' %}"></button>
-    </div>
-  </form>
+        <div class="edit page">
+            <button><img src="{% static 'cms/save.png' %}"></button>
+        </div>
+    </form>
 {% endblock %}

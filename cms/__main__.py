@@ -36,11 +36,17 @@ def create_project(project_name, project_dir):
                 line = f"django-simplecms=={cms.__version__}"
             print(line, file=f)
 
-    shutil.copytree(
-        os.path.dirname(example.__file__),
-        os.path.join(project_dir, project_name),
-        dirs_exist_ok=True,
+    example_dir = os.path.dirname(example.__file__)
+    app_dir = os.path.join(project_dir, project_name)
+    shutil.copytree(example_dir, app_dir, dirs_exist_ok=True)
+    shutil.move(
+        os.path.join(app_dir, "setup.cfg"), os.path.join(project_dir, "setup.cfg")
     )
+    shutil.move(
+        os.path.join(app_dir, ".pre-commit-config.yaml"),
+        os.path.join(project_dir, ".pre-commit-config.yaml"),
+    )
+
     with open(
         os.open(
             os.path.join(project_dir, "manage.py"), os.O_CREAT | os.O_WRONLY, 0o755
@@ -48,36 +54,40 @@ def create_project(project_name, project_dir):
         "w",
     ) as f:
         print(
-            "#!/usr/bin/env python",
-            "import os, sys",
-            f"os.environ.setdefault('DJANGO_SETTINGS_MODULE', '{project_name}.settings')",
-            "from django.core.management import execute_from_command_line",
-            "execute_from_command_line(sys.argv)",
-            sep="\n",
+            f"""#!/usr/bin/env python
+import os
+import sys
+
+from django.core.management import execute_from_command_line
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "{project_name}.settings")
+execute_from_command_line(sys.argv)""",
             file=f,
         )
     with open(os.path.join(project_dir, project_name, "wsgi.py"), "w") as f:
         print(
-            "import os",
-            "from django.core.wsgi import get_wsgi_application",
-            f"os.environ.setdefault('DJANGO_SETTINGS_MODULE', '{project_name}.settings')",
-            "application = get_wsgi_application()",
-            sep="\n",
+            f"""import os
+
+from django.core.wsgi import get_wsgi_application
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "{project_name}.settings")
+application = get_wsgi_application()""",
             file=f,
         )
     with open(os.path.join(project_dir, ".gitignore"), "w") as f:
         print("*.pyc\n__pycache__/", file=f)
 
     print(
-        f'Successfully created project "{project_name}"',
-        "",
-        "Things to do next:",
-        "- create a database",
-        "- ./manage.py makemigrations",
-        "- ./manage.py migrate",
-        "- ./manage.py createsuperuser",
-        "- ./manage.py runserver",
-        sep="\n",
+        f"""
+Successfully created project "{project_name}"
+
+Things to do next:
+- create a database
+- ./manage.py makemigrations
+- ./manage.py migrate
+- ./manage.py createsuperuser
+- ./manage.py runserver
+"""
     )
 
 
