@@ -1,0 +1,47 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-01-29 13:28+0100\n"
+"PO-Revision-Date: 2022-01-29 13:30+0100\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: models.py:21
+msgid "Image"
+msgstr "Afbeelding"
+
+#: templates/base.html:32
+msgid "new page"
+msgstr "nieuwe pagina"
+
+#: templates/contact.html:14
+msgid "Send"
+msgstr "Verstuur"
+
+#: views.py:9
+msgid "Text"
+msgstr "Tekst"
+
+#: views.py:16
+msgid "Image(s)"
+msgstr "Afbeelding(en)"
+
+#: views.py:23
+msgid "Video"
+msgstr "Video"
+
+#: views.py:30
+msgid "Contact"
+msgstr "Contact"

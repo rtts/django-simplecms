@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-24 14:49+0100\n"
-"PO-Revision-Date: 2020-03-24 14:50+0100\n"
+"POT-Creation-Date: 2022-01-29 13:27+0100\n"
+"PO-Revision-Date: 2022-01-29 13:28+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -17,92 +17,87 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: apps.py:7
+#: apps.py:8
 msgid "Content Management System"
 msgstr "Content Beheer"
 
-#: forms.py:55
+#: forms.py:57
 msgid "Delete"
 msgstr "Verwijderen"
 
-#: forms.py:112
+#: forms.py:115
 msgid "Your email address"
 msgstr "Uw email adres"
 
-#: forms.py:113 forms.py:114
+#: forms.py:116 forms.py:118
 msgid "Your message"
 msgstr "Uw bericht"
 
-#: forms.py:128
-#, python-format
-msgid "Contact form at %(hostname)s."
-msgstr "%(hostname)s contactformulier"
+#: forms.py:132
+msgid "Contact form"
+msgstr "Contactformulier"
 
-#: models.py:67
+#: models.py:22 models.py:39
 msgid "page"
 msgstr "pagina"
 
-#: models.py:68
+#: models.py:23
 msgid "slug"
 msgstr "slug"
 
-#: models.py:69 models.py:93
+#: models.py:24 models.py:50
 msgid "number"
 msgstr "nummer"
 
-#: models.py:70
+#: models.py:25
 msgid "visible in menu"
 msgstr "zichtbaar in het menu"
 
-#: models.py:74
+#: models.py:29
 msgid "New page"
 msgstr "Nieuwe pagina"
 
-#: models.py:84
-msgid "Page"
-msgstr "Pagina"
+#: models.py:40
+msgid "pages"
+msgstr "pagina’s"
 
-#: models.py:85
-msgid "Pages"
-msgstr "Pagina’s"
-
-#: models.py:91 models.py:115
+#: models.py:48 models.py:76
 msgid "section"
 msgstr "sectie"
 
-#: models.py:92
+#: models.py:49
 msgid "type"
 msgstr "type"
 
-#: models.py:94
+#: models.py:51
 msgid "content"
 msgstr "inhoud"
 
-#: models.py:95
+#: models.py:52
 msgid "image"
 msgstr "afbeelding"
 
-#: models.py:96
+#: models.py:54
 msgid "video"
 msgstr "video"
 
-#: models.py:96
+#: models.py:56
 msgid "Paste a YouTube, Vimeo, or SoundCloud link"
 msgstr "Plak hier een YouTube, Vimeo of SoundCloud link"
 
-#: models.py:97
+#: models.py:58
 msgid "link"
 msgstr "link"
 
-#: models.py:107
+#: models.py:68
 msgid "New section"
 msgstr "Nieuwe sectie"
 
-#: models.py:109
+#: models.py:70
 msgid "Untitled"
 msgstr "Geen titel"
 
-#: models.py:116
+#: models.py:77
 msgid "sections"
 msgstr "secties"
 

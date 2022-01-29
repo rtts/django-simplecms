@@ -11,7 +11,7 @@ setup(
     description="Simple Django CMS",
     version=cms.__version__,
     author="Jaap Joris Vens",
-    author_email="jj+cms@rtts.eu",
+    author_email="cms@jj.rtts.eu",
     url="https://github.com/rtts/django-simplecms",
     long_description=long_description,
     long_description_content_type="text/markdown",
