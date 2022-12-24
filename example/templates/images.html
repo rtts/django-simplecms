@@ -1,6 +1,6 @@
 {% load thumbnail i18n cms %}
 
-<section class="images">
+<section class="images" id="{{section.title|slugify}}">
     <div class="images">
         {% for image in section.images.all %}
             <div class="image">

@@ -1,6 +1,6 @@
 {% load embed_video_tags i18n cms %}
 
-<section class="video">
+<section class="video" id="{{section.title|slugify}}">
     {% if section.video %}
         <div class="video">
             <div class="iframe">
