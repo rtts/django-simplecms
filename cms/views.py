@@ -1,14 +1,19 @@
 import json
 
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.http import Http404, HttpResponseBadRequest, HttpResponseRedirect
+from django.http import (
+    Http404,
+    HttpResponse,
+    HttpResponseBadRequest,
+    HttpResponseRedirect,
+)
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.generic import base, detail, edit
 
 from . import registry
-from .forms import PageForm, SectionForm
+from .forms import ContactForm, PageForm, SectionForm
 
 
 class SectionView:
@@ -52,6 +57,17 @@ class SectionFormView(SectionView):
                 }
             )
         return form_class(**kwargs)
+
+
+class ContactSectionFormView(SectionFormView):
+    """Contact section with bogus contact form"""
+
+    form_class = ContactForm
+
+    def form_valid(self, form):
+        response = HttpResponse(status=302)
+        response["Location"] = form.save(self.object.href)
+        return response
 
 
 class PageView(detail.DetailView):

@@ -117,9 +117,7 @@ class ContactForm(forms.Form):
     Spam-resistant contact form.
     """
 
-    body = forms.CharField(
-        label=_("Your message"), widget=forms.Textarea(), required=False
-    )
+    body = forms.CharField(label=_("Message"), widget=forms.Textarea(), required=False)
 
     def save(self, address):
         """
