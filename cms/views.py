@@ -107,6 +107,7 @@ class PageView(detail.DetailView):
                 view = registry.get_view(section, request)
                 form = view.get_form(method="post")
                 if form.is_valid():
+                    view.object = section
                     return view.form_valid(form)
                 section.invalid_form = form
 

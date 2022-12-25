@@ -1,6 +1,7 @@
 from cms.decorators import section_view
 from cms.forms import ContactForm
 from cms.views import SectionFormView, SectionView
+from django.http import HttpResponse
 from django.utils.translation import gettext_lazy as _
 
 
@@ -28,7 +29,11 @@ class Video(SectionView):
 @section_view
 class Contact(SectionFormView):
     verbose_name = _("Contact")
-    fields = []
+    fields = ["content", "href"]
     form_class = ContactForm
-    success_url = "/thanks/"
     template_name = "contact.html"
+
+    def form_valid(self, form):
+        response = HttpResponse(status=302)
+        response["Location"] = form.save(self.object.href)
+        return response

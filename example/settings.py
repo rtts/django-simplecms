@@ -7,9 +7,9 @@ PROJECT_NAME = os.path.basename(os.path.dirname(os.path.abspath(__file__)))
 
 DEBUG = "runserver" in sys.argv
 KEYFILE = f"/tmp/{PROJECT_NAME}.secret"
-ADMINS = [("JJ Vens", "jj@rtts.eu")]
+ADMINS = [("Jaap Joris Vens", "jj@rtts.eu")]
 DEFAULT_FROM_EMAIL = "noreply@rtts.eu"
-DEFAULT_TO_EMAIL = ["jj@rtts.eu"]
+CONTACT_FORM_EMAIL_SUBJECT = "Contact form"
 ALLOWED_HOSTS = ["*"]
 ROOT_URLCONF = PROJECT_NAME + ".urls"
 WSGI_APPLICATION = PROJECT_NAME + ".wsgi.application"

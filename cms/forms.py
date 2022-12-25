@@ -1,6 +1,7 @@
+from urllib.parse import quote
+
 from django import forms
 from django.conf import settings
-from django.core.mail import EmailMessage
 from django.utils.translation import gettext_lazy as _
 
 from . import registry
@@ -112,24 +113,19 @@ class SectionForm(forms.ModelForm):
 
 
 class ContactForm(forms.Form):
-    sender = forms.EmailField(label=_("Your email address"))
-    spam_protection = forms.CharField(label=_("Your message"), widget=forms.Textarea())
-    message = forms.CharField(
-        label=_("Your message"), widget=forms.Textarea(), initial="Hi there!"
+    """
+    Spam-resistant contact form.
+    """
+
+    body = forms.CharField(
+        label=_("Your message"), widget=forms.Textarea(), required=False
     )
 
-    def save(self):
-        body = self.cleaned_data.get("spam_protection")
-        if len(body.split()) < 7:
-            return
-        spamcheck = self.cleaned_data.get("message")
-        if spamcheck != "Hi there!":
-            return
+    def save(self, address):
+        """
+        Return a mailto: link.
+        """
 
-        email = EmailMessage(
-            to=settings.DEFAULT_TO_EMAIL,
-            body=body,
-            subject=_("Contact form"),
-            headers={"Reply-To": self.cleaned_data.get("sender")},
-        )
-        email.send()
+        subject = quote(settings.CONTACT_FORM_EMAIL_SUBJECT, safe="")
+        body = quote(self.cleaned_data.get("body"), safe="")
+        return f"mailto:{address}?subject={subject}&body={body}"
