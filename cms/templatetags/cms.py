@@ -1,9 +1,8 @@
+from cms import registry
 from django import template
 from django.shortcuts import reverse
 from django.utils.safestring import mark_safe
 from markdown import markdown as md
-
-from cms import registry
 
 MARKDOWN_EXTENSIONS = ["extra", "smarty"]
 register = template.Library()

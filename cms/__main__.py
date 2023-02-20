@@ -3,9 +3,9 @@ import os
 import re
 import shutil
 
+import cms
 from pip._internal.operations import freeze as pip
 
-import cms
 import example
 
 

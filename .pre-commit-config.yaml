@@ -1,24 +1,11 @@
 repos:
-
-  - repo: https://github.com/rtts/djhtml
-    rev: v1.5.2
-    hooks:
-      - id: djhtml
-
-  - repo: https://github.com/myint/autoflake
-    rev: v2.0.0
-    hooks:
-      - id: autoflake
-        args: ['--in-place', '--remove-all-unused-imports']
-
   - repo: https://github.com/pycqa/isort
-    rev: 5.11.4
+    rev: 5.12.0
     hooks:
       - id: isort
-        args: ['--resolve-all-configs', '--line-length', '88']
 
   - repo: https://github.com/psf/black
-    rev: 22.12.0
+    rev: 23.1.0
     hooks:
       - id: black
 
@@ -26,3 +13,11 @@ repos:
     rev: 6.0.0
     hooks:
       - id: flake8
+
+  - repo: https://github.com/rtts/djhtml
+    rev: 3.0.0
+    hooks:
+      - id: djhtml
+      - id: djcss
+        types: [scss]
+      - id: djjs

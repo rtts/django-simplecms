@@ -1,7 +1,6 @@
 #!/usr/bin/env python
-from setuptools import find_packages, setup
-
 import cms
+from setuptools import find_packages, setup
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -22,7 +21,10 @@ setup(
     include_package_data=True,
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
+        (
+            "License :: OSI Approved :: GNU Affero General Public License v3 or later"
+            " (AGPLv3+)"
+        ),
         "Operating System :: OS Independent",
     ],
     python_requires=">=3.8",
@@ -34,7 +36,6 @@ setup(
         "easy-thumbnails",
         "libsass",
         "markdown",
-        "pre-commit",
         "psycopg2",
         "pylibmc",
     ],
