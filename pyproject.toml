@@ -1,3 +1,31 @@
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "django-simplecms"
+description = "Simple Django CMS"
+version = "1.1.2"
+authors = [{name = "Jaap Joris Vens", email = "cms@jj.rtts.eu"}]
+readme = "README.md"
+requires-python = ">= 3.12"
+urls.source = "https://github.com/rtts/django-simplecms/"
+urls.issues = "https://github.com/rtts/django-simplecms/issues/"
+urls.changelog = "https://github.com/rtts/django-simplecms/releases/"
+classifiers = [
+  "Programming Language :: Python",
+  "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)"
+]
+dependencies = [
+  "django",
+  "django-embed-video",
+  "django-tidy",
+  "easy-thumbnails",
+  "libsass",
+  "markdown",
+  "psycopg",
+  "pylibmc",
+]
+
+[project.scripts]
+simplecms = "cms.__main__:main"
