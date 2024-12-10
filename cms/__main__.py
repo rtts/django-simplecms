@@ -20,8 +20,10 @@ def main():
         project_dir = os.path.join(os.getcwd(), project_name)
     if re.match(r"^\w+$", project_name):
         if (
-            input(f"Do you want to create a new project in `{project_dir}` ?\033[1D")
-            in "Yy"
+            input(
+                f"Do you want to create a new project in {project_dir}? [yN] "
+            ).lower()
+            == "y"
         ):
             create_project(project_name, project_dir)
     else:
@@ -39,13 +41,6 @@ def create_project(project_name, project_dir):
     example_dir = os.path.dirname(example.__file__)
     app_dir = os.path.join(project_dir, project_name)
     shutil.copytree(example_dir, app_dir, dirs_exist_ok=True)
-    shutil.move(
-        os.path.join(app_dir, "setup.cfg"), os.path.join(project_dir, "setup.cfg")
-    )
-    shutil.move(
-        os.path.join(app_dir, ".pre-commit-config.yaml"),
-        os.path.join(project_dir, ".pre-commit-config.yaml"),
-    )
 
     with open(
         os.open(

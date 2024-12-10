@@ -8,17 +8,12 @@ PROJECT_NAME = os.path.basename(os.path.dirname(os.path.abspath(__file__)))
 DEBUG = "runserver" in sys.argv
 KEYFILE = f"/tmp/{PROJECT_NAME}.secret"
 ADMINS = [("Jaap Joris Vens", "jj@rtts.eu")]
-DEFAULT_FROM_EMAIL = "noreply@rtts.eu"
-CONTACT_FORM_EMAIL_SUBJECT = "Contact form"
 ALLOWED_HOSTS = ["*"]
 ROOT_URLCONF = PROJECT_NAME + ".urls"
 WSGI_APPLICATION = PROJECT_NAME + ".wsgi.application"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LANGUAGE_CODE = "nl"
 TIME_ZONE = "Europe/Amsterdam"
-USE_I18N = True
-USE_L10N = True
-USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = "/srv/" + PROJECT_NAME + "/static"
 MEDIA_URL = "/media/"
@@ -48,7 +43,6 @@ INSTALLED_APPS = [
     "cms",
     "embed_video",
     "easy_thumbnails",
-    "django_extensions",
 ]
 if not DEBUG:
     INSTALLED_APPS += ["django.contrib.staticfiles"]
