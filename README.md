@@ -73,9 +73,9 @@ are stored in the same database table.
 
 ## Batteries included!
 
-SimpleCMS includes a variety of useful template tags, default *Page*
-and *Section* models, and all the other boilerplate code needed for
-new projects.
+SimpleCMS includes a variety of useful template tags, middlewares,
+reusable models, and all the other boilerplate code needed for new
+projects.
 
 ## Feedback
 
