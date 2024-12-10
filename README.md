@@ -29,26 +29,30 @@ lets them assign sections to pages and fill sections with content.
 
 Here's an example `views.py` of an app using SimpleCMS:
 
-    from cms.views import SectionView
-    from cms.decorators import section_view
+```python
+from cms.views import SectionView
+from cms.decorators import section_view
 
-    @section_view
-    class HelloWorld(SectionView):
-        verbose_name = 'Hello world section'
-        fields = ['content']
-        template_name = 'hello.html'
+@section_view
+class HelloWorld(SectionView):
+    verbose_name = 'Hello world section'
+    fields = ['content']
+    template_name = 'hello.html'
 
-        def get_context_data(self, **kwargs):
-            context = super().get_context_data(**kwargs)
-            context['message'] = 'Hello World!'
-            return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['message'] = 'Hello World!'
+        return context
+```
 
 And here is the contents of `hello.html`:
 
-    <section type="helloworld">
-        <h1>{{ message }}</h1>
-        {{ section.content }}
-    </section>
+```html
+<section type="helloworld">
+    <h1>{{ message }}</h1>
+    {{ section.content }}
+</section>
+```
 
 Everytime a section needs to be rendered, SimpleCMS will call the
 appropriate section view and insert the rendered result into the final
@@ -73,7 +77,9 @@ SimpleCMS includes a variety of useful template tags, default *Page*
 and *Section* models, and all the other boilerplate code needed for
 new projects.
 
-## Feedback and support
+## Feedback
 
-We would love to hear from you! Feel free to [open an
-issue](../../issues) or [send us an email](mailto:cms@jj.rtts.eu).
+We love to hear from you! Feel free to [open an
+issue](https://github.com/rtts/django-simplecms) or fill out the
+contact form on [our website](https://rtts.eu/) (which is of course
+built with SimpleCMS!)
