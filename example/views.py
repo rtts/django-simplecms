@@ -48,4 +48,4 @@ class Contact(ContactSectionFormView):
 
     verbose_name = _("Contact")
     template_name = "contact.html"
-    fields = ["content", "href"]
+    fields = ["content", "href", "subject"]

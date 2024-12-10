@@ -5,7 +5,6 @@ Some not-so-simple forms.
 from urllib.parse import quote
 
 from django import forms
-from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
 from . import registry
@@ -131,11 +130,11 @@ class ContactForm(forms.Form):
 
     body = forms.CharField(label=_("Message"), widget=forms.Textarea(), required=False)
 
-    def save(self, address):
+    def save(self, address, subject):
         """
         Return a mailto: link.
         """
 
-        subject = quote(settings.CONTACT_FORM_EMAIL_SUBJECT, safe="")
+        subject = quote(subject, safe="")
         body = quote(self.cleaned_data.get("body"), safe="")
         return f"mailto:{address}?subject={subject}&body={body}"

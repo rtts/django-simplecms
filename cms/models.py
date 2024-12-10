@@ -55,6 +55,7 @@ class BaseSection(mixins.Numbered, models.Model):
         help_text=_("Paste a YouTube, Vimeo, or SoundCloud link"),
     )
     href = fields.CharField(_("link"), blank=True)
+    subject = fields.CharField(_("subject"), blank=True)
 
     def number_with_respect_to(self):
         return self.page.sections.all()
