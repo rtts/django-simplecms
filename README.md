@@ -55,11 +55,11 @@ And here is the contents of `hello.html`:
 </section>
 ```
 
-This means that end users can supply the content for each section and
-programmers can optionally supply additional logic needed for each
-section. Every time a section needs to be rendered, SimpleCMS will
-call the appropriate section view and insert the rendered result into
-the final rendered page.
+This means that end users can supply the content for each section, and
+programmers can optionally supply additional logic for each section.
+Every time a section needs to be rendered, SimpleCMS will call the
+appropriate section view and insert the rendered result into the final
+rendered page.
 
 ## The edit interface
 
