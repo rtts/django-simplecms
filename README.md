@@ -21,11 +21,12 @@ included [example](example) project.
 ## Architecture
 
 SimpleCMS has a rather unique take on Django's MVT architecture.
-Contrary to "regular" Django websites, it allows you to write a view
-for each *section*, rather than for each *page* on your website. On
-which pages these sections appear, and in which order, is left to the
-content editors rather than the programmer. The included edit interface
-lets them assign sections to pages and fill sections with content.
+Contrary to regular Django websites, it allows you to write a Django
+view for each *section*, rather than for each *page* on your website.
+On which pages these sections appear, and in which order, is left to
+the content editors rather than the programmer. The included edit
+interface lets them assign sections to pages and fill sections with
+content.
 
 Here's an example `views.py` of an app using SimpleCMS:
 
@@ -54,9 +55,11 @@ And here is the contents of `hello.html`:
 </section>
 ```
 
-Everytime a section needs to be rendered, SimpleCMS will call the
-appropriate section view and insert the rendered result into the final
-rendered page.
+This means that end users can supply the content for each section and
+programmers can optionally supply additional logic needed for each
+section. Every time a section needs to be rendered, SimpleCMS will
+call the appropriate section view and insert the rendered result into
+the final rendered page.
 
 ## The edit interface
 
@@ -67,15 +70,15 @@ button on any page of the website to alter, add or rearrange sections.
 
 For each section, the section type can be selected from a dropdown
 menu. As you can see in `views.py` above, each section type comes with
-its own list of editable fields. Client-side javascript will hide/show
-the relevant fields based on the selected section type. All sections
-are stored in the same database table.
+its own list of editable fields. Client-side JS will hide/show the
+relevant fields based on the selected section type. All sections are
+stored in the same database table.
 
 ## Batteries included!
 
 SimpleCMS includes a variety of useful template tags, middlewares,
-reusable models, and all the other boilerplate code needed for new
-projects.
+reusable views and models, and all the other boilerplate code needed
+for new projects.
 
 ## Feedback
 
