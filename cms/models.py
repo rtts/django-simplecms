@@ -7,16 +7,7 @@ from embed_video.fields import EmbedVideoField
 from . import fields, mixins
 
 
-class Model(models.Model):
-    """Felt cute, might delete later."""
-
-    id = models.BigAutoField(primary_key=True)
-
-    class Meta:
-        abstract = True
-
-
-class BasePage(mixins.Numbered, Model):
+class BasePage(mixins.Numbered, models.Model):
     """Abstract base model for pages."""
 
     title = fields.CharField(_("page"))
@@ -41,7 +32,7 @@ class BasePage(mixins.Numbered, Model):
         ordering = ["number"]
 
 
-class BaseSection(mixins.Numbered, Model):
+class BaseSection(mixins.Numbered, models.Model):
     """Abstract base model for sections"""
 
     TYPES = []
