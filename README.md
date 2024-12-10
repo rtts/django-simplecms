@@ -1,6 +1,6 @@
 # SimpleCMS
 
-**This is the simple, Django-based CMS framework used by
+**This is the simple, Django-based CMS used by
   [Return to the Source](https://rtts.eu/), provided here for everyone
   to use under the [GPLv3](LICENSE) license as part of our free and
   open source philosophy. Also check out our [other
