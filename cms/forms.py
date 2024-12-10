@@ -1,3 +1,7 @@
+"""
+Some not-so-simple forms.
+"""
+
 from urllib.parse import quote
 
 from django import forms
@@ -8,6 +12,10 @@ from . import registry
 
 
 class PageForm(forms.ModelForm):
+    """
+    Form to edit a page, including all its sections.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label_suffix = ""
@@ -50,6 +58,10 @@ class PageForm(forms.ModelForm):
 
 
 class SectionForm(forms.ModelForm):
+    """
+    Form to edit a section.
+    """
+
     type = forms.ChoiceField()
 
     def __init__(self, *args, **kwargs):

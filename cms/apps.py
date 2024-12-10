@@ -1,11 +1,21 @@
+"""
+Metadata for the application registry.
+"""
+
 from django.apps import AppConfig
 from django.utils.module_loading import autodiscover_modules
-from django.utils.translation import gettext_lazy as _
 
 
 class CmsConfig(AppConfig):
+    """
+    The `cms` app.
+    """
+
     name = "cms"
-    verbose_name = _("Content Management System")
 
     def ready(self):
+        """
+        When ready, populate the section type registry.
+        """
+
         autodiscover_modules("views")

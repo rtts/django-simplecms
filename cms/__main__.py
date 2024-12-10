@@ -1,15 +1,22 @@
+"""
+Main entry point.
+"""
+
 import argparse
 import os
 import re
 import shutil
 
 import cms
-from pip._internal.operations import freeze as pip
 
 import example
 
 
 def main():
+    """
+    Ask the user to confirm, then call create_project().
+    """
+
     parser = argparse.ArgumentParser(description="SimpleCMS")
     parser.add_argument("project_name", nargs="?", default=".")
     project_name = parser.parse_args().project_name
@@ -31,12 +38,13 @@ def main():
 
 
 def create_project(project_name, project_dir):
+    """
+    Populate project directory with a minimal, working project.
+    """
+
     os.makedirs(project_dir, exist_ok=True)
     with open(os.path.join(project_dir, "requirements.txt"), "w") as f:
-        for line in pip.freeze():
-            if "django_simplecms" in line:
-                line = f"django-simplecms=={cms.__version__}"
-            print(line, file=f)
+        print(f"django-simplecms=={cms.__version__}", file=f)
 
     example_dir = os.path.dirname(example.__file__)
     app_dir = os.path.join(project_dir, project_name)
@@ -49,7 +57,7 @@ def create_project(project_name, project_dir):
         "w",
     ) as f:
         print(
-            f"""#!/usr/bin/env python
+            f"""#!/usr/bin/env python3
 import os
 import sys
 
@@ -74,7 +82,7 @@ application = get_wsgi_application()""",
 
     print(
         f"""
-Successfully created project "{project_name}"
+Successfully created project "{project_name}"!
 
 Things to do next:
 - create a database

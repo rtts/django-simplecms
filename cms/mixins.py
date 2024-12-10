@@ -1,3 +1,8 @@
+"""
+Some handy mixins.
+"""
+
+
 class EasilyMigratable:
     """
     Mixin for model fields. Prevents the generation of migrations that
@@ -37,7 +42,9 @@ class Numbered:
         return self.__class__._meta.ordering[-1].lstrip("-")
 
     def _renumber(self):
-        """Renumbers the queryset while preserving the instance's number"""
+        """
+        Renumber the queryset while preserving the instance's number.
+        """
 
         queryset = self.number_with_respect_to()
         field_name = self.get_field_name()
@@ -48,7 +55,7 @@ class Numbered:
         # The algorithm: loop over the queryset and set each object's
         # number to the counter. When an object's number equals the
         # number of this instance, set this instance's number to the
-        # counter, increment the counter by 1, and finish the loop
+        # counter, increment the counter by 1, and finish the loop.
         counter = 1
         inserted = False
         for other in queryset.exclude(pk=self.pk):

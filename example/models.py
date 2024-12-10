@@ -1,3 +1,7 @@
+"""
+Page and section models.
+"""
+
 from cms.decorators import page_model, section_model
 from cms.models import BasePage, BaseSection
 from django.db import models

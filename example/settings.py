@@ -1,3 +1,8 @@
+"""
+Django settings file. For the available options, see:
+https://docs.djangoproject.com/en/stable/ref/settings/
+"""
+
 import os
 import random
 import string
@@ -84,6 +89,7 @@ DATABASES = {
         "NAME": PROJECT_NAME,
     }
 }
+
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.memcached.PyLibMCCache",

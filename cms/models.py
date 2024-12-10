@@ -1,3 +1,7 @@
+"""
+Base page and section models.
+"""
+
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
@@ -8,7 +12,9 @@ from . import fields, mixins
 
 
 class BasePage(mixins.Numbered, models.Model):
-    """Abstract base model for pages."""
+    """
+    Abstract base model for pages.
+    """
 
     title = fields.CharField(_("page"))
     slug = fields.SlugField(_("slug"), blank=True, unique=True)
@@ -33,7 +39,9 @@ class BasePage(mixins.Numbered, models.Model):
 
 
 class BaseSection(mixins.Numbered, models.Model):
-    """Abstract base model for sections"""
+    """
+    Abstract base model for sections.
+    """
 
     TYPES = []
     title = fields.CharField(_("section"))

@@ -1,3 +1,7 @@
+"""
+Commonly used Django model fields.
+"""
+
 from django.db import models
 from django.forms import TextInput
 
@@ -5,9 +9,15 @@ from .mixins import EasilyMigratable
 
 
 class CharField(EasilyMigratable, models.TextField):
-    """Variable width CharField."""
+    """
+    Variable width CharField.
+    """
 
     def formfield(self, **kwargs):
+        """
+        Use TextInput instead of the default TextArea.
+        """
+
         if not self.choices:
             kwargs.update({"widget": TextInput})
         return super().formfield(**kwargs)
@@ -58,6 +68,10 @@ class ImageField(EasilyMigratable, models.ImageField):
 
 
 class ForeignKey(EasilyMigratable, models.ForeignKey):
+    """
+    A foreign key that does not create a reverse relation by default.
+    """
+
     def __init__(self, *args, related_name="+", **kwargs):
         super().__init__(
             *args,

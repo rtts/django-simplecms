@@ -1,3 +1,7 @@
+"""
+URLs.
+"""
+
 from django.urls import path
 
 from .views import CreatePage, CreateSection, PageView, UpdatePage, UpdateSection

@@ -1,3 +1,7 @@
+"""
+Optional but useful middleware classes.
+"""
+
 import os
 
 from django.conf import settings
@@ -5,18 +9,11 @@ from django.middleware import cache
 from sass import compile
 
 
-def locate(filename):
-    for path, dirs, files in os.walk(os.getcwd(), followlinks=True):
-        for f in files:
-            if f == filename:
-                yield os.path.join(path, filename)
-
-
 class FetchFromCacheMiddleware(cache.FetchFromCacheMiddleware):
-    """Minor change to the original middleware that prevents caching of
+    """
+    Minor change to the original middleware that prevents caching of
     requests that have a `sessionid` cookie. This should be the
     Django default, IMHO.
-
     """
 
     def process_request(self, request):
@@ -25,9 +22,11 @@ class FetchFromCacheMiddleware(cache.FetchFromCacheMiddleware):
 
 
 class SassMiddleware:
-    """Simple SASS middleware that intercepts requests for .css files and
+    """
+    SASS middleware that intercepts requests for .css files and
     tries to compile the corresponding SCSS file.
 
+    In production this does nothing, so commit your files!
     """
 
     def __init__(self, get_response):
@@ -53,3 +52,14 @@ class SassMiddleware:
 
         response = self.get_response(request)
         return response
+
+
+def locate(filename):
+    """
+    Locate a file beneath the current directory.
+    """
+
+    for path, dirs, files in os.walk(os.getcwd(), followlinks=True):
+        for f in files:
+            if f == filename:
+                yield os.path.join(path, filename)
