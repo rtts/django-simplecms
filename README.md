@@ -49,7 +49,7 @@ class HelloWorld(SectionView):
 And here is the contents of `hello.html`:
 
 ```html
-<section type="helloworld">
+<section>
     <h1>{{ message }}</h1>
     {{ section.content }}
 </section>
