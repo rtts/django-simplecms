@@ -5,26 +5,28 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "django-simplecms"
 description = "Simple Django-based CMS"
-requires-python = ">= 3.12"
+requires-python = ">= 3.8"
 dynamic = ["version"]
 readme = "README.md"
 authors = [{name = "Jaap Joris Vens", email = "jj@rtts.eu"}]
-urls.source = "https://github.com/rtts/django-simplecms/"
-urls.issues = "https://github.com/rtts/django-simplecms/issues/"
-urls.changelog = "https://github.com/rtts/django-simplecms/releases/"
+urls.Changelog = "https://github.com/rtts/django-simplecms/releases/"
+urls.Issues = "https://github.com/rtts/django-simplecms/issues/"
+urls.Source = "https://github.com/rtts/django-simplecms/"
 classifiers = [
+  "Framework :: Django",
+  "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+  "Operating System :: OS Independent",
   "Programming Language :: Python",
-  "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)"
 ]
 dependencies = [
   "django",
   "django-embed-video",
-  "django-tidy",  # requires Tidy (apt install tidy)
+  "django-tidy",  # requires Tidy
   "easy-thumbnails",
   "libsass",
   "markdown",
   "psycopg",
-  "pylibmc",  # requires Memcached (apt install memcached)
+  "pylibmc",  # requires Memcached
 ]
 
 [project.scripts]
